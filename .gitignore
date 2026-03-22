@@ -46,3 +46,4 @@ build/
 data/
 *.mv.db
 *.trace.db
+.idea/
