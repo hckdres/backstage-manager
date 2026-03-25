@@ -8,12 +8,18 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.example.ax0006.Entity.Usuario;
-import org.example.ax0006.Repository.UsuarioRepository;
+import org.example.ax0006.Entity.usuario;
+import org.example.ax0006.Repository.usuarioRepository;
 
 import java.io.IOException;
 
-public class LoginController {
+public class loginController {
+
+    private usuarioRepository usuarioRepo;
+
+    public loginController(usuarioRepository usuarioRepo) {
+        this.usuarioRepo = usuarioRepo;
+    }
 
     @FXML
     private TextField fid_Usuario;
@@ -57,11 +63,14 @@ public class LoginController {
                 getClass().getResource("/org/example/ax0006/signup.fxml")
         );
 
+        signUpControler signUpControl = new signUpControler(usuarioRepo);
+
+        loader.setController(signUpControl);
+
         Scene scene = new Scene(loader.load());
 
         Stage stage = (Stage) fid_sign_up.getScene().getWindow();
         stage.setScene(scene);
-        stage.show();
     }
 
     @FXML
@@ -70,7 +79,7 @@ public class LoginController {
             togglePassword();
         }
 
-        Usuario usuarioLogin = UsuarioRepository.getInstance().buscarPorNombre(fid_Usuario.getText());
+        usuario usuarioLogin = usuarioRepo.buscarPorNombre(fid_Usuario.getText());
 
         if (usuarioLogin == null) {
             System.out.println("Usuario no existe");
@@ -89,10 +98,13 @@ public class LoginController {
                 getClass().getResource("/org/example/ax0006/menu.fxml")
         );
 
+        menuController menuControl = new menuController();
+
+        loader.setController(menuControl);
+
         Scene scene = new Scene(loader.load());
 
         Stage stage = (Stage) fid_login.getScene().getWindow();
         stage.setScene(scene);
-        stage.show();
     }
 }

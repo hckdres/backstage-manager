@@ -4,7 +4,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
-public class MenuController {
+public class menuController {
+
+    public menuController() {
+    }
 
     @FXML
     private Button bt_volver;

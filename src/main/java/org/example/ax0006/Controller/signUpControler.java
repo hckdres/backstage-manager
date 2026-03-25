@@ -17,12 +17,22 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.example.ax0006.Entity.Usuario;
-import org.example.ax0006.Repository.UsuarioRepository;
+import org.example.ax0006.Entity.usuario;
+import org.example.ax0006.Repository.usuarioRepository;
 
 import java.io.IOException;
 
-public class SignUpControler {
+public class signUpControler {
+
+    //Atributos
+    private usuarioRepository usuarioRepository;
+
+    //Constructor
+    public signUpControler(usuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
+    }
+
+    //SE TIENE QUE INSTANCIAR DE MANERA MANUAL, Y NO DE LA FORMA AUTOMATICA DEL JAVA FX
 
     @FXML
     private TextField fid_correo;
@@ -127,7 +137,7 @@ public class SignUpControler {
             return;
         }
 
-        if (UsuarioRepository.getInstance().buscarPorNombre(usuario) != null) {
+        if (usuarioRepository.buscarPorNombre(usuario) != null) {
             System.out.println("El usuario ya existe, por favor intente nuevamente");
             return;
         }
@@ -148,7 +158,7 @@ public class SignUpControler {
         }
 
         System.out.println("Usuario creado correctamente. Por favor utilice el login");
-        UsuarioRepository.getInstance().guardar(new Usuario(usuario, contrasena, correo));
+        usuarioRepository.guardar(new usuario(usuario, contrasena, correo));
     }
 
     @FXML
@@ -160,7 +170,12 @@ public class SignUpControler {
                 getClass().getResource("/org/example/ax0006/login.fxml")
         );
 
+        loginController loginControl = new loginController(usuarioRepository);
+
+        loader.setController(loginControl);
+
         Scene scene = new Scene(loader.load());
+
 
         Stage stage = (Stage) fid_sign_up.getScene().getWindow();
         stage.setScene(scene);
