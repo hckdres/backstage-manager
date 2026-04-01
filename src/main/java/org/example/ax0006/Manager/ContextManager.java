@@ -17,14 +17,22 @@ public class ContextManager {
     private RolService rolService;
     private SesionManager sesion;
 
-    public ContextManager() {
-        this.h2 = new H2();
-        this.usuarioRepository = new UsuarioRepository(h2);
-        this.rolRepository = new RolRepository(h2);
-        this.autenService = new AutenticacionService(usuarioRepository);
-        this.profileService = new ProfileService(usuarioRepository);
-        this.rolService = new RolService(rolRepository, usuarioRepository);
-        this.sesion = new SesionManager();
+    public ContextManager(
+            H2 h2,
+            UsuarioRepository usuarioRepository,
+            RolRepository rolRepository,
+            AutenticacionService autenService,
+            ProfileService profileService,
+            RolService rolService,
+            SesionManager sesion
+    ) {
+        this.h2 = h2;
+        this.usuarioRepository = usuarioRepository;
+        this.rolRepository = rolRepository;
+        this.autenService = autenService;
+        this.profileService = profileService;
+        this.rolService = rolService;
+        this.sesion = sesion;
     }
 
     public H2 getH2() {
@@ -33,6 +41,10 @@ public class ContextManager {
 
     public UsuarioRepository getUsuarioRepository() {
         return usuarioRepository;
+    }
+
+    public RolRepository getRolRepository() {
+        return rolRepository;
     }
 
     public AutenticacionService getAutenService() {

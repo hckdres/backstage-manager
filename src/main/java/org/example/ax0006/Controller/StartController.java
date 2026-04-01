@@ -11,6 +11,7 @@ import org.example.ax0006.Repository.RolRepository;
 import org.example.ax0006.Repository.UsuarioRepository;
 import org.example.ax0006.Service.AutenticacionService;
 import org.example.ax0006.Manager.SceneManager;
+import org.example.ax0006.Service.ProfileService;
 import org.example.ax0006.db.H2;
 import org.example.ax0006.Repository.RolRepository;
 import org.example.ax0006.Service.RolService;
@@ -25,7 +26,31 @@ public class StartController extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        ContextManager context = new ContextManager();
+
+        // BASE DE DATOS
+        H2 h2 = new H2();
+        h2.inicializarDB();
+
+        // REPOSITORIOS
+        UsuarioRepository usuarioRepo = new UsuarioRepository(h2);
+        RolRepository rolRepo = new RolRepository(h2);
+
+        // SERVICIOS
+        AutenticacionService autenService = new AutenticacionService(usuarioRepo);
+        ProfileService profileService = new ProfileService(usuarioRepo);
+        RolService rolService = new RolService(rolRepo, usuarioRepo);
+
+        // MANAGERS
+        SesionManager sesion = new SesionManager();
+        ContextManager context = new ContextManager(
+                h2,
+                usuarioRepo,
+                rolRepo,
+                autenService,
+                profileService,
+                rolService,
+                sesion
+        );
         context.getH2().inicializarDB();
 
         SceneManager sceneManager = new SceneManager(stage, context);
