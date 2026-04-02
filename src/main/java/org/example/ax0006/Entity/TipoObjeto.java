@@ -4,9 +4,8 @@ public class TipoObjeto {
     int idTipoObjeto;
     String nombre;
 
-    public TipoObjeto(String nombre, int idTipoObjeto) {
+    public TipoObjeto(String nombre) {
         this.nombre = nombre;
-        this.idTipoObjeto = idTipoObjeto;
     }
 
     public int getIdTipoObjeto() {

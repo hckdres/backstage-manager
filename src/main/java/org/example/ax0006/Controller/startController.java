@@ -5,8 +5,10 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.example.ax0006.Repository.TipoObjetoRepository;
 import org.example.ax0006.Repository.usuarioRepository;
 import org.example.ax0006.Service.autenticacionService;
+import org.example.ax0006.Service.crearTipoObjetoService;
 import org.example.ax0006.db.H2;
 
 import java.io.IOException;
@@ -26,9 +28,11 @@ public class startController extends Application {
 
         // REPOSITORIOS
         usuarioRepository usuarioRepo = new usuarioRepository(h2);
+        TipoObjetoRepository tipoObjetoRepository = new TipoObjetoRepository(h2);
 
         // SERVICIOS
         autenticacionService authService = new autenticacionService(usuarioRepo);
+        crearTipoObjetoService authService1 = new crearTipoObjetoService(tipoObjetoRepository);
 
         // SE CARGA LA PRIMERA VISTA
         FXMLLoader loader = new FXMLLoader(

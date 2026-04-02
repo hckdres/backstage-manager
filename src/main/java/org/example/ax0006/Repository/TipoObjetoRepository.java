@@ -43,7 +43,7 @@ public class TipoObjetoRepository {
             stmt.setString(1, nombre);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return new TipoObjeto(rs.getString("nombre"), rs.getInt("idTipoObjeto"));
+                return new TipoObjeto(rs.getString("nombre"));
             }
         } catch (SQLException e) {
             e.printStackTrace();

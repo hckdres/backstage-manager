@@ -1,8 +1,24 @@
 package org.example.ax0006.Service;
 
+import org.example.ax0006.Entity.TipoObjeto;
 import org.example.ax0006.Repository.TipoObjetoRepository;
-import org.example.ax0006.Repository.usuarioRepository;
 
 public class crearTipoObjetoService {
-    public crearTipoObjetoService(TipoObjetoRepository tipoObjetoRepository) { }
+    private TipoObjetoRepository tipoObjetoRepository;
+
+    public crearTipoObjetoService(TipoObjetoRepository tipoObjetoRepository) {
+        this.tipoObjetoRepository = tipoObjetoRepository;
+    }
+
+    public boolean crearTipoObjeto(String nombre) {
+        if (tipoObjetoRepository.buscarPorNombreTipoObjeto(nombre) != null) {
+            System.out.println("el objeto ya existe");
+            return false;
+        }
+
+        TipoObjeto tipoObjeto = new TipoObjeto(nombre);
+        tipoObjetoRepository.guardarTipoObjeto(tipoObjeto);
+        return true;
+
+    }
 }

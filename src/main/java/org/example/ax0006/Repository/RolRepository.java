@@ -42,7 +42,7 @@ public class RolRepository {
             stmt.setString(1, rol);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return new Rol(rs.getString("rol"), rs.getInt("idRol"));
+                return new Rol(rs.getString("rol"));
             }
         } catch (SQLException e) {
             e.printStackTrace();

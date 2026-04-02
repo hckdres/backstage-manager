@@ -16,8 +16,7 @@ public class Rol {
         rol = rol;
     }
 
-    public Rol(String rol, int idRol) {
+    public Rol(String rol) {
         rol = rol;
-        this.idRol = idRol;
     }
 }
