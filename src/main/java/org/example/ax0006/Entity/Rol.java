@@ -13,10 +13,10 @@ public class Rol {
     }
 
     public void setRol(String rol) {
-        rol = rol;
+        this.rol = rol;
     }
 
     public Rol(String rol) {
-        rol = rol;
+        this.rol = rol;
     }
 }

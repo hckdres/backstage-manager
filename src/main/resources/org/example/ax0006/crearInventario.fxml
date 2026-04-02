@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<Pane prefHeight="800.0" prefWidth="1200.0"
+      xmlns="http://javafx.com/javafx/8"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.ax0006.Controller.crearInventarioController">
+
+    <children>
+
+        <Text layoutX="450.0" layoutY="100.0" text="Crear Inventario">
+            <font><Font size="26.0"/></font>
+        </Text>
+
+        <Button fx:id="bt_crear" layoutX="500.0" layoutY="300.0"
+                text="Crear Inventario" onAction="#on_bt_crear"/>
+
+        <Label fx:id="lbl_msg" layoutX="500.0" layoutY="360.0"/>
+
+    </children>
+</Pane>
