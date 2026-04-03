@@ -37,4 +37,19 @@ public class HorarioRepository {
 
         return -1;
     }
+
+    public void eliminarHorario(int idHorario) {
+
+        try (Connection conn = h2.getConnection()) {
+            // 2. borrar horario
+            String sql2 = "DELETE FROM HORARIO WHERE IDHORARIO = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(sql2)) {
+                stmt.setInt(1, idHorario);
+                stmt.executeUpdate();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

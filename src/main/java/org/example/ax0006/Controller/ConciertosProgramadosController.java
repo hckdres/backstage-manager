@@ -21,6 +21,12 @@ public class ConciertosProgramadosController {
     private ConciertoService conciertoService;
     private SceneManager sceneManager;
 
+    public ConciertosProgramadosController(SesionManager sesion, ConciertoService conciertoService, SceneManager sceneManager) {
+        this.sesion = sesion;
+        this.conciertoService = conciertoService;
+        this.sceneManager = sceneManager;
+    }
+
     @FXML
     private TableView<Concierto> tablaConciertos;
 
@@ -88,7 +94,7 @@ public class ConciertosProgramadosController {
 
                     Concierto c = getTableView().getItems().get(getIndex());
 
-                    conciertoService.eliminarConcierto(c.getIdConcierto());
+                    conciertoService.eliminarConcierto(c.getIdConcierto(), c.getHorario().getIdHorario());
 
                     getTableView().getItems().remove(c);
                 });

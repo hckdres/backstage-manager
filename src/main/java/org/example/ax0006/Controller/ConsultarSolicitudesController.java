@@ -121,7 +121,7 @@ public class ConsultarSolicitudesController {
                 btnRechazar.setOnAction(event -> {
                     Concierto c = getTableView().getItems().get(getIndex());
 
-                    conciertoService.eliminarConcierto(c.getIdConcierto());
+                    conciertoService.eliminarConcierto(c.getIdConcierto(),c.getHorario().getIdHorario());
 
                     getTableView().getItems().remove(c);
                 });

@@ -36,7 +36,8 @@ public class ConciertoService {
         conciertoRepo.aprobarConcierto(idConcierto);
     }
 
-    public void eliminarConcierto(int idConcierto) {
+    public void eliminarConcierto(int idConcierto, int idHorario) {
         conciertoRepo.eliminarConcierto(idConcierto);
+        horarioRepo.eliminarHorario(idHorario);
     }
 }
