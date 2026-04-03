@@ -85,7 +85,10 @@ public class MenuController {
     private Button fid_bt_CrearConcierto;
 
     @FXML
-    void On_CrearConcierto(ActionEvent event){
+    void On_CrearConcierto(ActionEvent event) throws IOException {
+        sceneManager.showCrearConcierto();
+
+        /*
         LocalDate fechaconcierto = LocalDate.of(2026,6,25);
         LocalTime horaConcierto = LocalTime.of(12, 0, 0);
         Horario horarioConcierto = new Horario();
@@ -98,6 +101,7 @@ public class MenuController {
         concierto.setAforo(100);
         concierto.setProgramado(false);
         conciertoService.crearConcierto(concierto);
+        */
     }
 
     @FXML

@@ -81,6 +81,11 @@ public class SceneManager {
         loadScene("/org/example/ax0006/consultarsolicitudes.fxml", consultarSolicitudesController);
     }
 
+    public void showCrearConcierto() throws  IOException{
+        CrearConciertoController crearConciertoController = new CrearConciertoController(context.getSesion(), context.getConciertoService(), this);
+        loadScene("/org/example/ax0006/crearconcierto.fxml", crearConciertoController);
+    }
+
 
     /*METODO PARA NO REPETIR ESTO COMO MIL VECES Y HACER QUE EL CAMBIO DE ESCENA SE VEA MAS LIMPIO*/
     private void loadScene(String fxml, Object controller) throws IOException {
