@@ -76,6 +76,12 @@ public class SceneManager {
         loadScene("/org/example/ax0006/changepassword.fxml", changePasswordController);
     }
 
+    public void showConsultarSolicitudes() throws IOException{
+        ConsultarSolicitudesController consultarSolicitudesController = new ConsultarSolicitudesController(context.getSesion(), context.getConciertoService(), this);
+        loadScene("/org/example/ax0006/consultarsolicitudes.fxml", consultarSolicitudesController);
+    }
+
+
     /*METODO PARA NO REPETIR ESTO COMO MIL VECES Y HACER QUE EL CAMBIO DE ESCENA SE VEA MAS LIMPIO*/
     private void loadScene(String fxml, Object controller) throws IOException {
 

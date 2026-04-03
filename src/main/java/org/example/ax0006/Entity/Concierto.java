@@ -13,11 +13,12 @@ public class Concierto {
 
     public Concierto(){}
 
-    public Concierto(int idConcierto, Horario horario, int aforo, Usuario artista) {
+    public Concierto(int idConcierto, Horario horario, int aforo, Usuario artista, boolean programado) {
         this.idConcierto = idConcierto;
         this.horario = horario;
         this.aforo = aforo;
         this.contrato = null;
+        this.programado = programado;
         this.analisis = null;
         this.artista = artista;
     }

@@ -29,7 +29,6 @@ public class MenuController {
 
     /*CONSTRUCTOR*/
     public MenuController(SceneManager sceneManager, SesionManager sesion, ConciertoService conciertoService){
-        System.out.println("Hola");
         this.sceneManager = sceneManager;
         this.sesion = sesion;
         this.conciertoService = conciertoService;
@@ -105,10 +104,23 @@ public class MenuController {
     private Button fid_bt_ConsultarConciertos;
 
     @FXML
-    void On_ConsultarConciertos(ActionEvent event){
+    void On_ConsultarConciertos(ActionEvent event) throws IOException {
+        sceneManager.showConsultarSolicitudes();
+    }
+        /*
         List<Concierto> Conciertos = conciertoService.obtenerConciertos();
         for(Concierto c : Conciertos){
             System.out.println(c.getArtista().getNombre());
         }
     }
+
+*/
+    @FXML
+    private Button fid_bt_ConsultarCProgramado;
+
+    @FXML
+    void On_ConsultarCProgramado(ActionEvent event) throws IOException {
+    }
+
+
 }

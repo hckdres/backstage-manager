@@ -52,8 +52,9 @@
    <center>
       <AnchorPane fx:id="fid_contenido" prefHeight="730.0" prefWidth="775.0" style="-fx-background-color: #f4f6f8;">
          <children>
-            <Button fx:id="fid_bt_CrearConcierto" layoutX="28.0" layoutY="28.0" mnemonicParsing="false" onAction="#On_CrearConcierto" text="Crear Concierto" />
-            <Button fx:id="fid_bt_ConsultarConciertos" layoutX="12.0" layoutY="88.0" mnemonicParsing="false" onAction="#On_ConsultarConciertos" text="Consultar Conciertos" />
+            <Button fx:id="fid_bt_CrearConcierto" layoutX="28.0" layoutY="28.0" mnemonicParsing="false" onAction="#On_CrearConcierto" text="Crear Solicitud de Concierto" />
+            <Button fx:id="fid_bt_ConsultarConciertos" layoutX="14.0" layoutY="86.0" mnemonicParsing="false" onAction="#On_ConsultarConciertos" text="Consultar Solicitudes de Conciertos" />
+            <Button fx:id="fid_bt_ConsultarCProgramado" layoutX="14.0" layoutY="145.0" mnemonicParsing="false" onAction="#On_ConsultarCProgramado" text="Consultar Conciertos Programados" />
          </children></AnchorPane>
    </center>
 </BorderPane>

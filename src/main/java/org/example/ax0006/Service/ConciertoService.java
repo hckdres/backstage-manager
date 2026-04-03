@@ -24,17 +24,19 @@ public class ConciertoService {
         // 2. Guardar concierto
         int idConcierto = conciertoRepo.guardar(c, idHorario);
 
-        System.out.println("Usuario ID: " + c.getArtista().getIdUsuario());
-        System.out.println("ID concierto generado: " + idConcierto);
         // 3. Guardar relación artista
-        conciertoRepo.guardarRelacionArtista(
-                c.getArtista().getIdUsuario(),
-                idConcierto,
-                c.getArtista().getIdRol() // o 3 si sabes que siempre es artista
-        );
+        conciertoRepo.guardarRelacionArtista(c.getArtista().getIdUsuario(), idConcierto, 3);
     }
 
     public List<Concierto> obtenerConciertos() {
         return conciertoRepo.obtenerConciertos();
+    }
+
+    public void aprobarConcierto(int idConcierto) {
+        conciertoRepo.aprobarConcierto(idConcierto);
+    }
+
+    public void eliminarConcierto(int idConcierto) {
+        conciertoRepo.eliminarConcierto(idConcierto);
     }
 }

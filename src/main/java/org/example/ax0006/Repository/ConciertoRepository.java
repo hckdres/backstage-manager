@@ -67,14 +67,14 @@ public class ConciertoRepository {
 
             while (rs.next()) {
 
-                // 🔹 Horario
+                // Horario
                 Horario h = new Horario();
                 h.setIdHorario(rs.getInt("idHorario"));
                 h.setFecha(rs.getDate("fecha").toLocalDate());
                 h.setHoraInicio(rs.getTime("horaInc").toLocalTime());
                 h.setHoraFin(rs.getTime("horaFin").toLocalTime());
 
-                // 🔹 Usuario (artista)
+                // Usuario (artista)
                 Usuario artista = null;
 
                 if (rs.getObject("idUsuario") != null) {
@@ -83,12 +83,13 @@ public class ConciertoRepository {
                     artista.setNombre(rs.getString("nombre"));
                 }
 
-                // 🔹 Concierto
+                // Concierto
                 Concierto c = new Concierto(
                         rs.getInt("idConcierto"),
                         h,
                         rs.getInt("aforo"),
-                        artista
+                        artista,
+                        rs.getBoolean("programado")
                 );
 
                 lista.add(c);
@@ -125,24 +126,25 @@ public class ConciertoRepository {
 
             while (rs.next()) {
 
-                // 🔹 Horario
+                // Horario
                 Horario h = new Horario();
                 h.setIdHorario(rs.getInt("idHorario"));
                 h.setFecha(rs.getDate("fecha").toLocalDate());
                 h.setHoraInicio(rs.getTime("horaInc").toLocalTime());
                 h.setHoraFin(rs.getTime("horaFin").toLocalTime());
 
-                // 🔹 Usuario (artista)
+                // Usuario (artista)
                 Usuario u = new Usuario();
                 u.setIdUsuario(rs.getInt("idUsuario"));
                 u.setNombre(rs.getString("nombre"));
 
-                // 🔹 Concierto
+                // Concierto
                 Concierto c = new Concierto(
                         rs.getInt("idConcierto"),
                         h,
                         rs.getInt("aforo"),
-                        u
+                        u,
+                        rs.getBoolean("programado")
                 );
 
                 lista.add(c);
@@ -170,6 +172,44 @@ public class ConciertoRepository {
             stmt.setInt(3, idConcierto);
 
             stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void aprobarConcierto(int id) {
+
+        String sql = "UPDATE Concierto SET programado = TRUE WHERE idConcierto = ?";
+
+        try (Connection conn = h2.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void eliminarConcierto(int idConcierto) {
+
+        try (Connection conn = h2.getConnection()) {
+
+            // 1. borrar relación artista
+            String sql1 = "DELETE FROM RolConciertoUsuario WHERE idConcierto = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(sql1)) {
+                stmt.setInt(1, idConcierto);
+                stmt.executeUpdate();
+            }
+
+            // 2. borrar concierto
+            String sql2 = "DELETE FROM Concierto WHERE idConcierto = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(sql2)) {
+                stmt.setInt(1, idConcierto);
+                stmt.executeUpdate();
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();

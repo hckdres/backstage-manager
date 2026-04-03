@@ -28,7 +28,7 @@ public class HorarioRepository {
 
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
-                return rs.getInt(1); // 🔥 id generado
+                return rs.getInt(1);
             }
 
         } catch (SQLException e) {
