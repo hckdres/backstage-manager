@@ -1,7 +1,11 @@
 package org.example.ax0006.Repository;
-
+import org.example.ax0006.Entity.Usuario;
+import java.util.ArrayList;
+import java.util.List;
 import org.example.ax0006.db.H2;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AsignacionStaffRepository {
 
@@ -50,5 +54,64 @@ public class AsignacionStaffRepository {
             e.printStackTrace();
             return false;
         }
+    }
+
+
+    public List<Integer> obtenerIdsUsuariosAsignados() {
+        List<Integer> ids = new ArrayList<>();
+        String sql = "SELECT DISTINCT idUsuario FROM RolConciertoUsuario";
+        try (Connection conn = h2.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                ids.add(rs.getInt("idUsuario"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ids;
+    }
+
+    public List<Usuario> obtenerUsuariosPorConcierto(int idConcierto) {
+        List<Usuario> lista = new ArrayList<>();
+        String sql = """
+        SELECT u.idUsuario, u.nombre, u.gmail
+        FROM RolConciertoUsuario rcu
+        JOIN Usuario u ON rcu.idUsuario = u.idUsuario
+        WHERE rcu.idConcierto = ?
+    """;
+        try (Connection conn = h2.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idConcierto);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Usuario u = new Usuario();
+                u.setIdUsuario(rs.getInt("idUsuario"));
+                u.setNombre(rs.getString("nombre"));
+                u.setGmail(rs.getString("gmail"));
+                lista.add(u);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
+    public String obtenerNombreRolEnConcierto(int idUsuario, int idConcierto) {
+        String sql = """
+        SELECT r.rol FROM RolConciertoUsuario rcu
+        JOIN Rol r ON rcu.idRol = r.idRol
+        WHERE rcu.idUsuario = ? AND rcu.idConcierto = ?
+    """;
+        try (Connection conn = h2.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idUsuario);
+            stmt.setInt(2, idConcierto);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) return rs.getString("rol");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "Sin rol";
     }
 }
