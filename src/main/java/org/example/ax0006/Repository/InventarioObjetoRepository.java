@@ -15,21 +15,59 @@ public class InventarioObjetoRepository {
         this.h2 = h2;
     }
 
-    public void guardarObjetoEnInventario(int inventarioId, int objetoId) {
-        String sql = "INSERT INTO ObjetoInventario (idInventario, idTipoObjeto) VALUES (?, ?)";
-        try (Connection conn = h2.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, inventarioId);
-            stmt.setInt(2, objetoId);
-            stmt.executeUpdate();
-            System.out.println("Objeto agregado al inventario correctamente");
+    public int guardarObjetoEnInventario(int inventarioId, int objetoId) {
+
+        try (Connection conn = h2.getConnection()) {
+
+            String sqlConflicto = """
+            SELECT 1
+            FROM ObjetoInventario oi
+            JOIN InventarioHorario ih1 ON oi.idInventario = ih1.idInventario
+            JOIN Horario h1 ON ih1.idHorario = h1.idHorario
+
+            JOIN InventarioHorario ih2 ON ih2.idInventario = ?
+            JOIN Horario h2 ON ih2.idHorario = h2.idHorario
+
+            WHERE oi.idTipoObjeto = ?
+            AND (
+                h1.horaInc < h2.horaFin
+                AND h1.horaFin > h2.horaInc
+                AND h1.fecha = h2.fecha
+            )
+        """;
+
+            PreparedStatement stmtCheck = conn.prepareStatement(sqlConflicto);
+            stmtCheck.setInt(1, inventarioId);
+            stmtCheck.setInt(2, objetoId);
+
+            ResultSet rs = stmtCheck.executeQuery();
+
+            if (rs.next()) {
+                System.out.println("el tipo de objeto ya está en uso");
+                return -1;
+            }
+
+
+            String sqlInsert = "INSERT INTO ObjetoInventario (idInventario, idTipoObjeto) VALUES (?, ?)";
+
+            PreparedStatement stmtInsert = conn.prepareStatement(sqlInsert);
+            stmtInsert.setInt(1, inventarioId);
+            stmtInsert.setInt(2, objetoId);
+
+            stmtInsert.executeUpdate();
+
+            System.out.println("bbjeto agregado correctamente al inventario");
+            return 1;
 
         } catch (SQLException e) {
             if (e.getMessage().toLowerCase().contains("constraint")) {
-                System.out.println("Ya está ese objeto en ese inventario o no existe la relación válida");
+                System.out.println("Ya existe o relación inválida");
             } else {
                 e.printStackTrace();
             }
         }
+
+        return -1;
     }
+
 }

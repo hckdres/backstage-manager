@@ -10,9 +10,7 @@ public class InventarioObjetoService {
         this.inventarioObjetoRepository = inventarioObjetoRepository;
     }
 
-    public boolean asignarObjetoAInventario(int inventarioId, int objetoId) {
-        inventarioObjetoRepository.guardarObjetoEnInventario(inventarioId, objetoId);
-        return true;
-
+    public int asignarObjetoAInventario(int inventarioId, int objetoId) {
+        return inventarioObjetoRepository.guardarObjetoEnInventario(inventarioId, objetoId);
     }
 }

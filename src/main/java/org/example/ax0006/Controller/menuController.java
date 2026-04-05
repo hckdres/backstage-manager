@@ -164,4 +164,26 @@ public class menuController {
         Stage stage = (Stage) bt_crearInventario.getScene().getWindow();
         stage.setScene(scene);
     }
+
+    @FXML
+    void on_bt_crearHorario(ActionEvent event) throws IOException {
+
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/org/example/ax0006/horario.fxml")
+        );
+
+        horarioController controller =
+                new horarioController(
+                        new horarioService(
+                                new horarioRepository(h2)
+                        )
+                );
+
+        loader.setController(controller);
+
+        Scene scene = new Scene(loader.load());
+
+        Stage stage = (Stage) fid_bt_volver.getScene().getWindow();
+        stage.setScene(scene);
+    }
 }

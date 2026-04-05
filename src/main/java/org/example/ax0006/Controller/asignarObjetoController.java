@@ -28,14 +28,22 @@ public class asignarObjetoController {
     @FXML
     void on_bt_asignar(ActionEvent event) {
         try {
+
             int inv = Integer.parseInt(ii_inventario.getText());
             int obj = Integer.parseInt(ii_objeto.getText());
 
-            service.asignarObjetoAInventario(inv, obj);
-            lbl_msg.setText("Asignado");
+            int resultado = service.asignarObjetoAInventario(inv, obj);
 
+            if (resultado == -1) {
+                lbl_msg.setText("El objeto ya está ocupado");
+            } else {
+                lbl_msg.setText("Asignado correctamente )");
+            }
+
+        } catch (NumberFormatException e) {
+            lbl_msg.setText("Error: ingresa números válidos");
         } catch (Exception e) {
-            lbl_msg.setText("Error en datos");
+            lbl_msg.setText("Error inesperado");
         }
     }
 

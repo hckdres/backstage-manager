@@ -26,37 +26,50 @@
             <Font size="19.0" />
          </font>
       </Text>
+      <!-- CREAR INVENTARIO -->
       <Button fx:id="bt_crearInventario"
-              layoutX="450.0" layoutY="200.0"
+              layoutX="450.0"
+              layoutY="200.0"
               prefWidth="300.0"
               text="Crear Inventario"
               onAction="#on_bt_crearInventario"/>
 
       <!-- CREAR TIPO OBJETO -->
       <Button fx:id="bt_crearTipoObjeto"
-              layoutX="450.0" layoutY="270.0"
+              layoutX="450.0"
+              layoutY="270.0"
               prefWidth="300.0"
               text="Crear Tipo de Objeto"
               onAction="#on_bt_crearTipoObjeto"/>
 
+      <!-- CREAR HORARIO -->
+      <Button fx:id="bt_crearHorario"
+              layoutX="450.0"
+              layoutY="340.0"
+              prefWidth="300.0"
+              text="Crear Horario"
+              onAction="#on_bt_crearHorario"/>
+
       <!-- ASIGNAR OBJETO -->
       <Button fx:id="bt_asignarObjeto"
-              layoutX="450.0" layoutY="340.0"
+              layoutX="450.0"
+              layoutY="410.0"
               prefWidth="300.0"
               text="Asignar Objeto a Inventario"
               onAction="#on_bt_asignarObjeto"/>
 
       <!-- RESERVAR INVENTARIO -->
       <Button fx:id="bt_reservar"
-              layoutX="450.0" layoutY="410.0"
+              layoutX="450.0"
+              layoutY="480.0"
               prefWidth="300.0"
               text="Reservar Inventario (Horario)"
               onAction="#on_bt_reservar"/>
 
-      <!-- CONSULTAR INVENTARIO (NUEVO) -->
+      <!-- CONSULTAR INVENTARIO -->
       <Button fx:id="bt_consultarInventario"
               layoutX="450.0"
-              layoutY="480.0"
+              layoutY="550.0"
               prefWidth="300.0"
               text="Consultar Inventario"
               onAction="#on_bt_consultarInventario"/>
