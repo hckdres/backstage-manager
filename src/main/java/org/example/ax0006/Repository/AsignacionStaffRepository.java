@@ -1,7 +1,10 @@
 package org.example.ax0006.Repository;
 
 import org.example.ax0006.db.H2;
+import org.example.ax0006.Entity.Usuario;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AsignacionStaffRepository {
 
@@ -50,5 +53,34 @@ public class AsignacionStaffRepository {
             e.printStackTrace();
             return false;
         }
+    }
+    //Metodo para obtener todos los usuarios de tipo staff asignados a un concierto especifico.
+    //Realiza una consulta entre la tabla Usuario y la tabla RolConciertoUsuario.
+    public List<Usuario> obtenerStaffPorConcierto(int idConcierto) {
+        List<Usuario> lista = new ArrayList<>();
+        String sql = """
+        SELECT u.idUsuario, u.nombre, u.contrasena, u.gmail, u.idRol
+        FROM Usuario u
+        INNER JOIN RolConciertoUsuario rcu ON u.idUsuario = rcu.idUsuario
+        WHERE rcu.idConcierto = ? AND u.idRol = 4
+    """;
+        try (Connection conn = h2.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idConcierto);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Usuario u = new Usuario();
+                u.setIdUsuario(rs.getInt("idUsuario"));
+                u.setNombre(rs.getString("nombre"));
+                u.setContrasena(rs.getString("contrasena"));
+                u.setGmail(rs.getString("gmail"));
+                u.setIdRol(rs.getInt("idRol"));
+                lista.add(u);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
     }
 }

@@ -4,6 +4,7 @@ import org.example.ax0006.Entity.Usuario;
 import org.example.ax0006.Repository.AsignacionStaffRepository;
 import org.example.ax0006.Repository.UsuarioRepository;
 import org.example.ax0006.db.H2;
+import java.util.List;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,5 +53,10 @@ public class StaffService {
     public double generarNomina(int idConcierto) {
         // TODO: implementar cálculo real
         return 0.0;
+    }
+    //Metodod que permite obtener el staff que fue asignado a un concierto.
+    //Este metodo lo que hace es llamar al REPOSITORY para consultar la informacion en la DB.
+    public List<Usuario> obtenerStaffPorConcierto(int idConcierto) {
+        return asignacionStaffRepository.obtenerStaffPorConcierto(idConcierto);
     }
 }
