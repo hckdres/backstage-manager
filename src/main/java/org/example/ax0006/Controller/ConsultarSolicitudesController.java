@@ -59,7 +59,7 @@ public class ConsultarSolicitudesController {
 
     @FXML
     void On_volver(ActionEvent event) throws IOException {
-        sceneManager.showMenu();
+        sceneManager.showMenuConcierto();
     }
 
     //se crea la tabla

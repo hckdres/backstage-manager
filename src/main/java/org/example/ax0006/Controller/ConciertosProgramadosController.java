@@ -56,7 +56,7 @@ public class ConciertosProgramadosController {
     @FXML
     void On_volver(ActionEvent event) {
         try {
-            sceneManager.showMenu();
+            sceneManager.showMenuConcierto();
         } catch (IOException e) {
             e.printStackTrace();
         }

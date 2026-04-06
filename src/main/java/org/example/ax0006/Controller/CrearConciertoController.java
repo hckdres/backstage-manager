@@ -16,7 +16,6 @@ import java.time.LocalTime;
 
 public class CrearConciertoController {
     /*En esta pantalla se crean los concietos, pero queda pendendiente el analisis financiero y la implementacion mas compleja del horario*/
-
     private SesionManager sesion;
     private ConciertoService conciertoService;
     private SceneManager sceneManager;
@@ -52,8 +51,9 @@ public class CrearConciertoController {
             java.time.LocalDate fechaFin = fid_fecha_Fin.getValue(); //CAMBIAR
 
             // Horas
-
+            fid_horaInicio.setText(verifcarHora(fid_horaInicio.getText()));
             LocalTime horaInicio = LocalTime.parse(fid_horaInicio.getText());
+            fid_horaFin.setText(verifcarHora(fid_horaFin.getText()));
             LocalTime horaFin = LocalTime.parse(fid_horaFin.getText());
 
             // Aforo
@@ -109,6 +109,13 @@ public class CrearConciertoController {
         alert.setHeaderText("El la solicitud del concierto fue creada correctamente");
         alert.setContentText("La solicitud sera revisada para que el concierto sea programado");
         alert.showAndWait(); // Esto abre el POP UP
-        sceneManager.showMenu();
+        sceneManager.showMenuConcierto();
+    }
+
+    String verifcarHora(String hora){
+        if(hora.length() == 4){
+            hora = "0" + hora;
+        }
+        return hora;
     }
 }
