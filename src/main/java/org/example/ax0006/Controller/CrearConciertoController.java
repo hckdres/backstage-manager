@@ -28,6 +28,9 @@ public class CrearConciertoController {
     }
 
     @FXML
+    private TextField fid_nombreConcierto;
+
+    @FXML
     private DatePicker fid_fecha;
 
     @FXML
@@ -47,6 +50,9 @@ public class CrearConciertoController {
             // Fecha
             java.time.LocalDate fecha = fid_fecha.getValue();
 
+            //nombre del concierto
+
+            String nombreConcierto = fid_nombreConcierto.getText();
             // Horas
 
             LocalTime horaInicio = LocalTime.parse(fid_horaInicio.getText());
@@ -63,6 +69,7 @@ public class CrearConciertoController {
 
             // Concierto
             Concierto concierto = new Concierto();
+            concierto.setNombreConcierto(nombreConcierto);
             concierto.setHorario(horario);
             concierto.setAforo(aforo);
             concierto.setArtista(sesion.getUsuarioActual());

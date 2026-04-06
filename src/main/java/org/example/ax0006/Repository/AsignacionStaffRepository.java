@@ -75,7 +75,7 @@ public class AsignacionStaffRepository {
     public List<Usuario> obtenerUsuariosPorConcierto(int idConcierto) {
         List<Usuario> lista = new ArrayList<>();
         String sql = """
-        SELECT u.idUsuario, u.nombre, u.gmail
+        SELECT DISTINCT u.idUsuario, u.nombre, u.gmail
         FROM RolConciertoUsuario rcu
         JOIN Usuario u ON rcu.idUsuario = u.idUsuario
         WHERE rcu.idConcierto = ?
@@ -97,21 +97,26 @@ public class AsignacionStaffRepository {
         return lista;
     }
 
+
+    //En el siguiente metodo se permitira que usario pueda tener mas de un rol en uno o diferentes conciertos aprovechando el cambio que se hizo en la DB.
     public String obtenerNombreRolEnConcierto(int idUsuario, int idConcierto) {
         String sql = """
         SELECT r.rol FROM RolConciertoUsuario rcu
         JOIN Rol r ON rcu.idRol = r.idRol
         WHERE rcu.idUsuario = ? AND rcu.idConcierto = ?
     """;
+        List<String> roles = new ArrayList<>();
         try (Connection conn = h2.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, idUsuario);
             stmt.setInt(2, idConcierto);
             ResultSet rs = stmt.executeQuery();
-            if (rs.next()) return rs.getString("rol");
+            while (rs.next()) {
+                roles.add(rs.getString("rol"));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return "Sin rol";
+        return roles.isEmpty() ? "Sin rol" : String.join(", ", roles);
     }
 }

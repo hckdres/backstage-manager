@@ -59,13 +59,18 @@ public class ConsultarSolicitudesController {
         sceneManager.showMenu();
     }
 
+    @FXML
+    private TableColumn<Concierto, String> colNombreConcierto;
+
     //se crea la tabla
     @FXML
     public void initialize() {
 
         colArtista.setCellValueFactory(data ->
                 new SimpleStringProperty(
-                        data.getValue().getArtista().getNombre()
+                        data.getValue().getArtista() != null
+                                ? data.getValue().getArtista().getNombre()
+                                : ""
                 )
         );
 
@@ -91,6 +96,10 @@ public class ConsultarSolicitudesController {
                 new SimpleIntegerProperty(
                         data.getValue().getAforo()
                 ).asObject()
+        );
+
+        colNombreConcierto.setCellValueFactory(data ->
+                new SimpleStringProperty(data.getValue().getNombreConcierto())
         );
 
         agregarBotonesAccion();
@@ -137,7 +146,7 @@ public class ConsultarSolicitudesController {
     }
 
     private void cargarConciertos() {
-        List<Concierto> lista = conciertoService.obtenerConciertos();
+        List<Concierto> lista = conciertoService.obtenerConciertosSolos();
 
         List<Concierto> pendientes = lista.stream().filter(c -> !c.isProgramado()).toList();
 

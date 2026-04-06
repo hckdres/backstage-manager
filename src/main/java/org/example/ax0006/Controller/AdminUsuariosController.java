@@ -99,23 +99,25 @@ public class AdminUsuariosController {
 
     }
 
-    // Carga el combo con "Sin asignar" + todos los conciertos
+
     private void cargarComboConciertoFiltro() {
         comboConciertoFiltro.getItems().clear();
         comboConciertoFiltro.getItems().add("Sin asignar");
-        comboConciertoFiltro.getItems().addAll(conciertoService.obtenerConciertos());
+        comboConciertoFiltro.getItems().addAll(
+                conciertoService.obtenerConciertosSolos().stream()
+                        .filter(c -> c.isProgramado())
+                        .toList()
+        );
         comboConciertoFiltro.setValue("Sin asignar");
 
-        // Mostrar nombre legible en el combo
+
         comboConciertoFiltro.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(Object item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) setText(null);
                 else if (item instanceof Concierto c)
-                    setText(c.getArtista() != null
-                            ? c.getArtista().getNombre() + " - " + c.getHorario().getFecha()
-                            : "Concierto " + c.getIdConcierto());
+                            setText(c.getNombreConcierto());
                 else setText(item.toString());
             }
         });
@@ -126,9 +128,7 @@ public class AdminUsuariosController {
                 super.updateItem(item, empty);
                 if (empty || item == null) setText(null);
                 else if (item instanceof Concierto c)
-                    setText(c.getArtista() != null
-                            ? c.getArtista().getNombre() + " - " + c.getHorario().getFecha()
-                            : "Concierto " + c.getIdConcierto());
+                    setText(c.getNombreConcierto());
                 else setText(item.toString());
             }
         });
@@ -185,9 +185,7 @@ public class AdminUsuariosController {
                 if (empty) {
                     setGraphic(null);
                 } else {
-                    // Solo habilitar si estamos en vista "Sin asignar"
-                    boolean sinAsignar = !(comboConciertoFiltro.getValue() instanceof Concierto);
-                    btn.setDisable(!sinAsignar);
+                    btn.setDisable(false);//pequeño cambio para que el boton estuviera disponible siempre para asignar mas roles asi ya tenga
                     setGraphic(btn);
                 }
             }
@@ -196,7 +194,7 @@ public class AdminUsuariosController {
 
     private void mostrarPopupRol(Usuario u) {
         List<Rol> roles = rolService.obtenerRolesAsignables();
-        List<Concierto> conciertos = conciertoService.obtenerConciertos();
+        List<Concierto> conciertos = conciertoService.obtenerConciertosSolos();
 
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Asignar Rol");
@@ -216,9 +214,7 @@ public class AdminUsuariosController {
             protected void updateItem(Concierto item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) setText(null);
-                else setText(item.getArtista() != null
-                        ? item.getArtista().getNombre() + " - " + item.getHorario().getFecha()
-                        : "Concierto " + item.getIdConcierto());
+                else setText(item.getNombreConcierto());
             }
         });
         comboConciertos.setButtonCell(new ListCell<>() {
@@ -226,9 +222,7 @@ public class AdminUsuariosController {
             protected void updateItem(Concierto item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) setText(null);
-                else setText(item.getArtista() != null
-                        ? item.getArtista().getNombre() + " - " + item.getHorario().getFecha()
-                        : "Concierto " + item.getIdConcierto());
+                else setText(item.getNombreConcierto());
             }
         });
 

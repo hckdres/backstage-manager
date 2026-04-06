@@ -5,6 +5,7 @@ public class Concierto {
     * Pendiente a implementar: Horario(actualmente es una implementacion basica), contrato, analisis financiero*/
     private int idConcierto;
     private Horario horario;
+    private String nombreConcierto;
     private int aforo;
     private Contrato contrato;
     private boolean programado;
@@ -13,8 +14,9 @@ public class Concierto {
 
     public Concierto(){}
 
-    public Concierto(int idConcierto, Horario horario, int aforo, Usuario artista, boolean programado) {
+    public Concierto(int idConcierto,String nombreConcierto, Horario horario, int aforo, Usuario artista, boolean programado) {
         this.idConcierto = idConcierto;
+        this.nombreConcierto = nombreConcierto;
         this.horario = horario;
         this.aforo = aforo;
         this.contrato = null;
@@ -79,5 +81,13 @@ public class Concierto {
 
     public void setArtista(Usuario artista) {
         this.artista = artista;
+    }
+
+    public String getNombreConcierto() {
+        return nombreConcierto;
+    }
+
+    public void setNombreConcierto(String nombreConcierto) {
+        this.nombreConcierto = nombreConcierto;
     }
 }

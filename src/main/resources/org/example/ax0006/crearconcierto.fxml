@@ -31,6 +31,12 @@
 
             <children>
 
+                <!-- NOMBRE DEL CONCIERTO -->
+                <VBox spacing="5">
+                    <Label text="Nombre del concierto" />
+                    <TextField fx:id="fid_nombreConcierto" promptText="Ej: Rock en vivo" prefWidth="250"/>
+                </VBox>
+
                 <!-- FECHA -->
                 <VBox spacing="5">
                     <Label text="Fecha del concierto" />

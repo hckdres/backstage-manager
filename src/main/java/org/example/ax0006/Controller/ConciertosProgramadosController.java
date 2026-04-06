@@ -47,6 +47,9 @@ public class ConciertosProgramadosController {
     private TableColumn<Concierto, String> colAforo;
 
     @FXML
+    private TableColumn<Concierto, String> colNombreConcierto;
+
+    @FXML
     private TableColumn<Concierto, Void> colAccion;
 
     /*Es un boton para volver al menu*/
@@ -64,7 +67,12 @@ public class ConciertosProgramadosController {
     public void initialize() {
 
         colArtista.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getArtista().getNombre()));
+                new SimpleStringProperty(
+                        data.getValue().getArtista() != null
+                                ? data.getValue().getArtista().getNombre()
+                                : ""
+                )
+        );
 
         colFecha.setCellValueFactory(data ->
                 new SimpleStringProperty(data.getValue().getHorario().getFecha().toString()));
@@ -77,6 +85,10 @@ public class ConciertosProgramadosController {
 
         colAforo.setCellValueFactory(data ->
                 new SimpleStringProperty(String.valueOf(data.getValue().getAforo())));
+
+        colNombreConcierto.setCellValueFactory(data ->
+                new SimpleStringProperty(data.getValue().getNombreConcierto())
+        );
 
         agregarBotonCancelar();
         cargarConciertos();
@@ -114,7 +126,7 @@ public class ConciertosProgramadosController {
 
     /*Carga los datos de los conciertos para que sean cargados en la tabla*/
     private void cargarConciertos() {
-        List<Concierto> lista = conciertoService.obtenerConciertos();
+        List<Concierto> lista = conciertoService.obtenerConciertosSolos();
 
         List<Concierto> programados = lista.stream()
                 .filter(c -> c.isProgramado())

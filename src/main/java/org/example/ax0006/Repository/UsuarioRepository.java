@@ -8,7 +8,6 @@
 
 package org.example.ax0006.Repository;
 
-import org.example.ax0006.Entity.Rol;
 import org.example.ax0006.db.H2;
 import org.example.ax0006.Entity.Usuario;
 
@@ -22,7 +21,7 @@ import java.util.List;
 public class UsuarioRepository {
 
     private H2 h2;
-    private List<Usuario> Usuarios = new ArrayList<>();
+
     
 
     //CONSTRUCTOR
@@ -51,12 +50,10 @@ public class UsuarioRepository {
     //SE HACE LA CONSULTA AL NOMBRE QUE SE RECIBE COMO PARAMETRO A LA BASE DE DATOS.
     public Usuario buscarPorNombre(String nombre) {
         String sql = """
-                SELECT u.idUsuario, u.nombre, u.contrasena, u.gmail, u.idRol,
+                SELECT u.idUsuario, u.nombre, u.contrasena, u.gmail,
                        u.telefono, u.direccion,
-                       u.contactoEmergenciaNombre, u.contactoEmergenciaTelefono, u.contactoEmergenciaRelacion,
-                       r.idRol AS rol_id, r.rol AS rol_nombre
+                       u.contactoEmergenciaNombre, u.contactoEmergenciaTelefono, u.contactoEmergenciaRelacion
                 FROM Usuario u
-                LEFT JOIN Rol r ON u.idRol = r.idRol
                 WHERE u.nombre = ?
                 """;
 
@@ -77,12 +74,6 @@ public class UsuarioRepository {
                 u.setContactoEmergenciaNombre(rs.getString("contactoEmergenciaNombre"));
                 u.setContactoEmergenciaTelefono(rs.getString("contactoEmergenciaTelefono"));
                 u.setContactoEmergenciaRelacion(rs.getString("contactoEmergenciaRelacion"));
-
-                String rolNombre = rs.getString("rol_nombre");
-                if (rolNombre != null) {
-                    u.setRol(new Rol(rs.getInt("rol_id"), rolNombre));
-                }
-
                 return u;
             }
         } catch (SQLException e) {
@@ -105,7 +96,6 @@ public class UsuarioRepository {
                 u.setIdUsuario(rs.getInt("idUsuario"));
                 u.setNombre(rs.getString("nombre"));
                 u.setGmail(rs.getString("gmail"));
-
                 lista.add(u);
             }
         } catch (SQLException e) {
@@ -113,19 +103,7 @@ public class UsuarioRepository {
         }
         return lista;
     }
-    //PERMITE ACTUALIZAR EL ROL DEL USUARIO POR MEDIO DEL IDROL Y IDUSUARIO.
-    public void actualizarRol(int idUsuario, int idRol) {
-        String sql = "UPDATE Usuario SET idRol = ? WHERE idUsuario = ?";
-        try (Connection conn = h2.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, idRol);
-            stmt.setInt(2, idUsuario);
-            stmt.executeUpdate();
-            System.out.println("Rol actualizado para usuario id: " + idUsuario);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+
     //PERMITE BUSCAR EL USUARIO Y MOSTRARLO EN SU PERFIL
     public Usuario buscarCompletoPorId(int idUsuario) {
         String sql = """
@@ -134,16 +112,12 @@ public class UsuarioRepository {
             u.nombre,
             u.gmail,
             u.contrasena,
-            u.idRol,
             u.telefono,
             u.direccion,
             u.contactoEmergenciaNombre,
             u.contactoEmergenciaTelefono,
-            u.contactoEmergenciaRelacion,
-            r.idRol AS rolId,
-            r.rol AS nombreRol
+            u.contactoEmergenciaRelacion
         FROM Usuario u
-        LEFT JOIN Rol r ON u.idRol = r.idRol
         WHERE u.idUsuario = ?
     """;
 
@@ -164,14 +138,6 @@ public class UsuarioRepository {
                 u.setContactoEmergenciaNombre(rs.getString("contactoEmergenciaNombre"));
                 u.setContactoEmergenciaTelefono(rs.getString("contactoEmergenciaTelefono"));
                 u.setContactoEmergenciaRelacion(rs.getString("contactoEmergenciaRelacion"));
-
-                int rolId = rs.getInt("rolId");
-                String nombreRol = rs.getString("nombreRol");
-
-                if (nombreRol != null) {
-                    u.setRol(new Rol(rolId, nombreRol));
-                }
-
                 return u;
             }
 
