@@ -79,14 +79,33 @@ public class H2 {
                     nombre VARCHAR(255)
                 )
             """);
-
+            stmt.execute("""
+                CREATE TABLE IF NOT EXISTS Inventario(
+                    idInventario INT AUTO_INCREMENT PRIMARY KEY
+                )
+            """);
+//            stmt.execute("""
+//            DROP TABLE ObjetoInventario;
+//            """);
             stmt.execute("""
                 CREATE TABLE IF NOT EXISTS ObjetoInventario (
-                    idInventario INT AUTO_INCREMENT PRIMARY KEY,
+                    idInventario INT,
                     idTipoObjeto INT,
+                    PRIMARY KEY (idInventario, idTipoObjeto),
+                    FOREIGN KEY (idInventario) REFERENCES Inventario(idInventario),
                     FOREIGN KEY (idTipoObjeto) REFERENCES TipoObjeto(idTipoObjeto)
                 )
             """);
+            stmt.execute("""
+                CREATE TABLE IF NOT EXISTS InventarioHorario (
+                    PRIMARY KEY (idInventario, idHorario),
+                    idInventario INT,
+                    FOREIGN KEY (idInventario) REFERENCES Inventario(idInventario),
+                    idHorario INT,
+                    FOREIGN KEY (idHorario) REFERENCES Horario(idHorario)
+                )
+            """);
+
 
             stmt.execute("""
                 CREATE TABLE IF NOT EXISTS Concierto (
@@ -118,7 +137,7 @@ public class H2 {
                     idInventario INT,
                     idConcierto INT,
                     PRIMARY KEY (idInventario, idConcierto),
-                    FOREIGN KEY (idInventario) REFERENCES ObjetoInventario(idInventario),
+                    FOREIGN KEY (idInventario) REFERENCES Inventario(idInventario),
                     FOREIGN KEY (idConcierto) REFERENCES Concierto(idConcierto)
                 )
             """);
@@ -150,6 +169,15 @@ public class H2 {
             User: sa
             Password: vacío
            */
+// PARA BORRAR LA BASE DE DATOS
+//            stmt.execute("SET REFERENTIAL_INTEGRITY FALSE");
+//
+//            stmt.execute("DROP ALL OBJECTS");
+//
+//            stmt.execute("SET REFERENTIAL_INTEGRITY TRUE");
+//
+//            System.out.println("Base de datos limpiada");
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
