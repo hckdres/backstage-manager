@@ -1,0 +1,140 @@
+package org.example.ax0006.Controller;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+
+import org.example.ax0006.Entity.Clausula;
+import org.example.ax0006.Entity.Contrato;
+import org.example.ax0006.Manager.SceneManager;
+import org.example.ax0006.Service.ContratoService;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+public class CrearContratoController {
+
+    // =========================
+    // COMPONENTES FXML
+    // =========================
+    @FXML
+    private DatePicker dateFecha;
+
+    @FXML
+    private TextArea txtClausula;
+
+    @FXML
+    private ListView<String> listClausulas;
+
+    // =========================
+    // ATRIBUTOS
+    // =========================
+    private ObservableList<String> listaClausulas = FXCollections.observableArrayList();
+    private List<Clausula> clausulas = new ArrayList<>();
+
+    private SceneManager sceneManager;
+    private ContratoService contratoService;
+
+    // =========================
+    // CONSTRUCTOR
+    // =========================
+    public CrearContratoController(SceneManager sceneManager, ContratoService contratoService) {
+        this.sceneManager = sceneManager;
+        this.contratoService = contratoService;
+    }
+
+    // =========================
+    // INIT (cuando carga la vista)
+    // =========================
+    @FXML
+    public void initialize() {
+        listClausulas.setItems(listaClausulas);
+    }
+
+    // =========================
+    // AGREGAR CLAUSULA
+    // =========================
+    @FXML
+    public void agregarClausula() {
+
+        String texto = txtClausula.getText();
+
+        if (texto == null || texto.trim().isEmpty()) {
+            mostrarAlerta("Error", "La cláusula no puede estar vacía");
+            return;
+        }
+
+        // Crear objeto cláusula (sin id aún)
+        Clausula clausula = new Clausula();
+        clausula.setClausula(texto);
+
+        clausulas.add(clausula);
+        listaClausulas.add(texto);
+
+        txtClausula.clear();
+    }
+
+    // =========================
+    // GUARDAR CONTRATO
+    // =========================
+    @FXML
+    public void guardarContrato() {
+
+        LocalDate fecha = dateFecha.getValue();
+
+        if (fecha == null) {
+            mostrarAlerta("Error", "Debe seleccionar una fecha");
+            return;
+        }
+
+        if (clausulas.isEmpty()) {
+            mostrarAlerta("Error", "Debe agregar al menos una cláusula");
+            return;
+        }
+
+        // Crear contrato
+        Contrato contrato = new Contrato();
+        contrato.setFecha(fecha);
+        contrato.setClausulas(clausulas);
+
+        boolean creado = contratoService.crearContrato(contrato);
+
+        if (creado) {
+            mostrarAlerta("Éxito", "Contrato creado correctamente");
+
+            // limpiar todo
+            dateFecha.setValue(null);
+            txtClausula.clear();
+            listaClausulas.clear();
+            clausulas.clear();
+
+        } else {
+            mostrarAlerta("Error", "No se pudo crear el contrato");
+        }
+    }
+
+    // =========================
+    // CANCELAR
+    // =========================
+    @FXML
+    public void cancelar() {
+        try {
+            sceneManager.showMenu(); // o a donde quieras volver
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // =========================
+    // ALERTAS
+    // =========================
+    private void mostrarAlerta(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+}

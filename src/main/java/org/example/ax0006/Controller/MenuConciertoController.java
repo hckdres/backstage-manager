@@ -21,6 +21,12 @@ public class MenuConciertoController {
     private Button fid_bt_ConsultarProgramados;
 
     @FXML
+    private Button fid_bt_CrearContrato;
+
+    @FXML
+    private Button fid_bt_ConsultarContrato;
+
+    @FXML
     private Button fid_bt_volver;
 
 
@@ -70,6 +76,26 @@ public class MenuConciertoController {
     void On_ConsultarCProgramado(ActionEvent event) {
         try {
             sceneManager.showConciertosProgramados();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+     /* CREAR CONTRATO */
+    @FXML
+    void On_CrearContrato(ActionEvent event) {
+        try {
+            sceneManager.showCrearContrato();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+     /* CONSULTAR CONTRATO */
+    @FXML
+    void On_ConsultarContrato(ActionEvent event) {
+        try {
+            sceneManager.showConsultarContrato();
         } catch (IOException e) {
             e.printStackTrace();
         }

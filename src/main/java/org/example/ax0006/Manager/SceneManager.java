@@ -96,6 +96,22 @@ public class SceneManager {
         loadScene("/org/example/ax0006/verconciertosprogramados.fxml", conciertosProgramadosController);
     }
 
+    //Crear Contrato
+    public void showCrearContrato() throws IOException {
+    CrearContratoController controller =
+        new CrearContratoController(this, context.getContratoService());
+
+    loadScene("/org/example/ax0006/crearcontrato.fxml", controller);
+    }
+
+    //Consultar Contrato
+    public void showConsultarContrato() throws IOException {
+    ConsultarContratoController controller =
+        new ConsultarContratoController(this, context.getContratoService());
+
+    loadScene("/org/example/ax0006/consultarcontrato.fxml", controller);
+    }
+
     public void showMenuConcierto() throws IOException{
         MenuConciertoController menuConciertoController = new MenuConciertoController(this, context.getSesion());
         loadScene("/org/example/ax0006/menuconcierto.fxml", menuConciertoController);
