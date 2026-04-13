@@ -1,4 +1,5 @@
 package org.example.ax0006.Controller;
+
 import java.util.Optional;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.*;
@@ -7,7 +8,6 @@ import org.example.ax0006.Manager.SceneManager;
 import org.example.ax0006.Service.ConciertoService;
 import org.example.ax0006.Service.RolService;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.example.ax0006.Entity.Usuario;
@@ -15,12 +15,6 @@ import org.example.ax0006.Manager.SesionManager;
 import javafx.event.ActionEvent;
 import java.io.IOException;
 import org.example.ax0006.Entity.Rol;
-import org.example.ax0006.Repository.RolRepository;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import org.example.ax0006.Service.StaffService;
 
@@ -34,7 +28,7 @@ public class AdminUsuariosController {
     private ConciertoService conciertoService;
     private StaffService staffService;
 
-    public AdminUsuariosController(SesionManager sesion, RolService rolService, SceneManager sceneManager,ConciertoService conciertoService, StaffService staffService) {
+    public AdminUsuariosController(SesionManager sesion, RolService rolService, SceneManager sceneManager, ConciertoService conciertoService, StaffService staffService) {
         this.sesion = sesion;
         this.rolService = rolService;
         this.sceneManager = sceneManager;
@@ -42,8 +36,6 @@ public class AdminUsuariosController {
         this.staffService = staffService;
     }
 
-
-    //elementos de la pantalla de administracion de usuarios:
     @FXML
     private Label fid_Bienvenido;
 
@@ -59,23 +51,17 @@ public class AdminUsuariosController {
     @FXML
     private TableColumn<Usuario, String> colGmail;
 
-
-
-
-
     @FXML
     private TableColumn<Usuario, String> colNombreRol;
 
     @FXML
-    private TableColumn<Usuario, Void> colAccion; //columna para asignar rol
+    private TableColumn<Usuario, Void> colAccion;
+
+    @FXML
+    private TableColumn<Usuario, Void> colDirectorioStaff;
 
     @FXML
     private ComboBox<Object> comboConciertoFiltro;
-
-
-
-
-
 
     @FXML
     public void initialize() {
@@ -92,13 +78,12 @@ public class AdminUsuariosController {
 
         cargarComboConciertoFiltro();
         agregarBoton();
+        agregarBotonDirectorioStaff();
 
         comboConciertoFiltro.setOnAction(e -> actualizarTabla());
 
         cargarUsuariosSinAsignar();
-
     }
-
 
     private void cargarComboConciertoFiltro() {
         comboConciertoFiltro.getItems().clear();
@@ -110,14 +95,13 @@ public class AdminUsuariosController {
         );
         comboConciertoFiltro.setValue("Sin asignar");
 
-
         comboConciertoFiltro.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(Object item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) setText(null);
                 else if (item instanceof Concierto c)
-                            setText(c.getNombreConcierto());
+                    setText(c.getNombreConcierto());
                 else setText(item.toString());
             }
         });
@@ -134,7 +118,6 @@ public class AdminUsuariosController {
         });
     }
 
-    // Decide qué cargar según el filtro seleccionado
     private void actualizarTabla() {
         Object seleccionado = comboConciertoFiltro.getValue();
         if (seleccionado instanceof Concierto c) {
@@ -142,9 +125,9 @@ public class AdminUsuariosController {
         } else {
             cargarUsuariosSinAsignar();
         }
+        tablaUsuarios.refresh();
     }
 
-    // Usuarios que NO tienen ninguna asignación en RolConciertoUsuario
     private void cargarUsuariosSinAsignar() {
         List<Usuario> todos = rolService.obtenerUsuarios();
         List<Integer> asignados = staffService.obtenerIdsUsuariosAsignados();
@@ -154,13 +137,11 @@ public class AdminUsuariosController {
         tablaUsuarios.setItems(FXCollections.observableArrayList(sinAsignar));
     }
 
-    // Usuarios asignados a un concierto específico
     private void cargarUsuariosPorConcierto(Concierto concierto) {
         List<Usuario> usuarios = staffService.obtenerUsuariosPorConcierto(concierto.getIdConcierto());
         tablaUsuarios.setItems(FXCollections.observableArrayList(usuarios));
     }
 
-    // Obtiene el rol del usuario en el concierto actualmente filtrado
     private String obtenerRolEnConcierto(Usuario u) {
         Object seleccionado = comboConciertoFiltro.getValue();
         if (seleccionado instanceof Concierto c) {
@@ -172,6 +153,7 @@ public class AdminUsuariosController {
     private void agregarBoton() {
         colAccion.setCellFactory(param -> new TableCell<>() {
             private final Button btn = new Button("Asignar");
+
             {
                 btn.setOnAction(event -> {
                     Usuario u = getTableView().getItems().get(getIndex());
@@ -182,14 +164,55 @@ public class AdminUsuariosController {
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty) {
+                if (empty || getIndex() < 0 || getIndex() >= getTableView().getItems().size()) {
                     setGraphic(null);
                 } else {
-                    btn.setDisable(false);//pequeño cambio para que el boton estuviera disponible siempre para asignar mas roles asi ya tenga
+                    btn.setDisable(false);
                     setGraphic(btn);
                 }
             }
         });
+    }
+
+    private void agregarBotonDirectorioStaff() {
+        colDirectorioStaff.setCellFactory(param -> new TableCell<>() {
+            private final Button btn = new Button("Directorio Staff");
+
+            {
+                btn.setOnAction(event -> {
+                    Usuario u = getTableView().getItems().get(getIndex());
+                    abrirDirectorioStaff(u);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || getIndex() < 0 || getIndex() >= getTableView().getItems().size()) {
+                    setGraphic(null);
+                    return;
+                }
+
+                Usuario u = getTableView().getItems().get(getIndex());
+                Object seleccionado = comboConciertoFiltro.getValue();
+                String rol = obtenerRolEnConcierto(u);
+
+                if (seleccionado instanceof Concierto && rol != null && rol.equalsIgnoreCase("Staff")) {
+                    setGraphic(btn);
+                } else {
+                    setGraphic(null);
+                }
+            }
+        });
+    }
+
+    private void abrirDirectorioStaff(Usuario u) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Directorio Staff");
+        alert.setHeaderText("Directorio Staff");
+        alert.setContentText("Aquí se abrirá el directorio de subroles para: " + u.getNombre());
+        alert.showAndWait();
     }
 
     private void mostrarPopupRol(Usuario u) {
@@ -208,7 +231,6 @@ public class AdminUsuariosController {
         comboConciertos.getItems().addAll(conciertos);
         comboConciertos.setPromptText("Seleccionar concierto");
 
-        // Mostrar nombre legible en el combo de conciertos del popup
         comboConciertos.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(Concierto item, boolean empty) {
@@ -217,6 +239,7 @@ public class AdminUsuariosController {
                 else setText(item.getNombreConcierto());
             }
         });
+
         comboConciertos.setButtonCell(new ListCell<>() {
             @Override
             protected void updateItem(Concierto item, boolean empty) {
@@ -264,9 +287,3 @@ public class AdminUsuariosController {
         sceneManager.showMenu();
     }
 }
-
-
-
-
-
-

@@ -4,7 +4,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.example.ax0006.Controller.*;
-import org.example.ax0006.Repository.UsuarioRepository;
 
 import java.io.IOException;
 
@@ -86,12 +85,12 @@ public class SceneManager {
         loadScene("/org/example/ax0006/consultarsolicitudes.fxml", consultarSolicitudesController);
     }
 
-    public void showCrearConcierto() throws  IOException{
+    public void showCrearConcierto() throws IOException{
         CrearConciertoController crearConciertoController = new CrearConciertoController(context.getSesion(), context.getConciertoService(), this);
         loadScene("/org/example/ax0006/crearconcierto.fxml", crearConciertoController);
     }
 
-    public void showConciertosProgramados() throws  IOException{
+    public void showConciertosProgramados() throws IOException{
         ConciertosProgramadosController conciertosProgramadosController = new ConciertosProgramadosController(context.getSesion(), context.getConciertoService(), this);
         loadScene("/org/example/ax0006/verconciertosprogramados.fxml", conciertosProgramadosController);
     }
@@ -100,7 +99,6 @@ public class SceneManager {
         MenuConciertoController menuConciertoController = new MenuConciertoController(this, context.getSesion());
         loadScene("/org/example/ax0006/menuconcierto.fxml", menuConciertoController);
     }
-
 
     /*METODO PARA NO REPETIR ESTO COMO MIL VECES Y HACER QUE EL CAMBIO DE ESCENA SE VEA MAS LIMPIO*/
     private void loadScene(String fxml, Object controller) throws IOException {
@@ -114,6 +112,4 @@ public class SceneManager {
         Scene scene = new Scene(loader.load());
         stage.setScene(scene);
     }
-
-
 }
