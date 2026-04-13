@@ -4,7 +4,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.example.ax0006.Controller.*;
-import org.example.ax0006.Repository.UsuarioRepository;
 
 import java.io.IOException;
 
