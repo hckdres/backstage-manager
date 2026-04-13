@@ -99,10 +99,14 @@ public class CrearContratoController {
         contrato.setFecha(fecha);
         contrato.setClausulas(clausulas);
 
-        boolean creado = contratoService.crearContrato(contrato);
+        int idGenerado = contratoService.crearContrato(contrato);
 
-        if (creado) {
-            mostrarAlerta("Éxito", "Contrato creado correctamente");
+        if (idGenerado != 0) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Contrato creado");
+            alert.setHeaderText("¡Registro exitoso!");
+            alert.setContentText("El ID del contrato es:     " + idGenerado);
+            alert.showAndWait();
 
             // limpiar todo
             dateFecha.setValue(null);

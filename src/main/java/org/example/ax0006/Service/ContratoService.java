@@ -18,35 +18,32 @@ public class ContratoService {
     // =========================================
     // CREAR CONTRATO CON SUS CLAUSULAS
     // =========================================
-    public boolean crearContrato(Contrato contrato) {
+    public int crearContrato(Contrato contrato) {
 
-        // Validacion
-        if (contrato == null || contrato.getFecha() == null) {
-            return false;
+    if (contrato == null || contrato.getFecha() == null) {
+        return 0;
+    }
+
+    if (contrato.getClausulas() == null || contrato.getClausulas().isEmpty()) {
+        return 0;
+    }
+
+    // Guardar contrato
+    int idContrato = contratoRepo.guardar(contrato);
+
+    if (idContrato == 0) return 0;
+
+    // Guardar cláusulas
+    for (Clausula cl : contrato.getClausulas()) {
+        cl.setIdContrato(idContrato);
+
+        boolean guardado = contratoRepo.guardarClausula(cl);
+
+        if (!guardado) {
+            return 0;
         }
-
-        if (contrato.getClausulas() == null || contrato.getClausulas().isEmpty()) {
-            return false;
-        }
-
-        // 1. Guardar contrato
-        int idContrato = contratoRepo.guardar(contrato);
-
-        if (idContrato == 0) return false;
-
-        // 2. Guardar cláusulas
-        for (Clausula cl : contrato.getClausulas()) {
-
-            cl.setIdContrato(idContrato);
-
-            boolean guardado = contratoRepo.guardarClausula(cl);
-
-            if (!guardado) {
-                return false;
-            }
-        }
-
-        return true;
+    }
+    return idContrato; 
     }
 
     // =========================================
