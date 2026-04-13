@@ -1,6 +1,7 @@
 package org.example.ax0006.Controller;
 
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.event.ActionEvent;
@@ -9,9 +10,14 @@ import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 import org.example.ax0006.Manager.SceneManager;
 import org.example.ax0006.Manager.SesionManager;
-import org.example.ax0006.Service.ConciertoService;
+import org.example.ax0006.Repository.HorarioRepository;
+import org.example.ax0006.Repository.InventarioObjetoRepository;
+import org.example.ax0006.Repository.InventarioRepository;
+import org.example.ax0006.Repository.TipoObjetoRepository;
+import org.example.ax0006.Service.*;
 import org.example.ax0006.Entity.Horario;
 import org.example.ax0006.Entity.Concierto;
+import org.example.ax0006.db.H2;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -23,6 +29,8 @@ public class MenuController {
     /*ATRIBUTOS*/
     private SceneManager sceneManager;
     private SesionManager sesion;
+
+    private final H2 h2 = new H2();
 
     //BORRAR
     private ConciertoService conciertoService;
@@ -44,7 +52,10 @@ public class MenuController {
 
     @FXML
     private Button fid_bt_volver;
-
+    @FXML private Button bt_crearInventario;
+    @FXML private Button bt_crearTipoObjeto;
+    @FXML private Button bt_asignarObjeto;
+    @FXML private Button bt_consultarInventario;
     @FXML
     /*METODO QUE CAMBIA A LA PANTALLA DE LOGIN*/
     void On_btvolver(ActionEvent event) throws IOException {
@@ -87,6 +98,24 @@ public class MenuController {
     void On_Menu_Conciertos(ActionEvent event) throws IOException{
         sceneManager.showMenuConcierto();
     }
+    @FXML
+    void on_bt_crearInventario(ActionEvent event) throws IOException {
+        sceneManager.showCrearInventario();
+    }
 
+    @FXML
+    void on_bt_crearTipoObjeto(ActionEvent event) throws IOException {
+        sceneManager.showCrearTipoObjeto();
+    }
+
+    @FXML
+    void on_bt_asignarObjeto(ActionEvent event) throws IOException {
+        sceneManager.showAsignarObjeto();
+    }
+
+    @FXML
+    void on_bt_consultarInventario(ActionEvent event) throws IOException {
+        sceneManager.showConsultarInventario();
+    }
 
 }

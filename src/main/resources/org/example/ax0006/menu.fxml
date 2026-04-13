@@ -12,6 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: #f4f6f8;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+
    <!-- BARRA SUPERIOR -->
    <top>
       <HBox prefHeight="70.0" spacing="10" style="-fx-background-color: white; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
@@ -30,26 +31,60 @@
          </children>
       </HBox>
    </top>
+
    <!-- SIDEBAR -->
    <left>
       <VBox prefHeight="730.0" prefWidth="220.0" spacing="15" style="-fx-background-color: white; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 2, 0);">
          <children>
+
             <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="MENÚ" />
             <Separator />
+
             <Button fx:id="fid_Menu_Conciertos" onAction="#On_Menu_Conciertos" text="Menu Gestion Conciertos" />
+            <!-- CREAR INVENTARIO -->
+            <Button fx:id="bt_crearInventario"
+                    prefWidth="300.0"
+                    text="Crear Inventario"
+                    onAction="#on_bt_crearInventario"/>
+
+            <!-- CREAR TIPO OBJETO -->
+            <Button fx:id="bt_crearTipoObjeto"
+                    prefWidth="300.0"
+                    text="Crear Tipo de Objeto"
+                    onAction="#on_bt_crearTipoObjeto"/>
+
+            <!-- ASIGNAR OBJETO -->
+            <Button fx:id="bt_asignarObjeto"
+                    prefWidth="300.0"
+                    text="Asignar Objeto a Inventario"
+                    onAction="#on_bt_asignarObjeto"/>
+
+            <!-- CONSULTAR INVENTARIO -->
+            <Button fx:id="bt_consultarInventario"
+                    prefWidth="300.0"
+                    text="Consultar Inventario"
+                    onAction="#on_bt_consultarInventario"/>
+
             <Button fx:id="fid_bt_extra2" text="BOTON EXTRA" />
             <Button fx:id="fid_bt_extra3" text="BOTON EXTRA" />
             <Button fx:id="fid_bt_extra4" text="BOTON EXTRA" />
             <Button fx:id="fid_bt_extra5" text="BOTON EXTRA" />
+
             <Separator />
+
             <Button fx:id="fid_bt_admin" onAction="#On_admin" prefWidth="180" style="-fx-background-color: #ffcccc; -fx-text-fill: #c0392b; -fx-background-radius: 8;" text="Administrar Usuarios" />
+
             <Separator />
+
             <Button fx:id="fid_bt_volver" onAction="#On_btvolver" prefWidth="180" style="-fx-background-color: pink; -fx-text-fill: #7f8c8d; -fx-background-radius: 8;" text="Cerrar Sesión" />
+
          </children>
       </VBox>
    </left>
+
    <!-- CONTENIDO CENTRAL -->
    <center>
       <AnchorPane fx:id="fid_contenido" prefHeight="730.0" prefWidth="775.0" style="-fx-background-color: #f4f6f8;" />
    </center>
+
 </BorderPane>
