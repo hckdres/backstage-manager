@@ -2,9 +2,7 @@ package org.example.ax0006.Controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import org.example.ax0006.Entity.Concierto;
 import org.example.ax0006.Entity.Horario;
 import org.example.ax0006.Manager.SceneManager;
@@ -27,23 +25,16 @@ public class CrearConciertoController {
         this.sceneManager = sceneManager;
     }
 
-    @FXML
-    private TextField fid_nombreConcierto;
-
-    @FXML
-    private DatePicker fid_fecha_Inc;
-
-    @FXML
-    private DatePicker fid_fecha_Fin;
-
-    @FXML
-    private TextField fid_horaInicio;
-
-    @FXML
-    private TextField fid_horaFin;
-
-    @FXML
-    private TextField fid_aforo;
+    // =========================
+    // FXML
+    // =========================
+    @FXML private TextField fid_nombreConcierto;
+    @FXML private DatePicker fid_fecha_Inc;
+    @FXML private DatePicker fid_fecha_Fin;
+    @FXML private TextField fid_horaInicio;
+    @FXML private TextField fid_horaFin;
+    @FXML private TextField fid_aforo;
+    @FXML private Button fid_bt_agregarContrato;
 
     // =========================
     // INIT
@@ -53,6 +44,12 @@ public class CrearConciertoController {
 
         // 🔹 recuperar contrato
         idContrato = sesion.getIdContratoTemporal();
+
+        // 🔒 bloquear botón si ya hay contrato
+        if (idContrato != null) {
+            fid_bt_agregarContrato.setDisable(true);
+            fid_bt_agregarContrato.setText("Contrato ya agregado");
+        }
 
         // 🔹 recuperar concierto temporal
         Concierto temp = sesion.getConciertoTemporal();
@@ -112,13 +109,16 @@ public class CrearConciertoController {
 
             int aforo = Integer.parseInt(fid_aforo.getText());
 
-            // Fechas
             if (fid_fecha_Inc.getValue() == null || fid_fecha_Fin.getValue() == null) {
                 alertaConcierto("Debe seleccionar las fechas");
                 return;
             }
 
-            // Horas
+            if (fid_horaInicio.getText().isEmpty() || fid_horaFin.getText().isEmpty()) {
+                alertaConcierto("Debe ingresar las horas");
+                return;
+            }
+
             LocalTime horaInicio = LocalTime.parse(verifcarHora(fid_horaInicio.getText()));
             LocalTime horaFin = LocalTime.parse(verifcarHora(fid_horaFin.getText()));
 
@@ -140,7 +140,7 @@ public class CrearConciertoController {
 
             conciertoService.crearConcierto(concierto);
 
-            // limpiar temporales
+            // 🧹 limpiar sesión
             sesion.setConciertoTemporal(null);
             sesion.setIdContratoTemporal(null);
 
@@ -158,11 +158,16 @@ public class CrearConciertoController {
     @FXML
     public void On_agregarContrato() {
 
+        // 🔒 evitar múltiples contratos
+        if (idContrato != null) {
+            alertaConcierto("Ya existe un contrato asociado a este concierto");
+            return;
+        }
+
         Concierto temp = new Concierto();
 
         temp.setNombreConcierto(fid_nombreConcierto.getText());
 
-        // aforo seguro
         if (!fid_aforo.getText().isEmpty()) {
             temp.setAforo(Integer.parseInt(fid_aforo.getText()));
         }
@@ -171,7 +176,6 @@ public class CrearConciertoController {
         h.setFechaInicio(fid_fecha_Inc.getValue());
         h.setFechaFin(fid_fecha_Fin.getValue());
 
-        // horas seguras
         try {
             if (!fid_horaInicio.getText().isEmpty()) {
                 h.setHoraInicio(LocalTime.parse(verifcarHora(fid_horaInicio.getText())));
@@ -180,12 +184,12 @@ public class CrearConciertoController {
                 h.setHoraFin(LocalTime.parse(verifcarHora(fid_horaFin.getText())));
             }
         } catch (Exception e) {
-            // ignora si no están completas
+            // evita que se rompa si el usuario escribe mal
         }
 
         temp.setHorario(h);
 
-        // guardar en sesión
+        // guardar temporal
         sesion.setConciertoTemporal(temp);
 
         try {
@@ -209,7 +213,7 @@ public class CrearConciertoController {
     void alertaConcierto(String msg){
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
-        alert.setHeaderText("No se pudo crear el concierto");
+        alert.setHeaderText("No se pudo continuar");
         alert.setContentText(msg);
         alert.showAndWait();
     }
