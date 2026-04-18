@@ -40,6 +40,9 @@ public class StartController extends Application {
         ConciertoRepository conciertoRepo = new ConciertoRepository(h2);
         AsignacionStaffRepository asignacionStaffRepo = new AsignacionStaffRepository(h2);
 
+        NominaRepository nominaRepository = new NominaRepository(h2);
+        NominaService nominaService = new NominaService(nominaRepository, conciertoRepo, asignacionStaffRepo);
+
         // SERVICIOS
         AutenticacionService autenService = new AutenticacionService(usuarioRepo);
         ProfileService profileService = new ProfileService(usuarioRepo);
@@ -60,6 +63,8 @@ public class StartController extends Application {
                 conciertoService,
                 sesion,
                 staffService
+                nominaRepository,
+                nominaService
         );
 
 

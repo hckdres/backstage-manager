@@ -24,6 +24,8 @@ public class ContextManager {
     private HorarioRepository horarioRepo;
     private ConciertoRepository conciertoRepo;
     private StaffService staffService;
+    private NominaRepository nominaRepository;
+    private NominaService nominaService;
 
 
     public ContextManager(
@@ -50,6 +52,8 @@ public class ContextManager {
         this.rolService = rolService;
         this.sesion = sesion;
         this.staffService = staffService;
+        this.nominaRepository = nominaRepository;
+        this.nominaService = nominaService;
     }
 
     public H2 getH2() {
@@ -83,4 +87,8 @@ public class ContextManager {
     public ConciertoService getConciertoService() {return conciertoService;}
 
     public StaffService getStaffService() { return staffService; }
+
+    public NominaRepository getNominaRepository() { return nominaRepository; }
+
+    public NominaService getNominaService() { return nominaService; }
 }
