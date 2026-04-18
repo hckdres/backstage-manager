@@ -21,8 +21,8 @@ public class ConciertoRepository {
     public int guardar(Concierto c, int idHorario) {
 
         String sql = """
-        INSERT INTO Concierto (nombreConcierto, idHorario, aforo, programado)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO Concierto (nombreConcierto, idHorario, aforo, idContrato, programado)
+        VALUES (?, ?, ?, ?, ?)
     """;
 
         int idConciertoGenerado = 0;
@@ -33,7 +33,8 @@ public class ConciertoRepository {
             stmt.setString(1, c.getNombreConcierto());
             stmt.setInt(2, idHorario);
             stmt.setInt(3, c.getAforo());
-            stmt.setBoolean(4, c.isProgramado());
+            stmt.setInt(4,c.getIdContrato());
+            stmt.setBoolean(5, c.isProgramado());
 
             stmt.executeUpdate();
 

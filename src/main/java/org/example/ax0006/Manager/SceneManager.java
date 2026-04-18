@@ -14,6 +14,7 @@ public class SceneManager {
     /*ATRIBUTOS*/
     private Stage stage;
     private ContextManager context;
+    private Integer contratoTemporal;
 
     /*CONSTRUCTOR*/
     public SceneManager(Stage stage, ContextManager context) {
@@ -97,9 +98,11 @@ public class SceneManager {
 
     //Crear Contrato
     public void showCrearContrato() throws IOException {
-    CrearContratoController controller =
-        new CrearContratoController(this, context.getContratoService());
-
+    CrearContratoController controller = new CrearContratoController(
+        this,
+        context.getContratoService(),
+        context.getSesion() // 🔥 AQUÍ
+    );
     loadScene("/org/example/ax0006/crearcontrato.fxml", controller);
     }
 
@@ -116,6 +119,13 @@ public class SceneManager {
         loadScene("/org/example/ax0006/menuconcierto.fxml", menuConciertoController);
     }
 
+    public void setContratoTemporal(Integer id) {
+    this.contratoTemporal = id;
+    }
+
+    public Integer getContratoTemporal() {
+    return contratoTemporal;
+    }
 
     /*METODO PARA NO REPETIR ESTO COMO MIL VECES Y HACER QUE EL CAMBIO DE ESCENA SE VEA MAS LIMPIO*/
     private void loadScene(String fxml, Object controller) throws IOException {

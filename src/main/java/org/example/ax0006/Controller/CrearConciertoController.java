@@ -20,11 +20,17 @@ public class CrearConciertoController {
     private SesionManager sesion;
     private ConciertoService conciertoService;
     private SceneManager sceneManager;
+    private Integer idContrato = null;
 
     public CrearConciertoController(SesionManager sesion, ConciertoService conciertoService, SceneManager sceneManager){
         this.sesion = sesion;
         this.conciertoService = conciertoService;
         this.sceneManager = sceneManager;
+    }
+    
+    @FXML
+    public void initialize() {
+        idContrato = sesion.getIdContratoTemporal();
     }
 
     @FXML
@@ -48,6 +54,11 @@ public class CrearConciertoController {
     @FXML
     /*Metodo en donde se crea el concierto, obteiendo los datos de los campos*/
     void On_crearConcierto(ActionEvent event) {
+
+        if (idContrato == null) {
+            alertaConcierto("Debe agregar un contrato antes de crear el concierto");
+            return;
+        }
 
         try {
             // Fecha
@@ -81,6 +92,7 @@ public class CrearConciertoController {
             concierto.setAforo(aforo);
             concierto.setArtista(sesion.getUsuarioActual());
             concierto.setProgramado(false); // importante
+            concierto.setIdContrato(idContrato);
 
             /*Genera la pantalla de exito*/
             conciertoService.crearConcierto(concierto);
@@ -92,6 +104,34 @@ public class CrearConciertoController {
             /*Genera la pantalla de error*/
             alertaConcierto("llene todos los campos con los formatos requeridos");
         }
+    }
+
+    @FXML
+    public void On_agregarContrato() {
+
+    Concierto temp = new Concierto();
+
+    temp.setNombreConcierto(fid_nombreConcierto.getText());
+    temp.setAforo(Integer.parseInt(fid_aforo.getText()));
+
+    // Horario
+    Horario h = new Horario();
+    h.setFechaInicio(fid_fecha_Inc.getValue());
+    h.setFechaFin(fid_fecha_Fin.getValue());
+
+    h.setHoraInicio(LocalTime.parse(fid_horaInicio.getText()));
+    h.setHoraFin(LocalTime.parse(fid_horaFin.getText()));
+
+    temp.setHorario(h);
+
+    // guardar temporalmente
+    sesion.setConciertoTemporal(temp);
+
+    try {
+        sceneManager.showCrearContrato();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
     }
 
     @FXML

@@ -5,9 +5,11 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+
 import org.example.ax0006.Entity.Clausula;
 import org.example.ax0006.Entity.Contrato;
 import org.example.ax0006.Manager.SceneManager;
+import org.example.ax0006.Manager.SesionManager;
 import org.example.ax0006.Service.ContratoService;
 
 import java.time.LocalDate;
@@ -35,14 +37,16 @@ public class CrearContratoController {
     private List<Clausula> clausulas = new ArrayList<>();
 
     private SceneManager sceneManager;
+    private SesionManager sesion;
     private ContratoService contratoService;
 
     // =========================
     // CONSTRUCTOR
     // =========================
-    public CrearContratoController(SceneManager sceneManager, ContratoService contratoService) {
-        this.sceneManager = sceneManager;
-        this.contratoService = contratoService;
+    public CrearContratoController(SceneManager sceneManager, ContratoService contratoService, SesionManager sesion) {
+    this.sceneManager = sceneManager;
+    this.contratoService = contratoService;
+    this.sesion = sesion;
     }
 
     // =========================
@@ -99,24 +103,27 @@ public class CrearContratoController {
         contrato.setFecha(fecha);
         contrato.setClausulas(clausulas);
 
-        int idGenerado = contratoService.crearContrato(contrato);
+        int idContrato = contratoService.crearContrato(contrato);
+       
+        if (idContrato != 0) {
 
-        if (idGenerado != 0) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Contrato creado");
-            alert.setHeaderText("¡Registro exitoso!");
-            alert.setContentText("El ID del contrato es:     " + idGenerado);
-            alert.showAndWait();
+        sesion.setIdContratoTemporal(idContrato); // ✅ correcto
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Contrato creado");
+        alert.setHeaderText("¡Registro exitoso!");
+        alert.setContentText("El ID del contrato es: " + idContrato);
+        alert.showAndWait();
 
-            // limpiar todo
-            dateFecha.setValue(null);
-            txtClausula.clear();
-            listaClausulas.clear();
-            clausulas.clear();
-
-        } else {
+        try {
+            sceneManager.showCrearConcierto(); 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+}
+        else {
             mostrarAlerta("Error", "No se pudo crear el contrato");
         }
+
     }
 
     // =========================
@@ -125,7 +132,7 @@ public class CrearContratoController {
     @FXML
     public void cancelar() {
         try {
-            sceneManager.showMenu(); // o a donde quieras volver
+            sceneManager.showCrearConcierto(); // o a donde quieras volver
         } catch (Exception e) {
             e.printStackTrace();
         }
