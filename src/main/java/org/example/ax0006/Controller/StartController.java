@@ -14,6 +14,8 @@ import org.example.ax0006.Service.*;
 import org.example.ax0006.Manager.SceneManager;
 import org.example.ax0006.Service.ConciertoService;
 import org.example.ax0006.Service.ProfileService;
+import org.example.ax0006.Validator.ConciertoValidator;
+import org.example.ax0006.Validator.HorarioValidator;
 import org.example.ax0006.db.H2;
 
 import org.example.ax0006.Service.RolService;
@@ -28,10 +30,13 @@ public class StartController extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-
         // BASE DE DATOS
         H2 h2 = new H2();
         h2.inicializarDB();
+
+        // VALIDATORS
+        HorarioValidator horarioValidator = new HorarioValidator();
+        ConciertoValidator conciertoValidator = new ConciertoValidator(horarioValidator);
 
         // REPOSITORIOS
         UsuarioRepository usuarioRepo = new UsuarioRepository(h2);
@@ -44,7 +49,7 @@ public class StartController extends Application {
         AutenticacionService autenService = new AutenticacionService(usuarioRepo);
         ProfileService profileService = new ProfileService(usuarioRepo);
         RolService rolService = new RolService(rolRepo, usuarioRepo);
-        ConciertoService conciertoService = new ConciertoService(conciertoRepo, horarioRepo);
+        ConciertoService conciertoService = new ConciertoService(conciertoRepo, horarioRepo, conciertoValidator);
         StaffService staffService = new StaffService(usuarioRepo, asignacionStaffRepo);
         // MANAGERS
         SesionManager sesion = new SesionManager();

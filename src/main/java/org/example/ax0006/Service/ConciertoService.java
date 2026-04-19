@@ -3,6 +3,7 @@ package org.example.ax0006.Service;
 import org.example.ax0006.Entity.Concierto;
 import org.example.ax0006.Repository.ConciertoRepository;
 import org.example.ax0006.Repository.HorarioRepository;
+import org.example.ax0006.Validator.ConciertoValidator;
 
 import java.util.List;
 
@@ -10,13 +11,17 @@ public class ConciertoService {
 
     private ConciertoRepository conciertoRepo;
     private HorarioRepository horarioRepo;
+    private ConciertoValidator conciertoValidator;
 
-    public ConciertoService(ConciertoRepository conciertoRepo, HorarioRepository horarioRepo) {
+    public ConciertoService(ConciertoRepository conciertoRepo, HorarioRepository horarioRepo, ConciertoValidator conciertoValidator) {
         this.conciertoRepo = conciertoRepo;
         this.horarioRepo = horarioRepo;
+        this.conciertoValidator = conciertoValidator;
     }
 
     public void crearConcierto(Concierto c) {
+
+        conciertoValidator.validar(c);
 
         // 1. Guardar horario
         int idHorario = horarioRepo.guardar(c.getHorario());
