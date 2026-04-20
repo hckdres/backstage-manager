@@ -142,7 +142,7 @@ public class InventarioRepository {
         return lista;
     }
 
-    // Eliminar inventario (opcional)
+    // Eliminar inventario
     public void eliminar(int idInventario) {
 
         String sql = "DELETE FROM Inventario WHERE idInventario = ?";

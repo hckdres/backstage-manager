@@ -14,6 +14,7 @@ public class ConciertoObjetoRepository {
         this.h2 = h2;
     }
 
+    /*Metodo para asignar un objeto a un concierto*/
     public void asignarObjeto(int idConcierto, int idObjeto) {
 
         String sql = """
@@ -33,7 +34,8 @@ public class ConciertoObjetoRepository {
         }
     }
 
-    public void eliminarAsignacion(int idConcierto, int idObjeto) {
+    /*Metodo para eliminar un objeto de un concierto*/
+    public void eliminarObjeto(int idConcierto, int idObjeto) {
 
         String sql = """
             DELETE FROM ConciertoObjeto

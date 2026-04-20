@@ -16,9 +16,13 @@ public class InventarioService {
 
     public void asignarObjetoAConcierto(int idConcierto, int idObjeto) {
 
+        /*
         if (!objetoRepo.estaDisponible(idObjeto)) {
             throw new IllegalStateException("El objeto no está disponible");
         }
+
+        Confirmacion pendiente para que lo haga un validator
+        */
 
         // 1. asignar relación
         conciertoObjetoRepo.asignarObjeto(idConcierto, idObjeto);
@@ -30,7 +34,7 @@ public class InventarioService {
     public void liberarObjetoDeConcierto(int idConcierto, int idObjeto) {
 
         // 1. eliminar relación
-        conciertoObjetoRepo.eliminarAsignacion(idConcierto, idObjeto);
+        conciertoObjetoRepo.eliminarObjeto(idConcierto, idObjeto);
 
         // 2. volver disponible
         objetoRepo.actualizarDisponibilidad(idObjeto, true);
