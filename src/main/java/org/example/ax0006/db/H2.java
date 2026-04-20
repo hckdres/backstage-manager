@@ -134,6 +134,22 @@ public class H2 {
                     FOREIGN KEY (idConcierto) REFERENCES Concierto(idConcierto)
                 )
             """);
+
+            stmt.execute("""
+                CREATE TABLE IF NOT EXISTS Nomina (
+                    idNomina INT AUTO_INCREMENT PRIMARY KEY,
+                    idConcierto INT NOT NULL,
+                    idUsuario INT NOT NULL,
+                    horasTrabajadas DECIMAL(10,2),
+                    tarifaPorHora DECIMAL(10,2),
+                    horasExtra DECIMAL(10,2),
+                    total DECIMAL(10,2),
+                    pagado BOOLEAN DEFAULT FALSE,
+                    FOREIGN KEY (idConcierto) REFERENCES Concierto(idConcierto),
+                    FOREIGN KEY (idUsuario) REFERENCES Usuario(idUsuario)
+                )
+            """);
+
             //Crear roles con el idRol para eso toca mergear tablas para colocar los roles dentro de rol con los ids.
             //con merge into se evitan duplicados cada vez que se ejecute el programa.
             stmt.execute("""

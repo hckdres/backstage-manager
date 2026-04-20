@@ -67,7 +67,7 @@ public class StartController extends Application {
                 rolService,
                 conciertoService,
                 sesion,
-                staffService
+                staffService,
                 nominaRepository,
                 nominaService
         );

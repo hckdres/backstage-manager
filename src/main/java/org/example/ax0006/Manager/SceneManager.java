@@ -100,10 +100,15 @@ public class SceneManager {
         loadScene("/org/example/ax0006/menuconcierto.fxml", menuConciertoController);
     }
 
-    public void showLiquidacionHoras() throws IOException {
-        NominaController controller = new NominaController(this, context.getSesion(),
-                context.getConciertoService(), context.getNominaService(), context.getStaffService());
-        loadScene("/org/example/ax0006/liquidacionhoras.fxml", controller);
+    public void showLiquidacionHoras() {
+        NominaController controller = new NominaController(
+                this,
+                context.getSesion(),
+                context.getConciertoService(),
+                context.getNominaService(),
+                context.getStaffService()
+        );
+        controller.show(stage);
     }
 
     /*METODO PARA NO REPETIR ESTO COMO MIL VECES Y HACER QUE EL CAMBIO DE ESCENA SE VEA MAS LIMPIO*/

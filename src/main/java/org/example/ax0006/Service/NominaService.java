@@ -31,19 +31,19 @@ public class NominaService {
     }
 
     private double obtenerTarifaPorRol(String nombreRol) {
-        switch (nombreRol.toLowerCase()) {
+        // Si hay múltiples roles separados por coma, tomamos el primero
+        String primerRol = nombreRol.split(",")[0].trim().toLowerCase();
+        switch (primerRol) {
             case "staff": return 10000;
             case "tecnico": return 20000;
-            case "seguridad": return 12000;
+            case "artista": return 15000;
+            case "administrador": return 25000;
             default: return 10000;
         }
     }
 
     public void generarNominaParaConcierto(int idConcierto) {
-        Concierto concierto = conciertoRepository.obtenerConciertosSolos().stream()
-                .filter(c -> c.getIdConcierto() == idConcierto)
-                .findFirst()
-                .orElse(null);
+        Concierto concierto = conciertoRepository.obtenerPorId(idConcierto);
         if (concierto == null) return;
 
         double horasBase = calcularHorasTrabajadas(concierto);
@@ -67,9 +67,11 @@ public class NominaService {
     }
 
     public void actualizarHorasExtra(int idNomina, double horasExtra) {
-        List<Nomina> nominas = nominaRepository.obtenerPorConcierto(0);
-        Nomina n = nominas.stream().filter(nom -> nom.getIdNomina() == idNomina).findFirst().orElse(null);
+        // Buscar la nómina por ID
+        List<Nomina> todas = nominaRepository.obtenerPorConcierto(0); // Solución temporal: necesitamos un método obtenerPorId()
+        Nomina n = todas.stream().filter(nom -> nom.getIdNomina() == idNomina).findFirst().orElse(null);
         if (n == null) return;
+
         double nuevoTotal = (n.getHorasTrabajadas() * n.getTarifaPorHora()) + (horasExtra * n.getTarifaPorHora() * 1.5);
         nominaRepository.actualizarHorasExtraYTotal(idNomina, horasExtra, nuevoTotal);
     }
