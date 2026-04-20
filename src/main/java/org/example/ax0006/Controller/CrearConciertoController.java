@@ -87,6 +87,8 @@ public class CrearConciertoController {
 
             exitoConcierto();
 
+        } catch (IllegalArgumentException e) { /*Se reciven las excepciones personalidazadas del validator*/
+            alertaConcierto(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             /*Genera la pantalla de error*/
