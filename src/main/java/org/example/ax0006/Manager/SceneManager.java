@@ -103,6 +103,11 @@ public class SceneManager {
         loadScene("/org/example/ax0006/inventariodetalle.fxml", inventarioDetalleController);
     }
 
+    public void showCrearObjeto() throws IOException{
+        CrearObjetoController crearObjetoController = new CrearObjetoController(this, context.getSesion(), context.getObjetoService());
+        loadScene("/org/example/ax0006/crearobjeto.fxml", crearObjetoController);
+    }
+
     private void loadScene(String fxml, Object controller) throws IOException {
 
         FXMLLoader loader = new FXMLLoader(

@@ -42,41 +42,29 @@ public class ModeloObjetoRepository {
     }
 
     // Listar modelos con su tipo
-    public List<ModeloObjeto> obtenerTodos() {
+    public List<ModeloObjeto> obtenerPorTipo(int idTipo) {
 
-        List<ModeloObjeto> lista = new ArrayList<>();
+        List<ModeloObjeto> modelos = new ArrayList<>();
 
-        String sql = """
-            SELECT m.idModelo, m.nombre AS modeloNombre,
-                   t.idTipoObjeto, t.nombre AS tipoNombre
-            FROM ModeloObjeto m
-            JOIN TipoObjeto t ON m.idTipoObjeto = t.idTipoObjeto
-        """;
+        String sql = "SELECT * FROM ModeloObjeto WHERE idTipoObjeto = ?";
 
         try (Connection conn = h2.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idTipo);
+            ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-
-                TipoObjeto tipo = new TipoObjeto(
-                        rs.getInt("idTipoObjeto"),
-                        rs.getString("tipoNombre")
-                );
-
-                ModeloObjeto modelo = new ModeloObjeto(
-                        rs.getInt("idModelo"),
-                        rs.getString("modeloNombre"),
-                        tipo
-                );
-
-                lista.add(modelo);
+                ModeloObjeto m = new ModeloObjeto();
+                m.setIdModelo(rs.getInt("idModelo"));
+                m.setNombre(rs.getString("nombre"));
+                modelos.add(m);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return lista;
+        return modelos;
     }
 }

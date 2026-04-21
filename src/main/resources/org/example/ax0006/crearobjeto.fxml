@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane>
+
+    <BorderPane xmlns="http://javafx.com/javafx"
+                xmlns:fx="http://javafx.com/fxml">
+
+        <!-- TABLA ARRIBA -->
+        <center>
+            <TableView fx:id="tablaObjetos" prefHeight="400">
+                <!-- columnas -->
+            </TableView>
+        </center>
+
+        <!-- FORMULARIO ABAJO -->
+        <bottom>
+            <VBox spacing="10" style="-fx-padding: 15; -fx-background-color: #f3f4f6;">
+
+                <Label text="Agregar Objeto"
+                       style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+                <HBox spacing="10">
+                    <ComboBox fx:id="comboTipo" promptText="Tipo"/>
+                    <Button text="+"/>
+                </HBox>
+
+                <HBox spacing="10">
+                    <ComboBox fx:id="comboModelo" promptText="Modelo"/>
+                    <Button text="+"/>
+                </HBox>
+
+                <HBox spacing="10">
+                    <TextField fx:id="txtEstado" promptText="Estado"/>
+                    <TextField fx:id="txtObs" promptText="Observaciones"/>
+                </HBox>
+
+                <Button text="Crear Objeto" onAction="#On_crearObjeto"/>
+
+            </VBox>
+        </bottom>
+
+    </BorderPane>
+
+
+</AnchorPane>

@@ -60,4 +60,6 @@ public class TipoObjetoRepository {
 
         return lista;
     }
+
+
 }

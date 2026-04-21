@@ -85,8 +85,8 @@ public class InventarioDetalleController {
 
 
     @FXML
-    void On_agregarObjeto() {
-        //sceneManager.showCrearObjeto(inventario);
+    void On_agregarObjeto() throws IOException {
+        sceneManager.showCrearObjeto();
     }
 
     @FXML
