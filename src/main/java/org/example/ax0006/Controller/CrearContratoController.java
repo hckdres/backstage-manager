@@ -7,6 +7,7 @@ import javafx.scene.control.*;
 
 
 import org.example.ax0006.Entity.Clausula;
+import org.example.ax0006.Entity.Concierto;
 import org.example.ax0006.Entity.Contrato;
 import org.example.ax0006.Manager.SceneManager;
 import org.example.ax0006.Manager.SesionManager;
@@ -85,12 +86,21 @@ public class CrearContratoController {
     // =========================
     @FXML
     public void guardarContrato() {
-
+        Concierto conciertoTemp = sesion.getConciertoTemporal();
         LocalDate fecha = dateFecha.getValue();
 
         if (fecha == null) {
             mostrarAlerta("Error", "Debe seleccionar una fecha");
             return;
+        }
+        
+        if (conciertoTemp != null 
+        && conciertoTemp.getHorario() != null 
+        && conciertoTemp.getHorario().getFechaInicio() != null) {
+            if (fecha.isAfter(conciertoTemp.getHorario().getFechaInicio())) {
+                mostrarAlerta("Error", "La fecha del contrato debe ser anterior a la del concierto");
+                return;
+            }
         }
 
         if (clausulas.isEmpty()) {

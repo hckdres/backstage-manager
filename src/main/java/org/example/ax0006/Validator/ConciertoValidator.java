@@ -1,6 +1,7 @@
 package org.example.ax0006.Validator;
 
 import org.example.ax0006.Entity.Concierto;
+import org.example.ax0006.Entity.Contrato;
 
 public class ConciertoValidator {
 
@@ -10,7 +11,7 @@ public class ConciertoValidator {
         this.horarioValidator = horarioValidator;
     }
 
-    public void validar(Concierto c) {
+    public void validar(Concierto c, Contrato contrato) {
 
         if (c == null) {
             throw new IllegalArgumentException("El concierto es nulo");
@@ -27,6 +28,10 @@ public class ConciertoValidator {
         if (c.getArtista() == null) {
             throw new IllegalArgumentException("El artista es nulo");
         }
+
+        if (contrato.getFecha().isAfter(c.getHorario().getFechaInicio())) {
+        throw new IllegalArgumentException("La fecha de contrato debe ser PREVIA al concierto");
+        }   
         horarioValidator.validar(c.getHorario());
     }
 }
