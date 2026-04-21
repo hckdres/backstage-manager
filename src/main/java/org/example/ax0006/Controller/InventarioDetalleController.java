@@ -25,6 +25,8 @@ public class InventarioDetalleController {
     @FXML
     private TableColumn<Objeto, String> colEstado;
     @FXML
+    private TableColumn<Objeto, String> colObservacion;
+    @FXML
     private TableColumn<Objeto, Boolean> colDisponible;
     @FXML
     private TableColumn<Objeto, String> colTipoObjeto;
@@ -80,6 +82,8 @@ public class InventarioDetalleController {
         colDisponible.setCellValueFactory(data ->
                 new SimpleBooleanProperty(data.getValue().isDisponible()));
 
+        colObservacion.setCellValueFactory(data ->
+                new SimpleStringProperty(data.getValue().getObservaciones()));
         cargarObjetos();
     }
 

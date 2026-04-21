@@ -27,6 +27,7 @@
                   <TableColumn fx:id="colTipoObjeto" text="Tipo de Objeto" />
                         <TableColumn fx:id="colModelo" text="Modelo" />
                         <TableColumn fx:id="colEstado" text="Estado" />
+                  <TableColumn fx:id="colObservacion" text="Observacion" />
                         <TableColumn fx:id="colDisponible" text="Disponible" />
                     </columns>
                <columnResizePolicy>
