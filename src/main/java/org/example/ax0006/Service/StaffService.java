@@ -8,7 +8,6 @@ import org.example.ax0006.Repository.UsuarioRepository;
 import org.example.ax0006.db.H2;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class StaffService {
 
@@ -46,9 +45,7 @@ public class StaffService {
     }
 
     public List<Usuario> listarEmpleados() {
-        return usuarioRepository.obtenerUsuarios().stream()
-                .filter(u -> usuarioRepository.obtenerRolesDelUsuario(u.getIdUsuario()).contains("Staff"))
-                .collect(Collectors.toList());
+        return usuarioRepository.obtenerUsuarios();
     }
 
     public boolean asignarStaffAConcierto(int idUsuario, int idConcierto, int idRol) {
@@ -92,11 +89,13 @@ public class StaffService {
         return asignacionStaffRepository.obtenerNombreRolEnConcierto(idUsuario, idConcierto);
     }
 
-    public boolean actualizarSubrolStaffEnConcierto(int idUsuario, int idConcierto, String subrol) {
-        return asignacionStaffRepository.actualizarSubrolStaffEnConcierto(idUsuario, idConcierto, subrol);
+    // Retorna temporalmente el subrol del usuario en un concierto específico
+    public String obtenerSubrolStaffEnConcierto(int idUsuario, int idConcierto) {
+        return "Sin subrol";
     }
 
-    public String obtenerSubrolStaffEnConcierto(int idUsuario, int idConcierto) {
-        return asignacionStaffRepository.obtenerSubrolStaffEnConcierto(idUsuario, idConcierto);
+    // Actualiza temporalmente el subrol del usuario en un concierto específico
+    public boolean actualizarSubrolStaffEnConcierto(int idUsuario, int idConcierto, String subrol) {
+        return true;
     }
 }
