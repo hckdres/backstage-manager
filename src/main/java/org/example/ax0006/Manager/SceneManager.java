@@ -7,39 +7,31 @@ import org.example.ax0006.Controller.*;
 
 import java.io.IOException;
 
-
-/*ESTA CLASE ES LA QUE HACE TODO EL CAMBIO DE ESCENAS POSIBLE AL ENVIAR LA INFORMACION Y AL SIMPLIFICAR EL CAMBIAR DE ESCENA*/
 public class SceneManager {
 
-    /*ATRIBUTOS*/
-    private Stage stage;
-    private ContextManager context;
+    private final Stage stage;
+    private final ContextManager context;
 
-    /*CONSTRUCTOR*/
     public SceneManager(Stage stage, ContextManager context) {
         this.stage = stage;
         this.context = context;
     }
 
-    /*METODO PARA MOSTRAR EL LOGIN*/
     public void showLogin() throws IOException {
-        LoginController loginController = new LoginController(this, context.getAutenService(), context.getSesion());
-        loadScene("/org/example/ax0006/login.fxml", loginController);
+        LoginController controller = new LoginController(this, context.getAutenService(), context.getSesion());
+        loadScene("/org/example/ax0006/login.fxml", controller);
     }
 
-    /*METODO PARA MOSTRAR EL SIGN UP*/
     public void showSignUp() throws IOException {
-        SignUpController signUpControl = new SignUpController(this, context.getAutenService(), context.getSesion());
-        loadScene("/org/example/ax0006/signup.fxml", signUpControl);
+        SignUpController controller = new SignUpController(this, context.getAutenService(), context.getSesion());
+        loadScene("/org/example/ax0006/signup.fxml", controller);
     }
 
-    /*METOOD PARA MOSTRAR EL MENU*/
-    public void showMenu() throws IOException{
-        MenuController menuControl = new MenuController(this, context.getSesion(), context.getConciertoService());
-        loadScene("/org/example/ax0006/menu.fxml", menuControl);
+    public void showMenu() throws IOException {
+        MenuController controller = new MenuController(this, context.getSesion(), context.getConciertoService());
+        loadScene("/org/example/ax0006/menu.fxml", controller);
     }
 
-    //metodo para mostrar pantalla de administracion de usuarios.
     public void showAdminUsuarios() throws IOException {
         AdminUsuariosController controller = new AdminUsuariosController(
                 context.getSesion(),
@@ -51,56 +43,54 @@ public class SceneManager {
         loadScene("/org/example/ax0006/adminUsuarios.fxml", controller);
     }
 
-    //Metodo para mostrar pantalla de perfil del usuario
     public void showProfile() throws IOException {
-        ProfileController profileController = new ProfileController(
-                this,
-                context.getSesion(),
-                context.getProfileService()
-        );
-        loadScene("/org/example/ax0006/profile.fxml", profileController);
+        ProfileController controller = new ProfileController(this, context.getSesion(), context.getProfileService());
+        loadScene("/org/example/ax0006/profile.fxml", controller);
     }
 
     public void showEditProfile() throws IOException {
-        EditProfileController editProfileController = new EditProfileController(
-                this,
-                context.getSesion(),
-                context.getProfileService()
-        );
-        loadScene("/org/example/ax0006/editprofile.fxml", editProfileController);
+        EditProfileController controller = new EditProfileController(this, context.getSesion(), context.getProfileService());
+        loadScene("/org/example/ax0006/editprofile.fxml", controller);
     }
 
-    /*metodo para mostra la pantalla de mostrar los conciertos no programados*/
     public void showChangePassword() throws IOException {
-        ChangePasswordController changePasswordController = new ChangePasswordController(
-                this,
+        ChangePasswordController controller = new ChangePasswordController(this, context.getSesion(), context.getProfileService());
+        loadScene("/org/example/ax0006/changepassword.fxml", controller);
+    }
+
+    public void showConsultarSolicitudes() throws IOException {
+        ConsultarSolicitudesController controller = new ConsultarSolicitudesController(
                 context.getSesion(),
-                context.getProfileService()
+                context.getConciertoService(),
+                this
         );
-        loadScene("/org/example/ax0006/changepassword.fxml", changePasswordController);
+        loadScene("/org/example/ax0006/consultarsolicitudes.fxml", controller);
     }
 
-    public void showConsultarSolicitudes() throws IOException{
-        ConsultarSolicitudesController consultarSolicitudesController = new ConsultarSolicitudesController(context.getSesion(), context.getConciertoService(), this);
-        loadScene("/org/example/ax0006/consultarsolicitudes.fxml", consultarSolicitudesController);
+    public void showCrearConcierto() throws IOException {
+        CrearConciertoController controller = new CrearConciertoController(
+                context.getSesion(),
+                context.getConciertoService(),
+                this
+        );
+        loadScene("/org/example/ax0006/crearconcierto.fxml", controller);
     }
 
-    public void showCrearConcierto() throws  IOException{
-        CrearConciertoController crearConciertoController = new CrearConciertoController(context.getSesion(), context.getConciertoService(), this);
-        loadScene("/org/example/ax0006/crearconcierto.fxml", crearConciertoController);
+    public void showConciertosProgramados() throws IOException {
+        ConciertosProgramadosController controller = new ConciertosProgramadosController(
+                context.getSesion(),
+                context.getConciertoService(),
+                this
+        );
+        loadScene("/org/example/ax0006/verconciertosprogramados.fxml", controller);
     }
 
-    public void showConciertosProgramados() throws  IOException{
-        ConciertosProgramadosController conciertosProgramadosController = new ConciertosProgramadosController(context.getSesion(), context.getConciertoService(), this);
-        loadScene("/org/example/ax0006/verconciertosprogramados.fxml", conciertosProgramadosController);
+    public void showMenuConcierto() throws IOException {
+        MenuConciertoController controller = new MenuConciertoController(this, context.getSesion());
+        loadScene("/org/example/ax0006/menuconcierto.fxml", controller);
     }
 
-    public void showMenuConcierto() throws IOException{
-        MenuConciertoController menuConciertoController = new MenuConciertoController(this, context.getSesion());
-        loadScene("/org/example/ax0006/menuconcierto.fxml", menuConciertoController);
-    }
-
-    public void showLiquidacionHoras() {
+    public void showLiquidacionHoras() throws IOException {
         NominaController controller = new NominaController(
                 this,
                 context.getSesion(),
@@ -108,21 +98,14 @@ public class SceneManager {
                 context.getNominaService(),
                 context.getStaffService()
         );
-        controller.show(stage);
+        loadScene("/org/example/ax0006/liquidacionhoras.fxml", controller);
     }
 
-    /*METODO PARA NO REPETIR ESTO COMO MIL VECES Y HACER QUE EL CAMBIO DE ESCENA SE VEA MAS LIMPIO*/
-    private void loadScene(String fxml, Object controller) throws IOException {
-
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource(fxml)
-        );
-
+    private void loadScene(String fxmlPath, Object controller) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
         loader.setController(controller);
-
         Scene scene = new Scene(loader.load());
         stage.setScene(scene);
+        stage.centerOnScreen();
     }
-
-
 }

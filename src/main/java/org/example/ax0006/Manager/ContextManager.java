@@ -2,54 +2,57 @@ package org.example.ax0006.Manager;
 
 import org.example.ax0006.Repository.ConciertoRepository;
 import org.example.ax0006.Repository.HorarioRepository;
+import org.example.ax0006.Repository.NominaRepository;
 import org.example.ax0006.Repository.RolRepository;
 import org.example.ax0006.Repository.UsuarioRepository;
-import org.example.ax0006.Service.*;
 import org.example.ax0006.Service.AutenticacionService;
 import org.example.ax0006.Service.ConciertoService;
+import org.example.ax0006.Service.NominaService;
 import org.example.ax0006.Service.ProfileService;
 import org.example.ax0006.Service.RolService;
+import org.example.ax0006.Service.StaffService;
 import org.example.ax0006.db.H2;
 
 public class ContextManager {
 
-    private H2 h2;
-    private UsuarioRepository usuarioRepository;
-    private RolRepository rolRepository;
-    private AutenticacionService autenService;
-    private ProfileService profileService;
-    private RolService rolService;
-    private SesionManager sesion;
-    private ConciertoService conciertoService;
-    private HorarioRepository horarioRepo;
-    private ConciertoRepository conciertoRepo;
-    private StaffService staffService;
-    private NominaRepository nominaRepository;
-    private NominaService nominaService;
-
+    private final H2 h2;
+    private final UsuarioRepository usuarioRepository;
+    private final RolRepository rolRepository;
+    private final HorarioRepository horarioRepository;
+    private final ConciertoRepository conciertoRepository;
+    private final AutenticacionService autenService;
+    private final ProfileService profileService;
+    private final RolService rolService;
+    private final ConciertoService conciertoService;
+    private final SesionManager sesion;
+    private final StaffService staffService;
+    private final NominaRepository nominaRepository;
+    private final NominaService nominaService;
 
     public ContextManager(
             H2 h2,
             UsuarioRepository usuarioRepository,
             RolRepository rolRepository,
-            HorarioRepository horarioRepo,
-            ConciertoRepository conciertoRepo,
+            HorarioRepository horarioRepository,
+            ConciertoRepository conciertoRepository,
             AutenticacionService autenService,
             ProfileService profileService,
             RolService rolService,
             ConciertoService conciertoService,
             SesionManager sesion,
-            StaffService staffService
+            StaffService staffService,
+            NominaRepository nominaRepository,
+            NominaService nominaService
     ) {
         this.h2 = h2;
         this.usuarioRepository = usuarioRepository;
         this.rolRepository = rolRepository;
-        this.horarioRepo = horarioRepo;
-        this.conciertoRepo = conciertoRepo;
+        this.horarioRepository = horarioRepository;
+        this.conciertoRepository = conciertoRepository;
         this.autenService = autenService;
         this.profileService = profileService;
-        this.conciertoService = conciertoService;
         this.rolService = rolService;
+        this.conciertoService = conciertoService;
         this.sesion = sesion;
         this.staffService = staffService;
         this.nominaRepository = nominaRepository;
@@ -68,6 +71,14 @@ public class ContextManager {
         return rolRepository;
     }
 
+    public HorarioRepository getHorarioRepository() {
+        return horarioRepository;
+    }
+
+    public ConciertoRepository getConciertoRepository() {
+        return conciertoRepository;
+    }
+
     public AutenticacionService getAutenService() {
         return autenService;
     }
@@ -80,15 +91,23 @@ public class ContextManager {
         return rolService;
     }
 
+    public ConciertoService getConciertoService() {
+        return conciertoService;
+    }
+
     public SesionManager getSesion() {
         return sesion;
     }
 
-    public ConciertoService getConciertoService() {return conciertoService;}
+    public StaffService getStaffService() {
+        return staffService;
+    }
 
-    public StaffService getStaffService() { return staffService; }
+    public NominaRepository getNominaRepository() {
+        return nominaRepository;
+    }
 
-    public NominaRepository getNominaRepository() { return nominaRepository; }
-
-    public NominaService getNominaService() { return nominaService; }
+    public NominaService getNominaService() {
+        return nominaService;
+    }
 }

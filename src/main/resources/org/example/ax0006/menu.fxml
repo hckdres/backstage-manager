@@ -75,6 +75,16 @@
                             </children>
                         </VBox>
 
+                        <!-- COLUMNA 3 -->
+                        <VBox prefHeight="450.0" prefWidth="280.0" spacing="22.0">
+                            <children>
+                                <Button fx:id="fid_bt_calendario" ... text="N" />
+                                <Button fx:id="fid_bt_configuracion" ... text="N" />
+                                <Button fx:id="fid_bt_admin" onAction="#On_admin" ... text="Administrar&#10;Usuarios" />
+                                <Button fx:id="btLiquidacionNomina" onAction="#On_LiquidacionNomina" ... text="Liquidación de&#10;Nómina" />
+                            </children>
+                        </VBox>
+
                     </children>
                 </HBox>
 

@@ -89,4 +89,9 @@ public class MenuController {
     void On_Menu_Conciertos(ActionEvent event) throws IOException {
         sceneManager.showMenuConcierto();
     }
+
+    @FXML
+    void On_LiquidacionNomina(ActionEvent event) throws IOException {
+        sceneManager.showLiquidacionHoras();
+    }
 }

@@ -271,4 +271,38 @@ public class ConciertoRepository {
             e.printStackTrace();
         }
     }
+
+    public Concierto obtenerPorId(int idConcierto) {
+        String sql = """
+        SELECT c.idConcierto, c.nombreConcierto, c.aforo, c.programado,
+               h.idHorario, h.fechaInc, h.fechaFin, h.horaInc, h.horaFin
+        FROM Concierto c
+        JOIN Horario h ON c.idHorario = h.idHorario
+        WHERE c.idConcierto = ?
+    """;
+        try (Connection conn = h2.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idConcierto);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                Horario horario = new Horario();
+                horario.setIdHorario(rs.getInt("idHorario"));
+                horario.setFechaInicio(rs.getDate("fechaInc").toLocalDate());
+                horario.setFechaFin(rs.getDate("fechaFin").toLocalDate());
+                horario.setHoraInicio(rs.getTime("horaInc").toLocalTime());
+                horario.setHoraFin(rs.getTime("horaFin").toLocalTime());
+                return new Concierto(
+                        rs.getInt("idConcierto"),
+                        rs.getString("nombreConcierto"),
+                        horario,
+                        rs.getInt("aforo"),
+                        null,
+                        rs.getBoolean("programado")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

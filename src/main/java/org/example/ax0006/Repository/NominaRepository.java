@@ -85,4 +85,28 @@ public class NominaRepository {
             e.printStackTrace();
         }
     }
+
+    public Nomina obtenerPorId(int idNomina) {
+        String sql = "SELECT * FROM Nomina WHERE idNomina = ?";
+        try (Connection conn = h2.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idNomina);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                Nomina n = new Nomina();
+                n.setIdNomina(rs.getInt("idNomina"));
+                n.setIdConcierto(rs.getInt("idConcierto"));
+                n.setIdUsuario(rs.getInt("idUsuario"));
+                n.setHorasTrabajadas(rs.getDouble("horasTrabajadas"));
+                n.setTarifaPorHora(rs.getDouble("tarifaPorHora"));
+                n.setHorasExtra(rs.getDouble("horasExtra"));
+                n.setTotal(rs.getDouble("total"));
+                n.setPagado(rs.getBoolean("pagado"));
+                return n;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
