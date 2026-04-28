@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.util.List;
 
 public class ConciertosProgramadosController {
-    /*pantalla en donde se ven los conciertos programados, ademas se pueden cancelar ahi mismo*/
 
     private SesionManager sesion;
     private ConciertoService conciertoService;
@@ -70,33 +69,39 @@ public class ConciertosProgramadosController {
     }
 
     /*Hace que se actualize y se genere la tabla*/
+
+    @FXML private TableColumn<Concierto, Void> colDetalles; // Añadir este FXML
+
     @FXML
     public void initialize() {
+        colAforo.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getAforo())));
+        colNombreConcierto.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNombreConcierto()));
 
-
-
-        colFechaInicio.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getHorario().getFechaInicio().toString()));
-
-        colFechaFin.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getHorario().getFechaFin().toString()));
-
-        colHoraInicio.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getHorario().getHoraInicio().toString()));
-
-        colHoraFin.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getHorario().getHoraFin().toString()));
-
-        colAforo.setCellValueFactory(data ->
-                new SimpleStringProperty(String.valueOf(data.getValue().getAforo())));
-
-        colNombreConcierto.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getNombreConcierto())
-        );
-
-        agregarBotonContrato(); // 🔥 NUEVO
+        agregarBotonContrato();
+        agregarBotonDetalles();
         agregarBotonCancelar();
         cargarConciertos();
+    }
+
+    private void agregarBotonDetalles() {
+        colDetalles.setCellFactory(param -> new TableCell<>() {
+            private final Button btnInfo = new Button("Ver Detalles");
+            {
+                btnInfo.setStyle("-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold;");
+                btnInfo.setOnAction(event -> {
+                    Concierto c = getTableView().getItems().get(getIndex());
+                    sesion.setConciertoTemporal(c); // Guardamos para la siguiente pantalla
+                    try {
+                        sceneManager.showDetallesConcierto();
+                    } catch (IOException e) { e.printStackTrace(); }
+                });
+            }
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : btnInfo);
+            }
+        });
     }
 
     // =========================

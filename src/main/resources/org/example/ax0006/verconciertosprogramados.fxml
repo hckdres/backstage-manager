@@ -1,85 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            prefHeight="800.0" prefWidth="1200.0"
-            style="-fx-background-color: #f4f6f8;">
-
-    <!-- TOP -->
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: #f4f6f8;">
     <top>
-        <HBox spacing="650.0"
-              style="-fx-background-color: white; -fx-padding: 15;">
+        <HBox alignment="CENTER_LEFT" spacing="20.0" style="-fx-background-color: white; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
             <children>
-                <Label text="Conciertos Programados"
-                       style="-fx-font-size: 20px; -fx-font-weight: bold;" />
-
-                <Button fx:id="fid_bt_volver"
-                        text="Volver"
-                        onAction="#On_volver"
-                        prefWidth="100"
-                        style="-fx-background-color: #e74c3c; -fx-text-fill: white;">
-                    <HBox.margin>
-                        <Insets right="100.0"/>
-                    </HBox.margin>
-                </Button>
+                <Label text="Gestión de Conciertos Programados" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button fx:id="fid_bt_volver" text="Volver al Menú" onAction="#On_volver" prefWidth="150" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold;" />
             </children>
         </HBox>
     </top>
-
-    <!-- CENTER -->
     <center>
-        <AnchorPane>
-            <children>
-
-                <TableView fx:id="tablaConciertos"
-                           layoutX="20.0"
-                           layoutY="20.0"
-                           prefWidth="1160.0"
-                           prefHeight="720.0">
-
-                    <columns>
-
-                        <TableColumn fx:id="colNombreConcierto"
-                                     text="Nombre Concierto"
-                                     prefWidth="200.0"/>
-                        <TableColumn fx:id="colFechaInicio"
-                                     text="Fecha Inicio"
-                                     prefWidth="150.0"/>
-
-                        <TableColumn fx:id="colFechaFin"
-                                     text="Fecha Fin"
-                                     prefWidth="150.0"/>
-
-                        <TableColumn fx:id="colHoraInicio"
-                                     text="Hora Inicio"
-                                     prefWidth="150.0"/>
-
-                        <TableColumn fx:id="colHoraFin"
-                                     text="Hora Fin"
-                                     prefWidth="150.0"/>
-
-                        <TableColumn fx:id="colAforo"
-                                     text="Aforo"
-                                     prefWidth="120.0"/>
-
-                        <TableColumn fx:id="colContrato"
-                                     text="Contrato"
-                                     prefWidth="120.0"/>
-
-                        <TableColumn fx:id="colAccion"
-                                     text="Cancelar"
-                                     prefWidth="200.0"/>
-
-                    </columns>
-
-                </TableView>
-
-            </children>
-        </AnchorPane>
+        <VBox spacing="10" style="-fx-padding: 20;">
+            <TableView fx:id="tablaConciertos" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colNombreConcierto" text="Nombre" prefWidth="250.0"/>
+                    <TableColumn fx:id="colFechaInicio" text="Fecha Inicio" prefWidth="120.0"/>
+                    <TableColumn fx:id="colHoraInicio" text="Hora Inicio" prefWidth="100.0"/>
+                    <TableColumn fx:id="colAforo" text="Aforo" prefWidth="100.0"/>
+                    <TableColumn fx:id="colContrato" text="Contrato" prefWidth="120.0"/>
+                    <TableColumn fx:id="colDetalles" text="Información" prefWidth="150.0"/> <TableColumn fx:id="colAccion" text="Gestionar" prefWidth="150.0"/>
+                </columns>
+            </TableView>
+        </VBox>
     </center>
-
 </BorderPane>

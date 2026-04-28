@@ -10,7 +10,6 @@ import java.io.IOException;
 
 public class MenuConciertoController {
 
-
     @FXML
     private Button fid_bt_CrearConcierto;
 
@@ -27,9 +26,10 @@ public class MenuConciertoController {
     private Button fid_bt_ConsultarContrato;
 
     @FXML
+    private Button fid_bt_crearInventario; // Nuevo botón para el flujo de inventario
+
+    @FXML
     private Button fid_bt_volver;
-
-
 
     /* ATRIBUTOS */
     private SceneManager sceneManager;
@@ -76,6 +76,37 @@ public class MenuConciertoController {
     void On_ConsultarCProgramado(ActionEvent event) {
         try {
             sceneManager.showConciertosProgramados();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /* CREAR CONTRATO */
+    @FXML
+    void On_CrearContrato(ActionEvent event) {
+        try {
+            sceneManager.showCrearContrato();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /* CONSULTAR CONTRATO */
+    @FXML
+    void On_ConsultarContrato(ActionEvent event) {
+        try {
+            sceneManager.showConsultarContrato();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /* CREAR INVENTARIO PARA CONCIERTO (FLUJO AUTOMÁTICO) */
+    @FXML
+    void on_bt_crearInventario(ActionEvent event) {
+        try {
+            // 1. Muestra los conciertos disponibles para seleccionar uno
+            sceneManager.showSeleccionarConciertoInventario();
         } catch (IOException e) {
             e.printStackTrace();
         }

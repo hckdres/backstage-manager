@@ -89,4 +89,11 @@ public class MenuController {
     void On_Menu_Conciertos(ActionEvent event) throws IOException {
         sceneManager.showMenuConcierto();
     }
+
+    @FXML
+    void on_bt_crearObjeto(ActionEvent event) throws IOException {
+        sceneManager.showCrearObjeto();
+    }
+
+
 }

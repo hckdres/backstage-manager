@@ -1,15 +1,7 @@
 package org.example.ax0006.Manager;
 
-import org.example.ax0006.Repository.ConciertoRepository;
-import org.example.ax0006.Repository.ContratoRepository;
-import org.example.ax0006.Repository.HorarioRepository;
-import org.example.ax0006.Repository.RolRepository;
-import org.example.ax0006.Repository.UsuarioRepository;
+import org.example.ax0006.Repository.*;
 import org.example.ax0006.Service.*;
-import org.example.ax0006.Service.AutenticacionService;
-import org.example.ax0006.Service.ConciertoService;
-import org.example.ax0006.Service.ProfileService;
-import org.example.ax0006.Service.RolService;
 import org.example.ax0006.db.H2;
 
 public class ContextManager {
@@ -25,6 +17,10 @@ public class ContextManager {
     private HorarioRepository horarioRepo;
     private ConciertoRepository conciertoRepo;
     private StaffService staffService;
+
+    private InventarioService inventarioService;
+    private InventarioObjetoService inventarioObjetoService;
+    private ObjetoService objetoService;
     private ContratoService contratoService;
     private ContratoRepository contratoRepo;
 
@@ -40,7 +36,9 @@ public class ContextManager {
             ConciertoService conciertoService,
             SesionManager sesion,
             StaffService staffService,
-            ConciertoRepository conciertoRepoExtra, 
+            InventarioService inventarioService,
+            InventarioObjetoService inventarioObjetoService,
+            ObjetoService objetoService,
             ContratoService contratoService,
             ContratoRepository contratoRepo
     ) {
@@ -48,17 +46,23 @@ public class ContextManager {
         this.usuarioRepository = usuarioRepository;
         this.rolRepository = rolRepository;
         this.horarioRepo = horarioRepo;
-        this.conciertoRepo = conciertoRepo; 
+        this.conciertoRepo = conciertoRepo;
         this.autenService = autenService;
         this.profileService = profileService;
         this.conciertoService = conciertoService;
         this.rolService = rolService;
         this.sesion = sesion;
         this.staffService = staffService;
+        this.inventarioService = inventarioService;
+        this.inventarioObjetoService = inventarioObjetoService;
+        this.objetoService = objetoService;
         this.contratoService = contratoService;
         this.contratoRepo = contratoRepo;
     }
 
+    public InventarioService getInventarioService() { return inventarioService; }
+    public InventarioObjetoService getInventarioObjetoService() { return inventarioObjetoService; }
+    public ObjetoService getObjetoService() { return objetoService; }
     public H2 getH2() { return h2; }
     public UsuarioRepository getUsuarioRepository() { return usuarioRepository; }
     public RolRepository getRolRepository() { return rolRepository; }

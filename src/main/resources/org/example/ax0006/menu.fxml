@@ -11,12 +11,10 @@
 
     <children>
 
-        <!-- CARD PRINCIPAL -->
         <AnchorPane layoutX="40.0" layoutY="30.0" prefHeight="740.0" prefWidth="1120.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 18, 0, 0, 4);">
 
             <children>
 
-                <!-- CABECERA -->
                 <HBox layoutX="30.0" layoutY="25.0" prefHeight="70.0" prefWidth="1060.0" spacing="20.0">
                     <children>
 
@@ -44,33 +42,26 @@
 
                 <Separator layoutX="30.0" layoutY="110.0" prefWidth="1060.0" />
 
-                <!-- ZONA CENTRAL DE ACCESOS -->
                 <HBox layoutX="85.0" layoutY="170.0" prefHeight="450.0" prefWidth="950.0" spacing="50.0">
                     <children>
 
-                        <!-- COLUMNA 1 -->
                         <VBox prefHeight="450.0" prefWidth="280.0" spacing="22.0">
                             <children>
                                 <Button fx:id="fid_Menu_Conciertos" mnemonicParsing="false" onAction="#On_Menu_Conciertos" prefHeight="120.0" prefWidth="280.0" style="-fx-background-color: #d5b1fd; -fx-text-fill: #411c91; -fx-font-size: 17px; -fx-font-weight: bold; -fx-background-radius: 18; -fx-border-color: #dbe2ea; -fx-border-radius: 18; -fx-border-width: 1.2; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 2);" text="Gestión de&#10;Conciertos" />
-                                <Button fx:id="fid_bt_artistas" mnemonicParsing="false" prefHeight="120.0" prefWidth="280.0" style="-fx-background-color: #ffffff; -fx-text-fill: #1f2937; -fx-font-size: 17px; -fx-font-weight: bold; -fx-background-radius: 18; -fx-border-color: #dbe2ea; -fx-border-radius: 18; -fx-border-width: 1.2; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 2);" text="N" />
-                                <Button fx:id="fid_bt_recintos" mnemonicParsing="false" prefHeight="120.0" prefWidth="280.0" style="-fx-background-color: #ffffff; -fx-text-fill: #1f2937; -fx-font-size: 17px; -fx-font-weight: bold; -fx-background-radius: 18; -fx-border-color: #dbe2ea; -fx-border-radius: 18; -fx-border-width: 1.2; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 2);" text="N" />
+                                <Button fx:id="fid_bt_crearObjeto" mnemonicParsing="false" onAction="#on_bt_crearObjeto" prefHeight="120.0" prefWidth="280.0" style="-fx-background-color: #ffffff; -fx-text-fill: #1f2937; -fx-font-size: 17px; -fx-font-weight: bold; -fx-background-radius: 18; -fx-border-color: #dbe2ea; -fx-border-radius: 18; -fx-border-width: 1.2; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 2);" text="Registrar Objeto&#10;Físico" />
                             </children>
                         </VBox>
 
-                        <!-- COLUMNA 2 -->
                         <VBox prefHeight="450.0" prefWidth="280.0" spacing="22.0">
                             <children>
-                                <Button fx:id="fid_bt_entradas" mnemonicParsing="false" prefHeight="120.0" prefWidth="280.0" style="-fx-background-color: #ffffff; -fx-text-fill: #1f2937; -fx-font-size: 17px; -fx-font-weight: bold; -fx-background-radius: 18; -fx-border-color: #dbe2ea; -fx-border-radius: 18; -fx-border-width: 1.2; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 2);" text="N" />
-                                <Button fx:id="fid_bt_clientes" mnemonicParsing="false" prefHeight="120.0" prefWidth="280.0" style="-fx-background-color: #ffffff; -fx-text-fill: #1f2937; -fx-font-size: 17px; -fx-font-weight: bold; -fx-background-radius: 18; -fx-border-color: #dbe2ea; -fx-border-radius: 18; -fx-border-width: 1.2; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 2);" text="N" />
                                 <Button fx:id="fid_bt_reportes" mnemonicParsing="false" prefHeight="120.0" prefWidth="280.0" style="-fx-background-color: #91c3ff; -fx-text-fill: #0b418d; -fx-font-size: 17px; -fx-font-weight: bold; -fx-background-radius: 18; -fx-border-color: #dbe2ea; -fx-border-radius: 18; -fx-border-width: 1.2; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 2);" text="Reportes" />
                             </children>
                         </VBox>
 
-                        <!-- COLUMNA 3 -->
                         <VBox prefHeight="450.0" prefWidth="280.0" spacing="22.0">
                             <children>
-                                <Button fx:id="fid_bt_calendario" mnemonicParsing="false" prefHeight="120.0" prefWidth="280.0" style="-fx-background-color: #ffffff; -fx-text-fill: #1f2937; -fx-font-size: 17px; -fx-font-weight: bold; -fx-background-radius: 18; -fx-border-color: #dbe2ea; -fx-border-radius: 18; -fx-border-width: 1.2; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 2);" text="N" />
-                                <Button fx:id="fid_bt_configuracion" mnemonicParsing="false" prefHeight="120.0" prefWidth="280.0" style="-fx-background-color: #ffffff; -fx-text-fill: #1f2937; -fx-font-size: 17px; -fx-font-weight: bold; -fx-background-radius: 18; -fx-border-color: #dbe2ea; -fx-border-radius: 18; -fx-border-width: 1.2; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 2);" text="N" />
+                                <Button fx:id="fid_bt_calendario" mnemonicParsing="false" prefHeight="120.0" prefWidth="280.0" style="-fx-background-color: #ffffff; -fx-text-fill: #1f2937; -fx-font-size: 17px; -fx-font-weight: bold; -fx-background-radius: 18; -fx-border-color: #dbe2ea; -fx-border-radius: 18; -fx-border-width: 1.2; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 2);" text="Calendario" />
+                                <Button fx:id="fid_bt_configuracion" mnemonicParsing="false" prefHeight="120.0" prefWidth="280.0" style="-fx-background-color: #ffffff; -fx-text-fill: #1f2937; -fx-font-size: 17px; -fx-font-weight: bold; -fx-background-radius: 18; -fx-border-color: #dbe2ea; -fx-border-radius: 18; -fx-border-width: 1.2; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 2);" text="Configuración" />
                                 <Button fx:id="fid_bt_admin" mnemonicParsing="false" onAction="#On_admin" prefHeight="120.0" prefWidth="280.0" style="-fx-background-color: #ecfdf5; -fx-text-fill: #047857; -fx-font-size: 17px; -fx-font-weight: bold; -fx-background-radius: 18; -fx-border-color: #a7f3d0; -fx-border-radius: 18; -fx-border-width: 1.2; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 2);" text="Administrar&#10;Usuarios" />
                             </children>
                         </VBox>
@@ -78,7 +69,6 @@
                     </children>
                 </HBox>
 
-                <!-- PIE -->
                 <Label layoutX="30.0" layoutY="690.0" style="-fx-font-size: 13px; -fx-text-fill: #9ca3af;" text="Accede rápidamente a los módulos principales del sistema" />
 
             </children>
