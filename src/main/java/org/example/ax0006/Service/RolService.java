@@ -39,4 +39,10 @@ public class RolService {
     public String obtenerNombreRol(int idRol) {
         return rolRepo.obtenerNombreRol(idRol);
     }
+
+
+    public void actualizarRolGlobal(int idUsuario, int idRol) {
+        usuarioRepo.actualizarRolGlobal(idUsuario, idRol);
+    }
+
 }
