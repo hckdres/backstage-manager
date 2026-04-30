@@ -89,4 +89,13 @@ public class MenuController {
     void On_Menu_Conciertos(ActionEvent event) throws IOException {
         sceneManager.showMenuConcierto();
     }
+
+    @FXML
+    private void On_Nomina() {
+        try {
+            sceneManager.showNomina();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

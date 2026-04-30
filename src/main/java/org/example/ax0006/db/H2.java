@@ -124,6 +124,21 @@ public class H2 {
             """);
 
             stmt.execute("""
+                CREATE TABLE IF NOT EXISTS Nomina (
+                    idNomina INT AUTO_INCREMENT PRIMARY KEY,
+                    idConcierto INT NOT NULL,
+                    idUsuario INT NOT NULL,
+                    horasTrabajadas DOUBLE NOT NULL,
+                    tarifaPorHora DOUBLE NOT NULL,
+                    horasExtra DOUBLE DEFAULT 0,
+                    total DOUBLE NOT NULL,
+                    pagado BOOLEAN DEFAULT FALSE,
+                    FOREIGN KEY (idConcierto) REFERENCES Concierto(idConcierto),
+                    FOREIGN KEY (idUsuario) REFERENCES Usuario(idUsuario)
+                )
+            """);
+
+            stmt.execute("""
                 CREATE TABLE IF NOT EXISTS RolConciertoUsuario (
                     idRol INT,
                     idUsuario INT,
