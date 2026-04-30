@@ -84,33 +84,27 @@ public class LoginController {
     }
 
     @FXML
-    void On_login(ActionEvent event) {
-        try {
-
-            if (mostrando) {
-                togglePassword();
-            }
-
-            Usuario usuarioLogin = autenService.login(
-                    fid_Usuario.getText(),
-                    fid_Contrasena.getText()
-            );
-
-            if (usuarioLogin == null) {
-                throw new RuntimeException("Usuario no existe");
-            }
-
-            if (!usuarioLogin.getContrasena().equals(fid_Contrasena.getText())) {
-                throw new RuntimeException("Contraseña incorrecta");
-            }
-
-            sesion.setUsuarioActual(usuarioLogin);
-            sceneManager.showMenu();
-
-        } catch (Exception e) {
-            System.out.println("ERROR REAL: " + e.getMessage());
-            e.printStackTrace(); // 👈 esto muestra el error completo
-            AlertaLogin(e.getMessage());
+    /*METODO QUE EJECUTA EL LOGIN Y QUE CAMBIA A LA PANTALLA DE MENU SI ESTE ES EXITOSO*/
+    void On_login(ActionEvent event) throws IOException {
+        if (mostrando) {
+            togglePassword();
         }
+
+        //ATRAVEZ DEL SERVICIO DE AUTENTICACION OBTENEMOS EL USUARIO QUE SE VA A LOGEAR
+        Usuario usuarioLogin = autenService.login(fid_Usuario.getText(), fid_Contrasena.getText());
+
+        /*MENSAJES DE ERROR*/
+        if (usuarioLogin == null) {
+            System.out.println("Usuario no existe");
+            AlertaLogin("Error El usuario o contraseña incorrectos");
+            return;
+        }
+
+
+        /*SE ASIGNA EL USUARIO LOGEADO AL USUARIO EN LA CLASE SESION*/
+        sesion.setUsuarioActual(usuarioLogin);
+        /*EN CASO DE UN LOGEO EXITOSO CAMBIAMOS A LA VENTANA DE MENU*/
+        sceneManager.showMenu();
+
     }
 }

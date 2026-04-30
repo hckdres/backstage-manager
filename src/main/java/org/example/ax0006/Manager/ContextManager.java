@@ -1,7 +1,7 @@
 package org.example.ax0006.Manager;
 
-import org.example.ax0006.Entity.Nomina;
 import org.example.ax0006.Repository.ConciertoRepository;
+import org.example.ax0006.Repository.ContratoRepository;
 import org.example.ax0006.Repository.HorarioRepository;
 import org.example.ax0006.Repository.RolRepository;
 import org.example.ax0006.Repository.UsuarioRepository;
@@ -25,8 +25,8 @@ public class ContextManager {
     private HorarioRepository horarioRepo;
     private ConciertoRepository conciertoRepo;
     private StaffService staffService;
-    private NominaService nominaService;
-
+    private ContratoService contratoService;
+    private ContratoRepository contratoRepo;
 
     public ContextManager(
             H2 h2,
@@ -40,56 +40,34 @@ public class ContextManager {
             ConciertoService conciertoService,
             SesionManager sesion,
             StaffService staffService,
-            NominaService nominaService
+            ConciertoRepository conciertoRepoExtra, 
+            ContratoService contratoService,
+            ContratoRepository contratoRepo
     ) {
         this.h2 = h2;
         this.usuarioRepository = usuarioRepository;
         this.rolRepository = rolRepository;
         this.horarioRepo = horarioRepo;
-        this.conciertoRepo = conciertoRepo;
+        this.conciertoRepo = conciertoRepo; 
         this.autenService = autenService;
         this.profileService = profileService;
         this.conciertoService = conciertoService;
         this.rolService = rolService;
         this.sesion = sesion;
         this.staffService = staffService;
-        this.nominaService = nominaService;
+        this.contratoService = contratoService;
+        this.contratoRepo = contratoRepo;
     }
 
-    public H2 getH2() {
-        return h2;
-    }
-
-    public UsuarioRepository getUsuarioRepository() {
-        return usuarioRepository;
-    }
-
-    public RolRepository getRolRepository() {
-        return rolRepository;
-    }
-
-    public AutenticacionService getAutenService() {
-        return autenService;
-    }
-
-    public ProfileService getProfileService() {
-        return profileService;
-    }
-
-    public RolService getRolService() {
-        return rolService;
-    }
-
-    public SesionManager getSesion() {
-        return sesion;
-    }
-
-    public ConciertoService getConciertoService() {return conciertoService;}
-
+    public H2 getH2() { return h2; }
+    public UsuarioRepository getUsuarioRepository() { return usuarioRepository; }
+    public RolRepository getRolRepository() { return rolRepository; }
+    public AutenticacionService getAutenService() { return autenService; }
+    public ProfileService getProfileService() { return profileService; }
+    public RolService getRolService() { return rolService; }
+    public SesionManager getSesion() { return sesion; }
+    public ConciertoService getConciertoService() { return conciertoService; }
     public StaffService getStaffService() { return staffService; }
-
-    public NominaService getNominaService() {
-        return nominaService;
-    }
-
+    public ContratoService getContratoService() { return contratoService; }
+    public ContratoRepository getContratoRepository() { return contratoRepo; }
 }
