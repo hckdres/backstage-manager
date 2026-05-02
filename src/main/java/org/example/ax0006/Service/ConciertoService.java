@@ -2,6 +2,7 @@ package org.example.ax0006.Service;
 
 import org.example.ax0006.Entity.Concierto;
 import org.example.ax0006.Entity.Contrato;
+import org.example.ax0006.Repository.AsignacionStaffRepository;
 import org.example.ax0006.Repository.ConciertoRepository;
 import org.example.ax0006.Repository.HorarioRepository;
 import org.example.ax0006.Validator.ConciertoValidator;
@@ -14,12 +15,14 @@ public class ConciertoService {
     private HorarioRepository horarioRepo;
     private ConciertoValidator conciertoValidator;
     private ContratoService contratoService;
+    private AsignacionStaffRepository asignacionStaffRepo;
 
-    public ConciertoService(ConciertoRepository conciertoRepo, HorarioRepository horarioRepo, ConciertoValidator conciertoValidator, ContratoService contratoService) {
+    public ConciertoService(ConciertoRepository conciertoRepo, HorarioRepository horarioRepo, ConciertoValidator conciertoValidator, ContratoService contratoService, AsignacionStaffRepository asignacionStaffRepo) {
         this.conciertoRepo = conciertoRepo;
         this.horarioRepo = horarioRepo;
         this.conciertoValidator = conciertoValidator;
         this.contratoService = contratoService;
+        this.asignacionStaffRepo = asignacionStaffRepo;
     }
 
     public void crearConcierto(Concierto c) {

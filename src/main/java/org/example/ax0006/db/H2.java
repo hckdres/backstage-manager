@@ -30,12 +30,14 @@ public class H2 {
                 idUsuario INT AUTO_INCREMENT PRIMARY KEY,
                 nombre VARCHAR(255) NOT NULL,
                 gmail VARCHAR(255),
-                contrasena VARCHAR(255),           
+                contrasena VARCHAR(255), 
+                idRol INT DEFAULT 0,
                 telefono VARCHAR(10),
                 direccion VARCHAR(255),
                 contactoEmergenciaNombre VARCHAR(255),
                 contactoEmergenciaTelefono VARCHAR(20),
-                contactoEmergenciaRelacion VARCHAR(100)
+                contactoEmergenciaRelacion VARCHAR(100),
+                FOREIGN KEY (idRol) REFERENCES Rol(idRol)
             )
             """);
 
@@ -138,7 +140,7 @@ public class H2 {
             //con merge into se evitan duplicados cada vez que se ejecute el programa.
             stmt.execute("""
                MERGE INTO Rol (idRol, rol) KEY(idRol)   
-                  VALUES (1, 'Administrador'), (2, 'Tecnico'), (3, 'Artista'), (4, 'Staff')
+                  VALUES (0, 'Sin rol'), (1, 'Administrador'), (2, 'Tecnico'), (3, 'Artista'), (4, 'Staff')
                 """);
 
             org.h2.tools.Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082").start();

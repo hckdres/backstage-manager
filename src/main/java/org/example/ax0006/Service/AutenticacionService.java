@@ -21,12 +21,13 @@ public class AutenticacionService {
         if (usuarioRepo.buscarPorNombre(nombre) != null) {
             return false;
         }
+        boolean esPrimero = usuarioRepo.obtenerUsuarios().isEmpty();
 
         Usuario nuevo = new Usuario();
         nuevo.setNombre(nombre);
         nuevo.setContrasena(contrasena);
         nuevo.setGmail(gmail);
-
+        nuevo.setIdRol(esPrimero ? 1 : 0);
 
 
         usuarioRepo.guardar(nuevo);
