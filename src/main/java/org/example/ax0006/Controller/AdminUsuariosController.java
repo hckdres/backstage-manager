@@ -43,6 +43,7 @@ public class AdminUsuariosController {
     }
 
 
+
     //elementos de la pantalla de administracion de usuarios:
     @FXML
     private Label fid_Bienvenido;
@@ -59,9 +60,8 @@ public class AdminUsuariosController {
     @FXML
     private TableColumn<Usuario, String> colGmail;
 
-
-
-
+    @FXML
+    private TableColumn<Usuario, String> colRolGlobal;
 
     @FXML
     private TableColumn<Usuario, String> colNombreRol;
@@ -96,6 +96,18 @@ public class AdminUsuariosController {
         comboConciertoFiltro.setOnAction(e -> actualizarTabla());
 
         cargarUsuariosSinAsignar();
+
+        colRolGlobal.setCellValueFactory(cellData -> {
+            int idRol = cellData.getValue().getIdRol();
+            String nombreRol = switch (idRol) {
+                case 1 -> "Administrador";
+                case 2 -> "Tecnico";
+                case 3 -> "Artista";
+                case 4 -> "Staff";
+                default -> "Sin rol";
+            };
+            return new SimpleStringProperty(nombreRol);
+        });
 
     }
 
@@ -151,6 +163,7 @@ public class AdminUsuariosController {
         List<Usuario> sinAsignar = todos.stream()
                 .filter(u -> !asignados.contains(u.getIdUsuario()))
                 .filter(u -> u.getIdUsuario() != sesion.getUsuarioActual().getIdUsuario())
+                .filter(u -> u.getIdRol() != 1)
                 .toList();
         tablaUsuarios.setItems(FXCollections.observableArrayList(sinAsignar));
     }
@@ -160,6 +173,7 @@ public class AdminUsuariosController {
         List<Usuario> usuarios = staffService.obtenerUsuariosPorConcierto(concierto.getIdConcierto())
                 .stream()
                 .filter(u -> u.getIdUsuario() != sesion.getUsuarioActual().getIdUsuario())
+                .filter(u -> u.getIdRol() != 1)
                 .toList();
         tablaUsuarios.setItems(FXCollections.observableArrayList(usuarios));
     }

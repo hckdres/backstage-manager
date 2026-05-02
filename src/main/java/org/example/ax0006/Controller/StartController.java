@@ -47,7 +47,7 @@ public class StartController extends Application {
         ProfileService profileService = new ProfileService(usuarioRepo);
         RolService rolService = new RolService(rolRepo, usuarioRepo);
         ContratoService contratoService = new ContratoService(contratoRepo);
-        ConciertoService conciertoService = new ConciertoService(conciertoRepo, horarioRepo, conciertoValidator, contratoService);
+        ConciertoService conciertoService = new ConciertoService(conciertoRepo, horarioRepo, conciertoValidator, contratoService , asignacionStaffRepo);
         StaffService staffService = new StaffService(usuarioRepo, asignacionStaffRepo);
 
         // MANAGERS

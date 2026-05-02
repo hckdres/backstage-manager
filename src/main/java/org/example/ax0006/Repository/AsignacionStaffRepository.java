@@ -75,7 +75,7 @@ public class AsignacionStaffRepository {
     public List<Usuario> obtenerUsuariosPorConcierto(int idConcierto) {
         List<Usuario> lista = new ArrayList<>();
         String sql = """
-        SELECT DISTINCT u.idUsuario, u.nombre, u.gmail
+        SELECT DISTINCT u.idUsuario, u.nombre, u.gmail, u.idRol
         FROM RolConciertoUsuario rcu
         JOIN Usuario u ON rcu.idUsuario = u.idUsuario
         WHERE rcu.idConcierto = ?
@@ -89,6 +89,7 @@ public class AsignacionStaffRepository {
                 u.setIdUsuario(rs.getInt("idUsuario"));
                 u.setNombre(rs.getString("nombre"));
                 u.setGmail(rs.getString("gmail"));
+                u.setIdRol(rs.getInt("idRol"));
                 lista.add(u);
             }
         } catch (SQLException e) {
