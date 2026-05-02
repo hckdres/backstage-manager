@@ -223,21 +223,21 @@ public class AdminUsuariosController {
         comboRoles.getItems().addAll(roles);
         comboRoles.setPromptText("Seleccionar rol");
 
-
-
         Object seleccionado = comboConciertoFiltro.getValue();
         boolean tieneConcierto = seleccionado instanceof Concierto;
 
-
         CheckBox chkRolGlobal = new CheckBox("Asignar como rol global");
-
         Label labelConcierto = new Label("Concierto:");
         ComboBox<Concierto> comboConciertos = new ComboBox<>();
 
-
         VBox content = new VBox(10);
         content.getChildren().addAll(new Label("Rol:"), comboRoles);
-        if (!tieneConcierto) {
+
+        if (tieneConcierto) {
+            content.getChildren().add(chkRolGlobal);
+
+        } else {
+
             List<Concierto> conciertos = conciertoService.obtenerConciertosSolos();
             comboConciertos.getItems().addAll(conciertos);
             comboConciertos.setPromptText("Seleccionar concierto");
@@ -260,6 +260,7 @@ public class AdminUsuariosController {
             });
 
             content.getChildren().addAll(chkRolGlobal, labelConcierto, comboConciertos);
+
             chkRolGlobal.setOnAction(e -> {
                 boolean global = chkRolGlobal.isSelected();
                 labelConcierto.setVisible(!global);
@@ -288,17 +289,22 @@ public class AdminUsuariosController {
             }
 
             if (tieneConcierto) {
-                // Usar el concierto del filtro directamente
-                Concierto conciertoFiltro = (Concierto) seleccionado;
-                staffService.asignarStaffAConcierto(
-                        u.getIdUsuario(),
-                        conciertoFiltro.getIdConcierto(),
-                        rolSeleccionado.getIdRol()
-                );
+                if (chkRolGlobal.isSelected()) {
+
+                    rolService.actualizarRolGlobal(u.getIdUsuario(), rolSeleccionado.getIdRol());
+                } else {
+
+                    Concierto conciertoFiltro = (Concierto) seleccionado;
+                    staffService.asignarStaffAConcierto(
+                            u.getIdUsuario(),
+                            conciertoFiltro.getIdConcierto(),
+                            rolSeleccionado.getIdRol()
+                    );
+                }
             } else if (chkRolGlobal.isSelected()) {
+
                 rolService.actualizarRolGlobal(u.getIdUsuario(), rolSeleccionado.getIdRol());
-                actualizarTabla();
-            }else {
+            } else {
 
                 Concierto conciertoSeleccionado = comboConciertos.getValue();
                 if (conciertoSeleccionado == null) {
