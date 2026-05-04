@@ -13,6 +13,7 @@ import org.example.ax0006.Entity.Usuario;
 import org.example.ax0006.Manager.SceneManager;
 import org.example.ax0006.Manager.SesionManager;
 import org.example.ax0006.Service.AutenticacionService;
+import org.example.ax0006.Service.ActividadService;
 
 import java.io.IOException;
 
@@ -22,12 +23,14 @@ public class LoginController {
     private SceneManager sceneManager;
     private AutenticacionService autenService;
     private SesionManager sesion;
+    private ActividadService actividadService;
 
     /*CONSTRUCTOR DE LA CLASE*/
-    public LoginController(SceneManager sceneManager, AutenticacionService autenService, SesionManager sesion) {
+    public LoginController(SceneManager sceneManager, AutenticacionService autenService, SesionManager sesion, ActividadService actividadService) {
         this.sceneManager = sceneManager;
         this.autenService = autenService;
         this.sesion = sesion;
+        this.actividadService = actividadService;
     }
 
     @FXML
@@ -78,13 +81,13 @@ public class LoginController {
     }
 
     @FXML
-    /*METODO PARA PODER IR A LA PANTALLA DE SIGN UP*/
+        /*METODO PARA PODER IR A LA PANTALLA DE SIGN UP*/
     void On_sign_up(ActionEvent event) throws IOException {
         sceneManager.showSignUp();
     }
 
     @FXML
-    /*METODO QUE EJECUTA EL LOGIN Y QUE CAMBIA A LA PANTALLA DE MENU SI ESTE ES EXITOSO*/
+        /*METODO QUE EJECUTA EL LOGIN Y QUE CAMBIA A LA PANTALLA DE MENU SI ESTE ES EXITOSO*/
     void On_login(ActionEvent event) throws IOException {
         if (mostrando) {
             togglePassword();
@@ -103,6 +106,7 @@ public class LoginController {
 
         /*SE ASIGNA EL USUARIO LOGEADO AL USUARIO EN LA CLASE SESION*/
         sesion.setUsuarioActual(usuarioLogin);
+        actividadService.registrarLogin(usuarioLogin);
         /*EN CASO DE UN LOGEO EXITOSO CAMBIAMOS A LA VENTANA DE MENU*/
         sceneManager.showMenu();
 

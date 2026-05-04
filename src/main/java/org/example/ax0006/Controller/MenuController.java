@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import org.example.ax0006.Manager.SceneManager;
 import org.example.ax0006.Manager.SesionManager;
 import org.example.ax0006.Service.ConciertoService;
+import org.example.ax0006.Service.ActividadService;
 
 import java.io.IOException;
 
@@ -16,26 +17,16 @@ public class MenuController {
     private SceneManager sceneManager;
     private SesionManager sesion;
     private ConciertoService conciertoService;
+    private ActividadService actividadService;
 
     public MenuController() {
     }
 
-    public MenuController(SceneManager sceneManager, SesionManager sesion, ConciertoService conciertoService) {
+    public MenuController(SceneManager sceneManager, SesionManager sesion, ConciertoService conciertoService, ActividadService actividadService) {
         this.sceneManager = sceneManager;
         this.sesion = sesion;
         this.conciertoService = conciertoService;
-    }
-
-    public void setSceneManager(SceneManager sceneManager) {
-        this.sceneManager = sceneManager;
-    }
-
-    public void setSesion(SesionManager sesion) {
-        this.sesion = sesion;
-    }
-
-    public void setConciertoService(ConciertoService conciertoService) {
-        this.conciertoService = conciertoService;
+        this.actividadService = actividadService;
     }
 
     @FXML
@@ -48,22 +39,42 @@ public class MenuController {
     private Button fid_Menu_Conciertos;
 
     @FXML
+    private Label fid_lbl_contador_bandeja;
+
+    @FXML
     public void initialize() {
         if (sesion != null && sesion.getUsuarioActual() != null && fid_Bienvenido != null) {
             fid_Bienvenido.setText("Bienvenido " + sesion.getUsuarioActual().getNombre());
         }
-    }
 
-    public void setNombreBienvenido() {
-        if (sesion != null && sesion.getUsuarioActual() != null) {
-            fid_Bienvenido.setText("Bienvenido " + sesion.getUsuarioActual().getNombre());
-        }
+        actualizarContadorBandeja();
     }
 
     @FXML
     void On_btvolver(ActionEvent event) throws IOException {
+        if (actividadService != null && sesion != null) {
+            actividadService.registrarLogout(sesion.getUsuarioActual());
+        }
+
         sesion.cerrarSesion();
         sceneManager.showLogin();
+    }
+
+    @FXML
+    void On_bandeja(ActionEvent event) throws IOException {
+        sceneManager.showActividad();
+    }
+
+    private void actualizarContadorBandeja() {
+        if (fid_lbl_contador_bandeja == null || actividadService == null || sesion == null || sesion.getUsuarioActual() == null) {
+            return;
+        }
+
+        int pendientes = actividadService.contarPendientes(sesion.getUsuarioActual());
+
+        fid_lbl_contador_bandeja.setText(String.valueOf(pendientes));
+        fid_lbl_contador_bandeja.setVisible(pendientes > 0);
+        fid_lbl_contador_bandeja.setManaged(pendientes > 0);
     }
 
     @FXML

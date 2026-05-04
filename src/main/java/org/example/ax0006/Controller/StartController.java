@@ -41,6 +41,7 @@ public class StartController extends Application {
         ConciertoRepository conciertoRepo = new ConciertoRepository(h2);
         AsignacionStaffRepository asignacionStaffRepo = new AsignacionStaffRepository(h2);
         ContratoRepository contratoRepo = new ContratoRepository(h2);
+        ActividadRepository actividadRepo = new ActividadRepository(h2);
 
         // SERVICIOS
         AutenticacionService autenService = new AutenticacionService(usuarioRepo);
@@ -49,6 +50,7 @@ public class StartController extends Application {
         ContratoService contratoService = new ContratoService(contratoRepo);
         ConciertoService conciertoService = new ConciertoService(conciertoRepo, horarioRepo, conciertoValidator, contratoService);
         StaffService staffService = new StaffService(usuarioRepo, asignacionStaffRepo);
+        ActividadService actividadService = new ActividadService(actividadRepo, usuarioRepo);
 
         // MANAGERS
         SesionManager sesion = new SesionManager();
@@ -66,7 +68,9 @@ public class StartController extends Application {
                 staffService,
                 conciertoRepo,
                 contratoService,
-                contratoRepo
+                contratoRepo,
+                actividadRepo,
+                actividadService
         );
 
 
