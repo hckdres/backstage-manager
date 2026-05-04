@@ -15,13 +15,16 @@ public class AsignacionStaffRepository {
         this.h2 = h2;
     }
 
-    public void asignarStaffAConcierto(int idUsuario, int idConcierto, int idRol) {
-        String sql = "INSERT INTO RolConciertoUsuario (idRol, idUsuario, idConcierto) VALUES (?, ?, ?)";
+    // Método que permite asignar un rol a un usuario dentro de un concierto
+    // También guarda el subrol cuando el usuario asignado tiene rol de Staff
+    public void asignarStaffAConcierto(int idUsuario, int idConcierto, int idRol, String subrol) {
+        String sql = "INSERT INTO RolConciertoUsuario (idRol, idUsuario, idConcierto, subrol) VALUES (?, ?, ?, ?)";
         try (Connection conn = h2.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, idRol);
             stmt.setInt(2, idUsuario);
             stmt.setInt(3, idConcierto);
+            stmt.setString(4, subrol);
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -154,11 +157,36 @@ public class AsignacionStaffRepository {
         return usuarios;
     }
 
+    // Método que permite obtener todos los roles que tiene un usuario dentro de un concierto
+    // Si el usuario tiene más de un rol, los retorna separados por coma
     public String obtenerNombreRolEnConcierto(int idUsuario, int idConcierto) {
         String sql = "SELECT r.rol " +
                 "FROM RolConciertoUsuario rcu " +
                 "JOIN Rol r ON rcu.idRol = r.idRol " +
-                "WHERE rcu.idUsuario = ? AND rcu.idConcierto = ?";
+                "WHERE rcu.idUsuario = ? AND rcu.idConcierto = ? " +
+                "ORDER BY r.idRol";
+
+        List<String> roles = new ArrayList<>();
+
+        try (Connection conn = h2.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idUsuario);
+            stmt.setInt(2, idConcierto);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                roles.add(rs.getString("rol"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return roles.isEmpty() ? "Sin rol" : String.join(", ", roles);
+    }
+
+    // Método que permite obtener el subrol de un usuario con rol Staff dentro de un concierto
+    public String obtenerSubrolStaffEnConcierto(int idUsuario, int idConcierto) {
+        String sql = "SELECT subrol FROM RolConciertoUsuario WHERE idUsuario = ? AND idConcierto = ? AND idRol = 4";
 
         try (Connection conn = h2.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -167,12 +195,30 @@ public class AsignacionStaffRepository {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                return rs.getString("rol");
+                String subrol = rs.getString("subrol");
+                return subrol == null || subrol.isBlank() ? "Sin subrol" : subrol;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return null;
+        return "Sin subrol";
+    }
+
+    // Método que permite actualizar el subrol de un usuario con rol Staff dentro de un concierto
+    public boolean actualizarSubrolStaffEnConcierto(int idUsuario, int idConcierto, String subrol) {
+        String sql = "UPDATE RolConciertoUsuario SET subrol = ? WHERE idUsuario = ? AND idConcierto = ? AND idRol = 4";
+
+        try (Connection conn = h2.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, subrol);
+            stmt.setInt(2, idUsuario);
+            stmt.setInt(3, idConcierto);
+
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

@@ -140,9 +140,11 @@ public class DirectorioStaffController {
 
         List<Usuario> staffDelConcierto = staffService.obtenerUsuariosPorConcierto(conciertoSeleccionado.getIdConcierto())
                 .stream()
-                .filter(u -> "Staff".equalsIgnoreCase(
-                        staffService.obtenerNombreRolEnConcierto(u.getIdUsuario(), conciertoSeleccionado.getIdConcierto())
-                ))
+                // Se valida con contains porque ahora un usuario puede tener varios roles, por ejemplo: "Tecnico, Staff"
+                .filter(u -> {
+                    String roles = staffService.obtenerNombreRolEnConcierto(u.getIdUsuario(), conciertoSeleccionado.getIdConcierto());
+                    return roles != null && roles.toLowerCase().contains("staff");
+                })
                 .toList();
 
         tablaStaff.setItems(FXCollections.observableArrayList(staffDelConcierto));

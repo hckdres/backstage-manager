@@ -7,16 +7,13 @@ import org.example.ax0006.Repository.ConciertoRepository;
 import org.example.ax0006.Repository.UsuarioRepository;
 import org.example.ax0006.db.H2;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class StaffService {
 
     private final UsuarioRepository usuarioRepository;
     private final AsignacionStaffRepository asignacionStaffRepository;
     private final ConciertoRepository conciertoRepository;
-    private final Map<String, String> subrolesTemporales = new HashMap<>();
 
     public StaffService(H2 h2) {
         this.usuarioRepository = new UsuarioRepository(h2);
@@ -51,11 +48,13 @@ public class StaffService {
         return usuarioRepository.obtenerUsuarios();
     }
 
-    public boolean asignarStaffAConcierto(int idUsuario, int idConcierto, int idRol) {
-        if (asignacionStaffRepository.existeAsignacionEnConcierto(idUsuario, idConcierto)) {
-            asignacionStaffRepository.eliminarAsignacionesUsuarioEnConcierto(idUsuario, idConcierto);
+    // Método que permite asignar un rol a un usuario dentro de un concierto
+    // No elimina roles anteriores, para permitir que un usuario tenga varios roles en el mismo concierto
+    public boolean asignarStaffAConcierto(int idUsuario, int idConcierto, int idRol, String subrol) {
+        if (asignacionStaffRepository.existeAsignacion(idUsuario, idConcierto, idRol)) {
+            return false;
         }
-        asignacionStaffRepository.asignarStaffAConcierto(idUsuario, idConcierto, idRol);
+        asignacionStaffRepository.asignarStaffAConcierto(idUsuario, idConcierto, idRol, subrol);
         return true;
     }
 
@@ -92,20 +91,17 @@ public class StaffService {
         return asignacionStaffRepository.obtenerNombreRolEnConcierto(idUsuario, idConcierto);
     }
 
-    // Retorna temporalmente el subrol del usuario en un concierto específico
+    // Retorna el subrol del usuario con rol Staff en un concierto específico desde la base de datos
     public String obtenerSubrolStaffEnConcierto(int idUsuario, int idConcierto) {
-        String llave = idConcierto + "-" + idUsuario;
-        return subrolesTemporales.getOrDefault(llave, "Sin subrol");
+        return asignacionStaffRepository.obtenerSubrolStaffEnConcierto(idUsuario, idConcierto);
     }
 
-    // Actualiza temporalmente el subrol del usuario en un concierto específico
+    // Actualiza el subrol del usuario con rol Staff en un concierto específico en la base de datos
     public boolean actualizarSubrolStaffEnConcierto(int idUsuario, int idConcierto, String subrol) {
         if (subrol == null || subrol.isBlank()) {
             return false;
         }
 
-        String llave = idConcierto + "-" + idUsuario;
-        subrolesTemporales.put(llave, subrol);
-        return true;
+        return asignacionStaffRepository.actualizarSubrolStaffEnConcierto(idUsuario, idConcierto, subrol);
     }
 }
