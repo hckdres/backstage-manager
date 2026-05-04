@@ -5,6 +5,7 @@ import org.example.ax0006.Repository.ContratoRepository;
 import org.example.ax0006.Repository.HorarioRepository;
 import org.example.ax0006.Repository.RolRepository;
 import org.example.ax0006.Repository.UsuarioRepository;
+import org.example.ax0006.Repository.ActividadRepository;
 import org.example.ax0006.Service.*;
 import org.example.ax0006.Service.AutenticacionService;
 import org.example.ax0006.Service.ConciertoService;
@@ -27,6 +28,8 @@ public class ContextManager {
     private StaffService staffService;
     private ContratoService contratoService;
     private ContratoRepository contratoRepo;
+    private ActividadRepository actividadRepository;
+    private ActividadService actividadService;
 
     public ContextManager(
             H2 h2,
@@ -40,15 +43,17 @@ public class ContextManager {
             ConciertoService conciertoService,
             SesionManager sesion,
             StaffService staffService,
-            ConciertoRepository conciertoRepoExtra, 
+            ConciertoRepository conciertoRepoExtra,
             ContratoService contratoService,
-            ContratoRepository contratoRepo
+            ContratoRepository contratoRepo,
+            ActividadRepository actividadRepository,
+            ActividadService actividadService
     ) {
         this.h2 = h2;
         this.usuarioRepository = usuarioRepository;
         this.rolRepository = rolRepository;
         this.horarioRepo = horarioRepo;
-        this.conciertoRepo = conciertoRepo; 
+        this.conciertoRepo = conciertoRepo;
         this.autenService = autenService;
         this.profileService = profileService;
         this.conciertoService = conciertoService;
@@ -57,6 +62,8 @@ public class ContextManager {
         this.staffService = staffService;
         this.contratoService = contratoService;
         this.contratoRepo = contratoRepo;
+        this.actividadRepository = actividadRepository;
+        this.actividadService = actividadService;
     }
 
     public H2 getH2() { return h2; }
@@ -70,4 +77,6 @@ public class ContextManager {
     public StaffService getStaffService() { return staffService; }
     public ContratoService getContratoService() { return contratoService; }
     public ContratoRepository getContratoRepository() { return contratoRepo; }
+    public ActividadRepository getActividadRepository() { return actividadRepository; }
+    public ActividadService getActividadService() { return actividadService; }
 }
