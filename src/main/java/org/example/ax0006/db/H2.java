@@ -59,7 +59,9 @@ public class H2 {
                 CREATE TABLE IF NOT EXISTS AnalisisFinanciero (
                     idAnalisisF INT AUTO_INCREMENT PRIMARY KEY,
                     presupuesto INT NOT NULL,
-                    gastos INT NOT NULL
+                    gastos INT NOT NULL,
+                    aprobado BOOLEAN DEFAULT FALSE,
+                    precioBoleta INT DEFAULT 0
                 )
             """);
 
