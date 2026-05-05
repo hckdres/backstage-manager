@@ -49,7 +49,7 @@ public class AnalisisFinanciero {
         this.precioBoleta = precioBoleta;
     }
 
-    public boolean getAprobado(){
+    public boolean isAprobado(){
         return aprobado;
     }
 
