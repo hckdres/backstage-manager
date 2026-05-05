@@ -132,6 +132,17 @@ public class SceneManager {
     loadScene("/org/example/ax0006/vercontrato.fxml", controller);
     }
 
+    public void showAnalisisFinanciero() throws IOException {
+
+    AnalisisFinancieroController controller =
+            new AnalisisFinancieroController(
+                    context.getAnalisisFinancieroService(),
+                    this
+            );
+
+    loadScene("/org/example/ax0006/analisisfinanciero.fxml", controller);
+}
+
     public void setContratoTemporal(Integer id) {
     this.contratoTemporal = id;
     }

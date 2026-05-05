@@ -47,6 +47,9 @@ public class MenuController {
     @FXML
     private Button fid_Menu_Conciertos;
 
+    @FXML 
+    private Button fid_AnalisisFinanciero;
+
     @FXML
     public void initialize() {
         if (sesion != null && sesion.getUsuarioActual() != null && fid_Bienvenido != null) {
@@ -81,6 +84,15 @@ public class MenuController {
             alert.setHeaderText("No se pudo abrir la ventana de perfil");
             alert.setContentText("Ocurrió un problema al cargar la vista.");
             alert.showAndWait();
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void On_irAnalisisFinanciero() {
+        try {
+            sceneManager.showAnalisisFinanciero();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
