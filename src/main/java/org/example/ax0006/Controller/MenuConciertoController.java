@@ -29,9 +29,6 @@ public class MenuConciertoController {
     @FXML
     private Button fid_bt_volver;
 
-    @FXML
-    private Button fid_bt_AnalisisConciertos;
-
 
 
     /* ATRIBUTOS */
