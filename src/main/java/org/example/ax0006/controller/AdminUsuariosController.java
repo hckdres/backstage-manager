@@ -75,6 +75,8 @@ public class AdminUsuariosController {
 
 
 
+
+
     @FXML
     public void initialize() {
         if (sesion.getUsuarioActual() != null) {
@@ -115,7 +117,7 @@ public class AdminUsuariosController {
                 super.updateItem(item, empty);
                 if (empty || item == null) setText(null);
                 else if (item instanceof Concierto c)
-                            setText(c.getNombreConcierto());
+                    setText(c.getNombreConcierto());
                 else setText(item.toString());
             }
         });
@@ -256,10 +258,14 @@ public class AdminUsuariosController {
             if (tieneConcierto) {
                 // Usar el concierto del filtro directamente
                 Concierto conciertoFiltro = (Concierto) seleccionado;
+
+                // Se asigna el rol seleccionado sin borrar roles anteriores del mismo usuario
+                // El subrol se envía como null porque se gestiona desde la pantalla DirectorioStaff
                 staffService.asignarStaffAConcierto(
                         u.getIdUsuario(),
                         conciertoFiltro.getIdConcierto(),
-                        rolSeleccionado.getIdRol()
+                        rolSeleccionado.getIdRol(),
+                        null
                 );
             } else {
 
@@ -271,10 +277,14 @@ public class AdminUsuariosController {
                     alert.showAndWait();
                     return;
                 }
+
+                // Se asigna el rol seleccionado sin borrar roles anteriores del mismo usuario
+                // El subrol se envía como null porque se gestiona desde la pantalla DirectorioStaff
                 staffService.asignarStaffAConcierto(
                         u.getIdUsuario(),
                         conciertoSeleccionado.getIdConcierto(),
-                        rolSeleccionado.getIdRol()
+                        rolSeleccionado.getIdRol(),
+                        null
                 );
             }
             actualizarTabla();
@@ -286,9 +296,3 @@ public class AdminUsuariosController {
         sceneManager.showMenu();
     }
 }
-
-
-
-
-
-
