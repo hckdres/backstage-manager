@@ -1,15 +1,12 @@
 package org.example.ax0006.Manager;
 
+import org.example.ax0006.Repository.AnalisisFinancieroRepository;
 import org.example.ax0006.Repository.ConciertoRepository;
 import org.example.ax0006.Repository.ContratoRepository;
 import org.example.ax0006.Repository.HorarioRepository;
 import org.example.ax0006.Repository.RolRepository;
 import org.example.ax0006.Repository.UsuarioRepository;
 import org.example.ax0006.Service.*;
-import org.example.ax0006.Service.AutenticacionService;
-import org.example.ax0006.Service.ConciertoService;
-import org.example.ax0006.Service.ProfileService;
-import org.example.ax0006.Service.RolService;
 import org.example.ax0006.db.H2;
 
 public class ContextManager {
@@ -27,6 +24,8 @@ public class ContextManager {
     private StaffService staffService;
     private ContratoService contratoService;
     private ContratoRepository contratoRepo;
+    private AnalisisFinancieroService analisisService;
+    private AnalisisFinancieroRepository analisisRepo;
 
     public ContextManager(
             H2 h2,
@@ -42,7 +41,9 @@ public class ContextManager {
             StaffService staffService,
             ConciertoRepository conciertoRepoExtra, 
             ContratoService contratoService,
-            ContratoRepository contratoRepo
+            ContratoRepository contratoRepo,
+            AnalisisFinancieroService analisisService,
+            AnalisisFinancieroRepository analisisRepo
     ) {
         this.h2 = h2;
         this.usuarioRepository = usuarioRepository;
@@ -57,6 +58,8 @@ public class ContextManager {
         this.staffService = staffService;
         this.contratoService = contratoService;
         this.contratoRepo = contratoRepo;
+        this.analisisService = analisisService;
+        this.analisisRepo = analisisRepo;
     }
 
     public H2 getH2() { return h2; }
@@ -70,4 +73,6 @@ public class ContextManager {
     public StaffService getStaffService() { return staffService; }
     public ContratoService getContratoService() { return contratoService; }
     public ContratoRepository getContratoRepository() { return contratoRepo; }
+    public AnalisisFinancieroService getAnalisisFinancieroService() { return analisisService;}
+    public AnalisisFinancieroRepository getAnalisisFinancieroRepository() {return analisisRepo;}
 }

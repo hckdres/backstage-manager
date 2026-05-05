@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.ax0006.Controller.AnalisisFinancieroController">
+
+    <!-- =========================
+         TOP: TITULO
+    ========================= -->
+    <top>
+        <Label text="Gestión Financiera del Evento"
+               style="-fx-font-size: 20px; -fx-font-weight: bold;"
+               BorderPane.alignment="CENTER">
+            <BorderPane.margin>
+                <Insets top="15" bottom="15"/>
+            </BorderPane.margin>
+        </Label>
+    </top>
+
+    <!-- =========================
+         CENTER: CONTENIDO
+    ========================= -->
+    <center>
+        <VBox spacing="15" alignment="CENTER">
+
+            <padding>
+                <Insets top="20" left="20" right="20" bottom="20"/>
+            </padding>
+
+            <!-- ID -->
+            <HBox spacing="10" alignment="CENTER">
+                <Label text="ID Presupuesto:"/>
+                <TextField fx:id="fid_id" promptText="Ingrese ID"/>
+            </HBox>
+
+            <!-- PRESUPUESTO -->
+            <HBox spacing="10" alignment="CENTER">
+                <Label text="Presupuesto:"/>
+                <TextField fx:id="fid_presupuesto" promptText="Monto"/>
+                <Button text="Crear" onAction="#On_crearPresupuesto"/>
+                <Button text="Eliminar" onAction="#On_eliminarPresupuesto"/>
+            </HBox>
+
+            <!-- GASTOS -->
+            <HBox spacing="10" alignment="CENTER">
+                <Label text="Gasto:"/>
+                <TextField fx:id="fid_gasto" promptText="Monto gasto"/>
+                <Button text="Agregar Gasto" onAction="#On_registrarGasto"/>
+                <Button text="Eliminar Gasto" onAction="#On_eliminarGasto"/>
+            </HBox>
+
+            <!-- PRECIO BOLETA -->
+            <HBox spacing="10" alignment="CENTER">
+                <Label text="Precio Boleta:"/>
+                <TextField fx:id="fid_precioBoleta" promptText="Precio"/>
+                <Button text="Definir" onAction="#On_definirPrecio"/>
+            </HBox>
+
+            <!-- ACCIONES -->
+            <HBox spacing="15" alignment="CENTER">
+                <Button text="Aprobar Presupuesto" onAction="#On_aprobarPresupuesto"/>
+                <Button text="Calcular Balance" onAction="#On_calcularEquilibrio"/>
+            </HBox>
+
+            <!-- RESULTADO -->
+            <Label fx:id="lbl_resultado"
+                   text="Resultado..."
+                   style="-fx-font-size: 16px; -fx-text-fill: blue;"/>
+
+        </VBox>
+    </center>
+
+    <!-- =========================
+         BOTTOM: BOTÓN VOLVER
+    ========================= -->
+    <bottom>
+        <HBox alignment="CENTER">
+            <Button text="Volver" onAction="#On_volver">
+                <HBox.margin>
+                    <Insets top="15" bottom="15"/>
+                </HBox.margin>
+            </Button>
+        </HBox>
+    </bottom>
+
+</BorderPane>
