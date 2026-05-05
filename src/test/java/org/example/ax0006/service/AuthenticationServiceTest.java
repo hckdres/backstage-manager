@@ -1,4 +1,4 @@
-package org.example.ax0006.test;
+package org.example.ax0006.service;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -9,9 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.example.ax0006.db.H2;
 import org.example.ax0006.entity.Usuario;
-import org.example.ax0006.manager.SesionManager;
 import org.example.ax0006.repository.UsuarioRepository;
-import org.example.ax0006.service.AutenticacionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -187,108 +185,6 @@ class AuthenticationServiceTest {
                     () -> assertEquals("usuario_multiple_1", loginUsuario1.getNombre()),
                     () -> assertNotNull(loginUsuario2),
                     () -> assertEquals("usuario_multiple_2", loginUsuario2.getNombre()));
-        }
-    }
-
-    @Nested
-    @DisplayName("SesionManager")
-    class Sesion {
-
-        @Test
-        @DisplayName("guarda el usuario actual en sesión")
-        void sesionGuardaUsuario() {
-            // Se crea un usuario de prueba con datos conocidos.
-            Usuario usuario = new Usuario(
-                    1,
-                    "a",
-                    "password_hash",
-                    "a@example.com");
-
-            // Se crea una sesión inicialmente vacía.
-            SesionManager sesion = new SesionManager();
-
-            // Se asigna el usuario como usuario actual de la sesión.
-            sesion.setUsuarioActual(usuario);
-
-            // Se obtiene el usuario guardado en la sesión.
-            Usuario usuarioActual = sesion.getUsuarioActual();
-
-            // Se verifica que la sesión conserve el usuario asignado.
-            assertAll("usuario en sesión",
-                    () -> assertNotNull(usuarioActual),
-                    () -> assertEquals(1, usuarioActual.getIdUsuario()),
-                    () -> assertEquals("a", usuarioActual.getNombre()),
-                    () -> assertEquals("a@example.com", usuarioActual.getGmail()));
-        }
-
-        @Test
-        @DisplayName("inicia sin usuario actual")
-        void sesionIniciaSinUsuarioActual() {
-            // Se crea una sesión nueva sin asignarle ningún usuario.
-            SesionManager sesion = new SesionManager();
-
-            // Se consulta el usuario actual de la sesión recién creada.
-            Usuario usuarioActual = sesion.getUsuarioActual();
-
-            // Se comprueba que una sesión nueva no tenga usuario autenticado.
-            assertNull(usuarioActual, "Una sesión nueva debe iniciar sin usuario actual.");
-        }
-    }
-
-    @Nested
-    @DisplayName("Usuario")
-    class UsuarioTest {
-
-        @Test
-        @DisplayName("guarda correctamente los datos básicos del usuario")
-        void guardaDatosBasicosUsuario() {
-            // Se crea un usuario con id, nombre, contraseña y correo.
-            Usuario usuario = new Usuario(
-                    5,
-                    "Juan Pérez",
-                    "password_hash",
-                    "juan@example.com");
-
-            // Se verifica que el constructor haya guardado correctamente los datos básicos.
-            assertAll("datos básicos",
-                    () -> assertEquals(5, usuario.getIdUsuario()),
-                    () -> assertEquals("Juan Pérez", usuario.getNombre()),
-                    () -> assertEquals("password_hash", usuario.getContrasena()),
-                    () -> assertEquals("juan@example.com", usuario.getGmail()));
-        }
-
-        @Test
-        @DisplayName("guarda correctamente los datos complementarios del usuario")
-        void guardaDatosComplementariosUsuario() {
-            // Se crea un usuario base para completar después su información adicional.
-            Usuario usuario = new Usuario(
-                    5,
-                    "Juan Pérez",
-                    "password_hash",
-                    "juan@example.com");
-
-            // Se asigna el teléfono del usuario.
-            usuario.setTelefono("1234567890");
-
-            // Se asigna la dirección del usuario.
-            usuario.setDireccion("Calle Principal 123");
-
-            // Se asigna el nombre del contacto de emergencia.
-            usuario.setContactoEmergenciaNombre("Maria Pérez");
-
-            // Se asigna el teléfono del contacto de emergencia.
-            usuario.setContactoEmergenciaTelefono("9876543210");
-
-            // Se asigna la relación del contacto de emergencia con el usuario.
-            usuario.setContactoEmergenciaRelacion("Hermana");
-
-            // Se verifica que todos los datos complementarios hayan quedado guardados.
-            assertAll("datos complementarios",
-                    () -> assertEquals("1234567890", usuario.getTelefono()),
-                    () -> assertEquals("Calle Principal 123", usuario.getDireccion()),
-                    () -> assertEquals("Maria Pérez", usuario.getContactoEmergenciaNombre()),
-                    () -> assertEquals("9876543210", usuario.getContactoEmergenciaTelefono()),
-                    () -> assertEquals("Hermana", usuario.getContactoEmergenciaRelacion()));
         }
     }
 }
