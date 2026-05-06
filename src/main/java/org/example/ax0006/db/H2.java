@@ -15,6 +15,7 @@ public class H2 {
     public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASS);
     }
+
     public void inicializarDB() {
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
 
