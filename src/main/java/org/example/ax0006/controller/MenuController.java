@@ -48,9 +48,6 @@ public class MenuController {
     private Button fid_Menu_Conciertos;
 
     @FXML
-    private Button fid_bt_directorio_staff;
-
-    @FXML
     public void initialize() {
         if (sesion != null && sesion.getUsuarioActual() != null && fid_Bienvenido != null) {
             fid_Bienvenido.setText("Bienvenido " + sesion.getUsuarioActual().getNombre());

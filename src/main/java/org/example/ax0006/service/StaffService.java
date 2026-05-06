@@ -5,7 +5,6 @@ import org.example.ax0006.entity.Usuario;
 import org.example.ax0006.repository.AsignacionStaffRepository;
 import org.example.ax0006.repository.ConciertoRepository;
 import org.example.ax0006.repository.UsuarioRepository;
-import org.example.ax0006.db.H2;
 
 import java.util.List;
 
@@ -15,13 +14,7 @@ public class StaffService {
     private final AsignacionStaffRepository asignacionStaffRepository;
     private final ConciertoRepository conciertoRepository;
 
-    public StaffService(H2 h2) {
-        this.usuarioRepository = new UsuarioRepository(h2);
-        this.asignacionStaffRepository = new AsignacionStaffRepository(h2);
-        this.conciertoRepository = new ConciertoRepository(h2);
-    }
-
-    // Constructor alternativo para recibir repositorios ya creados
+    // Constructor que recibe los repositorios por inyección de dependencias
     public StaffService(UsuarioRepository usuarioRepository,
                         AsignacionStaffRepository asignacionStaffRepository,
                         ConciertoRepository conciertoRepository) {

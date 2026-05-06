@@ -75,8 +75,6 @@ public class AdminUsuariosController {
 
 
 
-
-
     @FXML
     public void initialize() {
         if (sesion.getUsuarioActual() != null) {
@@ -260,13 +258,24 @@ public class AdminUsuariosController {
                 Concierto conciertoFiltro = (Concierto) seleccionado;
 
                 // Se asigna el rol seleccionado sin borrar roles anteriores del mismo usuario
-                // El subrol se envía como null porque se gestiona desde la pantalla DirectorioStaff
-                staffService.asignarStaffAConcierto(
+                // El subrol se envia como null porque se gestiona desde la pantalla DirectorioStaff
+                boolean asignado = staffService.asignarStaffAConcierto(
                         u.getIdUsuario(),
                         conciertoFiltro.getIdConcierto(),
                         rolSeleccionado.getIdRol(),
                         null
                 );
+
+                if (!asignado) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Asignación duplicada");
+                    alert.setHeaderText("Este usuario ya tiene ese rol en este concierto");
+                    alert.showAndWait();
+                    return;
+                }
+
+                comboConciertoFiltro.setValue(conciertoFiltro);
+
             } else {
 
                 Concierto conciertoSeleccionado = comboConciertos.getValue();
@@ -279,13 +288,23 @@ public class AdminUsuariosController {
                 }
 
                 // Se asigna el rol seleccionado sin borrar roles anteriores del mismo usuario
-                // El subrol se envía como null porque se gestiona desde la pantalla DirectorioStaff
-                staffService.asignarStaffAConcierto(
+                // El subrol se envia como null porque se gestiona desde la pantalla DirectorioStaff
+                boolean asignado = staffService.asignarStaffAConcierto(
                         u.getIdUsuario(),
                         conciertoSeleccionado.getIdConcierto(),
                         rolSeleccionado.getIdRol(),
                         null
                 );
+
+                if (!asignado) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Asignación duplicada");
+                    alert.setHeaderText("Este usuario ya tiene ese rol en este concierto");
+                    alert.showAndWait();
+                    return;
+                }
+
+                comboConciertoFiltro.setValue(conciertoSeleccionado);
             }
             actualizarTabla();
         }
