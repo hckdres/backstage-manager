@@ -1,9 +1,20 @@
 package org.example.ax0006.db;
 
+import org.h2.tools.RunScript;
+import org.h2.tools.Server;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.Objects;
+
+/*
+    CREDENCIALES BASE DE DATOS H2:
+    JDBC URL: jdbc:h2:./data/eventosdb
+    User: sa
+    Password:
+*/
 
 public class H2 {
     private static final String URL = "jdbc:h2:./data/eventosdb;DB_CLOSE_DELAY=-1";
