@@ -77,21 +77,11 @@
                            text="Resultado..."
                            style="-fx-font-size: 18px; -fx-text-fill: blue;"/>
 
+                    <Button text="Volver"
+                            onAction="#On_volver"
+                            style="-fx-background-color: #2563eb; -fx-text-fill: white;"/>
                 </VBox>
             </center>
-
-            <!-- =========================
-                 BOTTOM: BOTÓN VOLVER
-            ========================= -->
-            <bottom>
-                <HBox alignment="CENTER">
-                    <Button text="Volver" onAction="#On_volver">
-                        <HBox.margin>
-                            <Insets top="20" bottom="20"/>
-                        </HBox.margin>
-                    </Button>
-                </HBox>
-            </bottom>
 
         </BorderPane>
 
