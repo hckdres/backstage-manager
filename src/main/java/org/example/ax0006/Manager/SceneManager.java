@@ -41,8 +41,8 @@ public class SceneManager {
     }
 
     public void showActividad() throws IOException {
-        ActividadController actividadController = new ActividadController(this, context.getSesion(), context.getActividadService());
-        loadScene("/org/example/ax0006/notificaciones.fxml", actividadController);
+        ActivityNotificationController activityNotificationController = new ActivityNotificationController(this, context.getSesion(), context.getActividadService());
+        loadScene("/org/example/ax0006/notificaciones.fxml", activityNotificationController);
     }
 
     //metodo para mostrar pantalla de administracion de usuarios.

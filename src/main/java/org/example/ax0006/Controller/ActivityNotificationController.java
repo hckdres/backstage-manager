@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActividadController {
+public class ActivityNotificationController {
     private final SceneManager sceneManager;
     private final SesionManager sesion;
     private final ActividadService actividadService;
@@ -25,7 +25,7 @@ public class ActividadController {
     private Actividad actividadSeleccionada;
     private String filtroActual = "TODO";
 
-    public ActividadController(SceneManager sceneManager, SesionManager sesion, ActividadService actividadService) {
+    public ActivityNotificationController(SceneManager sceneManager, SesionManager sesion, ActividadService actividadService) {
         this.sceneManager = sceneManager;
         this.sesion = sesion;
         this.actividadService = actividadService;
