@@ -17,7 +17,7 @@ import java.util.List;
 
 public class crearInventarioController {
     private final InventarioService inventarioService;
-    private final ObjetoService objetoService; // Necesitas este servicio
+    private final ObjetoService objetoService; 
     private final SceneManager sceneManager;
     private final SesionManager sesionManager;
 
