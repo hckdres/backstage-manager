@@ -4,17 +4,14 @@ public class AnalisisFinanciero {
 
     private int idAnalisisF;
     private int presupuesto;
-    private int gastos;
     private boolean aprobado;
-    private int precioBoleta;
-
+  
     public AnalisisFinanciero() {}
 
-    public AnalisisFinanciero(int presupuesto, int gastos, boolean aprobado, int precioBoleta) {
+    public AnalisisFinanciero(int idAnalisisF, int presupuesto, boolean aprobado) {
+        this.idAnalisisF = idAnalisisF;
         this.presupuesto = presupuesto;
-        this.gastos = gastos;
         this.aprobado = aprobado;
-        this.precioBoleta = precioBoleta;
     }
 
     public int getIdAnalisisF() {
@@ -33,22 +30,6 @@ public class AnalisisFinanciero {
         this.presupuesto = presupuesto;
     }
 
-    public int getGastos() {
-        return gastos;
-    }
-
-    public void setGastos(int gastos) {
-        this.gastos = gastos;
-    }
-
-    public int getPrecioBoleta(){
-        return precioBoleta;
-    }
-
-    public void setPrecioBoleta(int precioBoleta){
-        this.precioBoleta = precioBoleta;
-    }
-
     public boolean isAprobado(){
         return aprobado;
     }
@@ -56,5 +37,4 @@ public class AnalisisFinanciero {
     public void setAprobado(boolean aprobado){
         this.aprobado = aprobado;
     }
-
 }

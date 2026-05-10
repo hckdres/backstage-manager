@@ -5,100 +5,84 @@ import org.example.ax0006.repository.AnalisisFinancieroRepository;
 
 public class AnalisisFinancieroService {
 
-    private AnalisisFinancieroRepository repo;
+    private AnalisisFinancieroRepository analisisRepo;
 
-    public AnalisisFinancieroService(AnalisisFinancieroRepository repo) {
-        this.repo = repo;
+    public AnalisisFinancieroService(
+            AnalisisFinancieroRepository analisisRepo
+    ) {
+
+        this.analisisRepo = analisisRepo;
     }
 
     // =========================
     // CREAR PRESUPUESTO
     // =========================
-    public int crearPresupuesto(int monto) {
+    public int crearPresupuesto(int presupuesto) {
 
-        if (monto <= 0) return 0;
-
-        AnalisisFinanciero af = new AnalisisFinanciero();
-        af.setPresupuesto(monto);
-        af.setGastos(0);
-        af.setAprobado(false);
-        af.setPrecioBoleta(0);
-
-        return repo.guardar(af);
-    }
-
-    // =========================
-    // ELIMINAR PRESUPUESTO
-    // =========================
-    public void eliminarPresupuesto(int id) {
-        repo.eliminar(id);
-    }
-
-    // =========================
-    // REGISTRAR GASTO
-    // =========================
-    public void registrarGasto(int id, int gasto) {
-
-        if (gasto <= 0) return;
-
-        AnalisisFinanciero af = repo.buscarPorId(id);
-        if (af == null) return;
-
-        int nuevoTotal = af.getGastos() + gasto;
-
-        repo.actualizarGastos(id, nuevoTotal);
-    }
-
-    // =========================
-    // ELIMINAR GASTO
-    // =========================
-    public void eliminarGasto(int id, int gasto) {
-
-        if (gasto <= 0) return;
-
-        AnalisisFinanciero af = repo.buscarPorId(id);
-        if (af == null) return;
-
-        int nuevoTotal = af.getGastos() - gasto;
-        if (nuevoTotal < 0) nuevoTotal = 0;
-
-        repo.actualizarGastos(id, nuevoTotal);
-    }
-
-    // =========================
-    // APROBAR PRESUPUESTO
-    // =========================
-    public void aprobarPresupuesto(int id) {
-
-        AnalisisFinanciero af = repo.buscarPorId(id);
-        if (af == null) return;
-
-        // Regla de negocio
-        if (af.getGastos() > af.getPresupuesto()) {
-            return; // no se aprueba si hay sobrecosto
+        if (presupuesto <= 0) {
+            return 0;
         }
 
-        repo.aprobar(id);
+        AnalisisFinanciero af =
+                new AnalisisFinanciero();
+
+        af.setPresupuesto(presupuesto);
+        af.setAprobado(false);
+
+        return analisisRepo.guardar(af);
     }
 
     // =========================
-    // DEFINIR PRECIO BOLETA
+    // EDITAR PRESUPUESTO
     // =========================
-    public void definirPrecioBoleta(int id, int precio) {
+    public void editarPresupuesto(
+            int idAnalisis,
+            int nuevoPresupuesto
+    ) {
 
-        if (precio <= 0) return;
+        if (nuevoPresupuesto <= 0) {
+            return;
+        }
 
-        repo.actualizarPrecioBoleta(id, precio);
+        analisisRepo.actualizarPresupuesto(
+                idAnalisis,
+                nuevoPresupuesto
+        );
     }
 
     // =========================
-    // CONSULTAR BALANCE
+    // APROBAR
     // =========================
-    public int obtenerBalance(int id) {
+    public void aprobarPresupuesto(int idAnalisis) {
 
-        AnalisisFinanciero af = repo.buscarPorId(id);
-        if (af == null) return 0;
+        analisisRepo.aprobar(idAnalisis);
+    }
 
-        return af.getPresupuesto() - af.getGastos();
+    // =========================
+    // DESAPROBAR
+    // =========================
+    public void desaprobarPresupuesto(int idAnalisis) {
+
+        analisisRepo.desaprobar(idAnalisis);
+    }
+
+    // =========================
+    // OBTENER ANALISIS
+    // =========================
+    public AnalisisFinanciero obtenerAnalisis(
+            int idAnalisis
+    ) {
+
+        return analisisRepo.buscarPorId(
+                idAnalisis
+        );
+    }
+
+    // =========================
+    // ELIMINAR ANALISIS
+    // =========================
+    public void eliminarAnalisis(int idAnalisis) {
+
+        analisisRepo.eliminar(idAnalisis);
     }
 }

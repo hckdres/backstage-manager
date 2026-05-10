@@ -87,12 +87,12 @@ public class SceneManager {
     }
 
     public void showCrearConcierto() throws  IOException{
-// 🔥 SOLO limpiar si NO vienes de crear contrato
+    //  SOLO limpiar si NO se viene de crear contrato
         if (!"crearContrato".equals(context.getSesion().getPantallaOrigen())) {
         context.getSesion().setIdContratoTemporal(null);
         context.getSesion().setConciertoTemporal(null);
         }
-    // 🔥 resetear origen
+    // esetear origen
     context.getSesion().setPantallaOrigen(null);
 
         CrearConciertoController crearConciertoController = new CrearConciertoController(context.getSesion(), context.getConciertoService(), this);
@@ -109,7 +109,7 @@ public class SceneManager {
     CrearContratoController controller = new CrearContratoController(
         this,
         context.getContratoService(),
-        context.getSesion() // 🔥 AQUÍ
+        context.getSesion() 
     );
     loadScene("/org/example/ax0006/crearcontrato.fxml", controller);
     }
@@ -134,14 +134,19 @@ public class SceneManager {
 
     public void showAnalisisFinanciero() throws IOException {
 
-    AnalisisFinancieroController controller =
-            new AnalisisFinancieroController(
-                    context.getAnalisisFinancieroService(),
-                    this
-            );
+    AnalisisFinancieroController controller = new AnalisisFinancieroController(
 
-    loadScene("/org/example/ax0006/analisisfinanciero.fxml", controller);
-}
+                            context.getAnalisisFinancieroService(),
+                            context.getGastoService(),
+                            context.getIngresoService(),
+                            context.getBoleteriaService(),
+                    this
+                    );
+                    loadScene(
+                            "/org/example/ax0006/analisisfinanciero.fxml",
+                            controller
+                    );
+    }
 
     public void setContratoTemporal(Integer id) {
     this.contratoTemporal = id;

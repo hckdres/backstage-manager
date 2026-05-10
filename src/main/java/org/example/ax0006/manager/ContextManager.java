@@ -26,6 +26,9 @@ public class ContextManager {
     private ContratoRepository contratoRepo;
     private AnalisisFinancieroService analisisService;
     private AnalisisFinancieroRepository analisisRepo;
+    private GastoService gastoService;
+    private IngresoService ingresoService;
+    private BoleteriaService boleteriaService;
 
     public ContextManager(
             H2 h2,
@@ -43,7 +46,10 @@ public class ContextManager {
             ContratoService contratoService,
             ContratoRepository contratoRepo,
             AnalisisFinancieroService analisisService,
-            AnalisisFinancieroRepository analisisRepo
+            AnalisisFinancieroRepository analisisRepo,
+            GastoService gastoService,
+            IngresoService ingresoService,
+            BoleteriaService boleteriaService
     ) {
         this.h2 = h2;
         this.usuarioRepository = usuarioRepository;
@@ -60,6 +66,9 @@ public class ContextManager {
         this.contratoRepo = contratoRepo;
         this.analisisService = analisisService;
         this.analisisRepo = analisisRepo;
+        this.gastoService = gastoService;
+        this.ingresoService = ingresoService;
+        this.boleteriaService = boleteriaService;
     }
 
     public H2 getH2() { return h2; }
@@ -75,4 +84,7 @@ public class ContextManager {
     public ContratoRepository getContratoRepository() { return contratoRepo; }
     public AnalisisFinancieroService getAnalisisFinancieroService() { return analisisService;}
     public AnalisisFinancieroRepository getAnalisisFinancieroRepository() {return analisisRepo;}
+    public GastoService getGastoService() { return gastoService;}
+    public IngresoService getIngresoService() { return ingresoService;}
+    public BoleteriaService getBoleteriaService() { return boleteriaService;}
 }

@@ -1,7 +1,7 @@
 package org.example.ax0006.repository;
 
-import org.example.ax0006.entity.AnalisisFinanciero;
 import org.example.ax0006.db.H2;
+import org.example.ax0006.entity.AnalisisFinanciero;
 
 import java.sql.*;
 
@@ -14,28 +14,33 @@ public class AnalisisFinancieroRepository {
     }
 
     // =========================
-    // CREAR PRESUPUESTO
+    // GUARDAR ANALISIS
     // =========================
     public int guardar(AnalisisFinanciero af) {
 
         String sql = """
-            INSERT INTO AnalisisFinanciero (presupuesto, gastos, aprobado, precioBoleta)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO AnalisisFinanciero
+            (presupuesto, aprobado)
+            VALUES (?, ?)
         """;
 
         int idGenerado = 0;
 
-        try (Connection conn = h2.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (
+                Connection conn = h2.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(
+                        sql,
+                        Statement.RETURN_GENERATED_KEYS
+                )
+        ) {
 
             stmt.setInt(1, af.getPresupuesto());
-            stmt.setInt(2, af.getGastos());
-            stmt.setBoolean(3, af.isAprobado());
-            stmt.setInt(4, af.getPrecioBoleta());
+            stmt.setBoolean(2, af.isAprobado());
 
             stmt.executeUpdate();
 
             ResultSet rs = stmt.getGeneratedKeys();
+
             if (rs.next()) {
                 idGenerado = rs.getInt(1);
             }
@@ -52,21 +57,38 @@ public class AnalisisFinancieroRepository {
     // =========================
     public AnalisisFinanciero buscarPorId(int id) {
 
-        String sql = "SELECT * FROM AnalisisFinanciero WHERE idAnalisisF = ?";
+        String sql = """
+            SELECT *
+            FROM AnalisisFinanciero
+            WHERE idAnalisisF = ?
+        """;
 
-        try (Connection conn = h2.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (
+                Connection conn = h2.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
 
             stmt.setInt(1, id);
+
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                AnalisisFinanciero af = new AnalisisFinanciero();
-                af.setIdAnalisisF(rs.getInt("idAnalisisF"));
-                af.setPresupuesto(rs.getInt("presupuesto"));
-                af.setGastos(rs.getInt("gastos"));
-                af.setAprobado(rs.getBoolean("aprobado"));
-                af.setPrecioBoleta(rs.getInt("precioBoleta"));
+
+                AnalisisFinanciero af =
+                        new AnalisisFinanciero();
+
+                af.setIdAnalisisF(
+                        rs.getInt("idAnalisisF")
+                );
+
+                af.setPresupuesto(
+                        rs.getInt("presupuesto")
+                );
+
+                af.setAprobado(
+                        rs.getBoolean("aprobado")
+                );
+
                 return af;
             }
 
@@ -78,35 +100,27 @@ public class AnalisisFinancieroRepository {
     }
 
     // =========================
-    // ELIMINAR PRESUPUESTO
+    // ACTUALIZAR PRESUPUESTO
     // =========================
-    public void eliminar(int id) {
+    public void actualizarPresupuesto(
+            int id,
+            int nuevoPresupuesto
+    ) {
 
-        String sql = "DELETE FROM AnalisisFinanciero WHERE idAnalisisF = ?";
+        String sql = """
+            UPDATE AnalisisFinanciero
+            SET presupuesto = ?
+            WHERE idAnalisisF = ?
+        """;
 
-        try (Connection conn = h2.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (
+                Connection conn = h2.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
 
-            stmt.setInt(1, id);
-            stmt.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // =========================
-    // ACTUALIZAR GASTOS
-    // =========================
-    public void actualizarGastos(int id, int gastos) {
-
-        String sql = "UPDATE AnalisisFinanciero SET gastos = ? WHERE idAnalisisF = ?";
-
-        try (Connection conn = h2.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, gastos);
+            stmt.setInt(1, nuevoPresupuesto);
             stmt.setInt(2, id);
+
             stmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -115,16 +129,23 @@ public class AnalisisFinancieroRepository {
     }
 
     // =========================
-    // APROBAR PRESUPUESTO
+    // APROBAR
     // =========================
     public void aprobar(int id) {
 
-        String sql = "UPDATE AnalisisFinanciero SET aprobado = TRUE WHERE idAnalisisF = ?";
+        String sql = """
+            UPDATE AnalisisFinanciero
+            SET aprobado = TRUE
+            WHERE idAnalisisF = ?
+        """;
 
-        try (Connection conn = h2.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (
+                Connection conn = h2.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
 
             stmt.setInt(1, id);
+
             stmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -133,17 +154,47 @@ public class AnalisisFinancieroRepository {
     }
 
     // =========================
-    // PRECIO BOLETA
+    // DESAPROBAR
     // =========================
-    public void actualizarPrecioBoleta(int id, int precio) {
+    public void desaprobar(int id) {
 
-        String sql = "UPDATE AnalisisFinanciero SET precioBoleta = ? WHERE idAnalisisF = ?";
+        String sql = """
+            UPDATE AnalisisFinanciero
+            SET aprobado = FALSE
+            WHERE idAnalisisF = ?
+        """;
 
-        try (Connection conn = h2.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (
+                Connection conn = h2.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
 
-            stmt.setInt(1, precio);
-            stmt.setInt(2, id);
+            stmt.setInt(1, id);
+
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // =========================
+    // ELIMINAR
+    // =========================
+    public void eliminar(int id) {
+
+        String sql = """
+            DELETE FROM AnalisisFinanciero
+            WHERE idAnalisisF = ?
+        """;
+
+        try (
+                Connection conn = h2.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
+
+            stmt.setInt(1, id);
+
             stmt.executeUpdate();
 
         } catch (SQLException e) {

@@ -1,56 +1,230 @@
 package org.example.ax0006.controller;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import org.example.ax0006.service.AnalisisFinancieroService;
+import org.example.ax0006.entity.Boleteria;
+import org.example.ax0006.entity.Gasto;
+import org.example.ax0006.entity.Ingreso;
 import org.example.ax0006.manager.SceneManager;
+import org.example.ax0006.service.AnalisisFinancieroService;
+import org.example.ax0006.service.BoleteriaService;
+import org.example.ax0006.service.GastoService;
+import org.example.ax0006.service.IngresoService;
 
 import java.io.IOException;
 
 public class AnalisisFinancieroController {
 
     // =========================
-    // FXML
+    // SERVICES
     // =========================
-    @FXML private TextField fid_id;
-    @FXML private TextField fid_presupuesto;
-    @FXML private TextField fid_gasto;
-    @FXML private TextField fid_precioBoleta;
-    @FXML private Label lbl_resultado;
+    private AnalisisFinancieroService analisisService;
+    private GastoService gastoService;
+    private IngresoService ingresoService;
+    private BoleteriaService boleteriaService;
+    private SceneManager sceneManager;
 
     // =========================
-    // ATRIBUTOS
+    // ID ACTUAL
     // =========================
-    private AnalisisFinancieroService service;
-    private SceneManager sceneManager;
+    private int idAnalisisActual = 0;
 
     // =========================
     // CONSTRUCTOR
     // =========================
-    public AnalisisFinancieroController(AnalisisFinancieroService service, SceneManager sceneManager) {
-        this.service = service;
+    public AnalisisFinancieroController(
+            AnalisisFinancieroService analisisService,
+            GastoService gastoService,
+            IngresoService ingresoService,
+            BoleteriaService boleteriaService,
+            SceneManager sceneManager
+    ) {
+
+        this.analisisService = analisisService;
+        this.gastoService = gastoService;
+        this.ingresoService = ingresoService;
+        this.boleteriaService = boleteriaService;
         this.sceneManager = sceneManager;
+    }
+
+    // =========================
+    // PRESUPUESTO
+    // =========================
+    @FXML private TextField fid_presupuesto;
+
+    @FXML private Label lbl_idPresupuesto;
+
+    @FXML private CheckBox chk_aprobado;
+
+    // =========================
+    // GASTOS
+    // =========================
+    @FXML private TextField fid_descripcionGasto;
+    @FXML private TextField fid_valorGasto;
+
+    @FXML private TableView<Gasto> tablaGastos;
+
+    @FXML private TableColumn<Gasto, String> colDescripcionGasto;
+    @FXML private TableColumn<Gasto, Integer> colValorGasto;
+
+    @FXML private Label lblTotalGastos;
+
+    // =========================
+    // INGRESOS
+    // =========================
+    @FXML private TextField fid_descripcionIngreso;
+    @FXML private TextField fid_valorIngreso;
+
+    @FXML private TableView<Ingreso> tablaIngresos;
+
+    @FXML private TableColumn<Ingreso, String> colDescripcionIngreso;
+    @FXML private TableColumn<Ingreso, Integer> colValorIngreso;
+
+    @FXML private Label lblTotalIngresos;
+
+    // =========================
+    // BOLETERIA
+    // =========================
+    @FXML private TextField fid_seccion;
+    @FXML private TextField fid_cantidad;
+    @FXML private TextField fid_precioBoleta;
+
+    @FXML private TableView<Boleteria> tablaBoleteria;
+
+    @FXML private TableColumn<Boleteria, String> colSeccion;
+    @FXML private TableColumn<Boleteria, Integer> colCantidad;
+    @FXML private TableColumn<Boleteria, Integer> colPrecio;
+    @FXML private TableColumn<Boleteria, Integer> colIngresoTotal;
+
+    // =========================
+    // INITIALIZE
+    // =========================
+    @FXML
+    public void initialize() {
+
+        colDescripcionGasto.setCellValueFactory(
+                data -> new javafx.beans.property.SimpleStringProperty(
+                        data.getValue().getDescripcion()
+                )
+        );
+
+        colValorGasto.setCellValueFactory(
+                data -> new javafx.beans.property.SimpleObjectProperty<>(
+                        data.getValue().getValor()
+                )
+        );
+
+        colDescripcionIngreso.setCellValueFactory(
+                data -> new javafx.beans.property.SimpleStringProperty(
+                        data.getValue().getDescripcion()
+                )
+        );
+
+        colValorIngreso.setCellValueFactory(
+                data -> new javafx.beans.property.SimpleObjectProperty<>(
+                        data.getValue().getValor()
+                )
+        );
+
+        colSeccion.setCellValueFactory(
+                data -> new javafx.beans.property.SimpleStringProperty(
+                        data.getValue().getSeccion()
+                )
+        );
+
+        colCantidad.setCellValueFactory(
+                data -> new javafx.beans.property.SimpleObjectProperty<>(
+                        data.getValue().getCantidad()
+                )
+        );
+
+        colPrecio.setCellValueFactory(
+                data -> new javafx.beans.property.SimpleObjectProperty<>(
+                        data.getValue().getPrecioBoleta()
+                )
+        );
+
+        colIngresoTotal.setCellValueFactory(
+                data -> new javafx.beans.property.SimpleObjectProperty<>(
+                        data.getValue().getIngresoTotal()
+                )
+        );
     }
 
     // =========================
     // CREAR PRESUPUESTO
     // =========================
     @FXML
-    public void On_crearPresupuesto() {
+    public void On_guardarPresupuesto() {
 
         try {
-            int monto = Integer.parseInt(fid_presupuesto.getText());
 
-            int id = service.crearPresupuesto(monto);
+            int presupuesto =
+                    Integer.parseInt(
+                            fid_presupuesto.getText()
+                    );
+
+            int id =
+                    analisisService.crearPresupuesto(
+                            presupuesto
+                    );
 
             if (id != 0) {
-                mostrarExito("Presupuesto creado ID: " + id);
+
+                idAnalisisActual = id;
+
+                lbl_idPresupuesto.setText(
+                        "ID Presupuesto: " + id
+                );
+
+                mostrarExito(
+                        "Presupuesto creado"
+                );
+
             } else {
-                mostrarError("No se pudo crear");
+
+                mostrarError(
+                        "No se pudo crear"
+                );
             }
 
         } catch (Exception e) {
-            mostrarError("Ingrese un monto válido");
+
+            mostrarError(
+                    "Datos inválidos"
+            );
+        }
+    }
+
+    // =========================
+    // EDITAR PRESUPUESTO
+    // =========================
+    @FXML
+    public void On_editarPresupuesto() {
+
+        try {
+
+            int presupuesto =
+                    Integer.parseInt(
+                            fid_presupuesto.getText()
+                    );
+
+            analisisService.editarPresupuesto(
+                    idAnalisisActual,
+                    presupuesto
+            );
+
+            mostrarExito(
+                    "Presupuesto actualizado"
+            );
+
+        } catch (Exception e) {
+
+            mostrarError(
+                    "Error al actualizar"
+            );
         }
     }
 
@@ -60,32 +234,44 @@ public class AnalisisFinancieroController {
     @FXML
     public void On_eliminarPresupuesto() {
 
-        try {
-            int id = Integer.parseInt(fid_id.getText());
+        analisisService.eliminarAnalisis(
+                idAnalisisActual
+        );
 
-            service.eliminarPresupuesto(id);
-            mostrarExito("Presupuesto eliminado");
-
-        } catch (Exception e) {
-            mostrarError("ID inválido");
-        }
+        mostrarExito(
+                "Presupuesto eliminado"
+        );
     }
 
     // =========================
-    // REGISTRAR GASTO
+    // AGREGAR GASTO
     // =========================
     @FXML
-    public void On_registrarGasto() {
+    public void On_agregarGasto() {
 
         try {
-            int id = Integer.parseInt(fid_id.getText());
-            int gasto = Integer.parseInt(fid_gasto.getText());
 
-            service.registrarGasto(id, gasto);
-            mostrarExito("Gasto registrado");
+            String descripcion =
+                    fid_descripcionGasto.getText();
+
+            int valor =
+                    Integer.parseInt(
+                            fid_valorGasto.getText()
+                    );
+
+            gastoService.agregarGasto(
+                    descripcion,
+                    valor,
+                    idAnalisisActual
+            );
+
+            actualizarTablaGastos();
 
         } catch (Exception e) {
-            mostrarError("Datos inválidos");
+
+            mostrarError(
+                    "Error al agregar gasto"
+            );
         }
     }
 
@@ -95,69 +281,212 @@ public class AnalisisFinancieroController {
     @FXML
     public void On_eliminarGasto() {
 
-        try {
-            int id = Integer.parseInt(fid_id.getText());
-            int gasto = Integer.parseInt(fid_gasto.getText());
+        Gasto gasto =
+                tablaGastos.getSelectionModel()
+                        .getSelectedItem();
 
-            service.eliminarGasto(id, gasto);
-            mostrarExito("Gasto eliminado");
+        if (gasto == null) {
+            return;
+        }
+
+        gastoService.eliminarGasto(
+                gasto.getIdGasto()
+        );
+
+        actualizarTablaGastos();
+    }
+
+    // =========================
+    // AGREGAR INGRESO
+    // =========================
+    @FXML
+    public void On_agregarIngreso() {
+
+        try {
+
+            String descripcion =
+                    fid_descripcionIngreso.getText();
+
+            int valor =
+                    Integer.parseInt(
+                            fid_valorIngreso.getText()
+                    );
+
+            ingresoService.agregarIngreso(
+                    descripcion,
+                    valor,
+                    idAnalisisActual
+            );
+
+            actualizarTablaIngresos();
 
         } catch (Exception e) {
-            mostrarError("Datos inválidos");
+
+            mostrarError(
+                    "Error al agregar ingreso"
+            );
         }
     }
 
     // =========================
-    // APROBAR PRESUPUESTO
+    // ELIMINAR INGRESO
+    // =========================
+    @FXML
+    public void On_eliminarIngreso() {
+
+        Ingreso ingreso =
+                tablaIngresos.getSelectionModel()
+                        .getSelectedItem();
+
+        if (ingreso == null) {
+            return;
+        }
+
+        ingresoService.eliminarIngreso(
+                ingreso.getIdIngreso()
+        );
+
+        actualizarTablaIngresos();
+    }
+
+    // =========================
+    // AGREGAR BOLETERIA
+    // =========================
+    @FXML
+    public void On_agregarBoleteria() {
+
+        try {
+
+            String seccion =
+                    fid_seccion.getText();
+
+            int cantidad =
+                    Integer.parseInt(
+                            fid_cantidad.getText()
+                    );
+
+            int precio =
+                    Integer.parseInt(
+                            fid_precioBoleta.getText()
+                    );
+
+            boleteriaService.agregarBoleteria(
+                    seccion,
+                    cantidad,
+                    precio,
+                    idAnalisisActual
+            );
+
+            actualizarTablaBoleteria();
+
+        } catch (Exception e) {
+
+            mostrarError(
+                    "Error al agregar boletería"
+            );
+        }
+    }
+
+    // =========================
+    // ELIMINAR BOLETERIA
+    // =========================
+    @FXML
+    public void On_eliminarBoleteria() {
+
+        Boleteria boleteria =
+                tablaBoleteria.getSelectionModel()
+                        .getSelectedItem();
+
+        if (boleteria == null) {
+            return;
+        }
+
+        boleteriaService.eliminarBoleteria(
+                boleteria.getIdBoleteria()
+        );
+
+        actualizarTablaBoleteria();
+    }
+
+    // =========================
+    // APROBAR
     // =========================
     @FXML
     public void On_aprobarPresupuesto() {
 
-        try {
-            int id = Integer.parseInt(fid_id.getText());
+        if (chk_aprobado.isSelected()) {
 
-            service.aprobarPresupuesto(id);
-            mostrarExito("Presupuesto aprobado");
+            analisisService.aprobarPresupuesto(
+                    idAnalisisActual
+            );
 
-        } catch (Exception e) {
-            mostrarError("No se pudo aprobar");
+        } else {
+
+            analisisService.desaprobarPresupuesto(
+                    idAnalisisActual
+            );
         }
+
+        mostrarExito(
+                "Estado actualizado"
+        );
     }
 
     // =========================
-    // PRECIO BOLETA
+    // ACTUALIZAR TABLAS
     // =========================
-    @FXML
-    public void On_definirPrecio() {
+    private void actualizarTablaGastos() {
 
-        try {
-            int id = Integer.parseInt(fid_id.getText());
-            int precio = Integer.parseInt(fid_precioBoleta.getText());
+        ObservableList<Gasto> lista =
+                FXCollections.observableArrayList(
+                        gastoService.listarGastos(
+                                idAnalisisActual
+                        )
+                );
 
-            service.definirPrecioBoleta(id, precio);
-            mostrarExito("Precio definido");
+        tablaGastos.setItems(lista);
 
-        } catch (Exception e) {
-            mostrarError("Datos inválidos");
-        }
+        int total =
+                gastoService.obtenerTotalGastos(
+                        idAnalisisActual
+                );
+
+        lblTotalGastos.setText(
+                "Gasto Total: " + total
+        );
     }
 
-    // =========================
-    // PUNTO DE EQUILIBRIO
-    // =========================
-    @FXML
-    public void On_calcularEquilibrio() {
+    private void actualizarTablaIngresos() {
 
-        try {
-            int id = Integer.parseInt(fid_id.getText());
+        ObservableList<Ingreso> lista =
+                FXCollections.observableArrayList(
+                        ingresoService.listarIngresos(
+                                idAnalisisActual
+                        )
+                );
 
-            int balance = service.obtenerBalance(id);
+        tablaIngresos.setItems(lista);
 
-            lbl_resultado.setText("Balance: " + balance);
+        int total =
+                ingresoService.obtenerTotalIngresos(
+                        idAnalisisActual
+                );
 
-        } catch (Exception e) {
-            mostrarError("Error al calcular");
-        }
+        lblTotalIngresos.setText(
+                "Ingreso Total: " + total
+        );
+    }
+
+    private void actualizarTablaBoleteria() {
+
+        ObservableList<Boleteria> lista =
+                FXCollections.observableArrayList(
+                        boleteriaService.listarBoleteria(
+                                idAnalisisActual
+                        )
+                );
+
+        tablaBoleteria.setItems(lista);
     }
 
     // =========================
@@ -165,6 +494,7 @@ public class AnalisisFinancieroController {
     // =========================
     @FXML
     public void On_volver() throws IOException {
+
         sceneManager.showMenu();
     }
 
@@ -172,18 +502,26 @@ public class AnalisisFinancieroController {
     // ALERTAS
     // =========================
     private void mostrarError(String msg) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+
+        Alert alert =
+                new Alert(Alert.AlertType.ERROR);
+
         alert.setTitle("Error");
         alert.setHeaderText("No se pudo continuar");
         alert.setContentText(msg);
+
         alert.showAndWait();
     }
 
     private void mostrarExito(String msg) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+        Alert alert =
+                new Alert(Alert.AlertType.INFORMATION);
+
         alert.setTitle("Éxito");
         alert.setHeaderText("Operación realizada");
         alert.setContentText(msg);
+
         alert.showAndWait();
     }
 }
