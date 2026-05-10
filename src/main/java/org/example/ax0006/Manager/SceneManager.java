@@ -3,7 +3,7 @@ package org.example.ax0006.Manager;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.example.ax0006.Controller.*;
+import org.example.ax0006.controller.*;
 import java.io.IOException;
 import java.net.URL;
 

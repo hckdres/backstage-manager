@@ -1,4 +1,4 @@
-package org.example.ax0006.Controller;
+package org.example.ax0006.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,7 +26,7 @@ public class MenuConciertoController {
     private Button fid_bt_ConsultarContrato;
 
     @FXML
-    private Button fid_bt_crearInventario; // Nuevo botón para el flujo de inventario
+    private Button fid_bt_crearInventario;
 
     @FXML
     private Button fid_bt_volver;
@@ -105,7 +105,6 @@ public class MenuConciertoController {
     @FXML
     void on_bt_crearInventario(ActionEvent event) {
         try {
-            // 1. Muestra los conciertos disponibles para seleccionar uno
             sceneManager.showSeleccionarConciertoInventario();
         } catch (IOException e) {
             e.printStackTrace();

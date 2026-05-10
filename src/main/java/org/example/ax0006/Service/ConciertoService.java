@@ -55,6 +55,10 @@ public class ConciertoService {
         horarioRepo.eliminarHorario(idHorario);
     }
 
+    public void eliminarInventarioConcierto(int idInventario, int idConcierto, int idHorario, List<Integer> idsObjetos){
+        inventarioService.eliminarDocumentoInventario(idInventario, idConcierto, idHorario, idsObjetos);
+    }
+
 
     public List<Concierto> listarConciertos() {
         return conciertoRepo.obtenerConciertos();

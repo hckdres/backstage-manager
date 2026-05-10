@@ -1,4 +1,4 @@
-package org.example.ax0006.Controller;
+package org.example.ax0006.controller;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;

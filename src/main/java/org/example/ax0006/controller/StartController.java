@@ -1,4 +1,4 @@
-package org.example.ax0006.Controller;
+package org.example.ax0006.controller;
 
 import javafx.application.Application;
 import javafx.application.Platform;
