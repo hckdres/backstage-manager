@@ -99,3 +99,12 @@ CREATE TABLE IF NOT EXISTS RolConciertoUsuario (
 -- Insertar roles por defecto
 MERGE INTO Rol (idRol, rol) KEY(idRol)
     VALUES (0, 'Sin rol'),(1, 'Administrador'), (2, 'Tecnico'), (3, 'Manager'), (4, 'Staff');
+
+-- Insertar los usuarios por defecto, las contraseñas son "12345678"
+MERGE INTO Usuario (idUsuario, nombre, gmail, contrasena, idRol, telefono, direccion, contactoEmergenciaNombre, contactoEmergenciaTelefono, contactoEmergenciaRelacion) KEY(idUsuario)
+    VALUES
+    (1, 'Admin', 'admin@gestionconcierto.com', '$2a$10$ToZhw13TSN5sI4X1N9YnjuMFRk1lYBtXGtCVHzDEpWbnLHMw.9X7O', 1, '314234123', 'Calle 100 #48-90', 'Aseguradora ALIANZA', '310233211', 'Aseguradora'),
+    (2, 'Feid', 'feid@vidaloca.com', '$2a$10$ToZhw13TSN5sI4X1N9YnjuMFRk1lYBtXGtCVHzDEpWbnLHMw.9X7O', 3, '314234123', 'Calle 44 #22-01', 'Centrals Seguros', '324231231', 'Aseguradora');
+
+-- Resincronizar el contador autoincremental de la tabla Usuario para evitar choques de Primary Key
+ALTER TABLE Usuario ALTER COLUMN idUsuario RESTART WITH 3;
