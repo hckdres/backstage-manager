@@ -102,5 +102,4 @@ public class StartController extends Application {
         launch();
     }
 
-
 }

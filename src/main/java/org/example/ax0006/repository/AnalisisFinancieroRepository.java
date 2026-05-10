@@ -4,6 +4,8 @@ import org.example.ax0006.db.H2;
 import org.example.ax0006.entity.AnalisisFinanciero;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AnalisisFinancieroRepository {
 
@@ -201,4 +203,54 @@ public class AnalisisFinancieroRepository {
             e.printStackTrace();
         }
     }
+
+    // =========================
+    // LISTAR
+    // =========================
+    public List<AnalisisFinanciero> listar() {
+
+            List<AnalisisFinanciero> lista =
+                    new ArrayList<>();
+
+            String sql = """
+                SELECT *
+                FROM AnalisisFinanciero
+            """;
+
+            try (
+                    Connection conn = h2.getConnection();
+                    PreparedStatement stmt =
+                            conn.prepareStatement(sql)
+            ) {
+
+                ResultSet rs = stmt.executeQuery();
+
+                while (rs.next()) {
+
+                    AnalisisFinanciero af =
+                            new AnalisisFinanciero();
+
+                    af.setIdAnalisisF(
+                            rs.getInt("idAnalisisF")
+                    );
+
+                    af.setPresupuesto(
+                            rs.getInt("presupuesto")
+                    );
+
+                    af.setAprobado(
+                            rs.getBoolean("aprobado")
+                    );
+
+                    lista.add(af);
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            return lista;
+        }
+
+
 }

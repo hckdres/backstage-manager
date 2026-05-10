@@ -1,5 +1,7 @@
 package org.example.ax0006.service;
 
+import java.util.List;
+
 import org.example.ax0006.entity.AnalisisFinanciero;
 import org.example.ax0006.repository.AnalisisFinancieroRepository;
 
@@ -85,4 +87,12 @@ public class AnalisisFinancieroService {
 
         analisisRepo.eliminar(idAnalisis);
     }
+
+
+    public List<AnalisisFinanciero> listarAnalisis() {
+
+    return analisisRepo.listar();
+    }
+
+    
 }

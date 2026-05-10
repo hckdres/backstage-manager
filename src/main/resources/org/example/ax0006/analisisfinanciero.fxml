@@ -284,6 +284,21 @@
 
                             </VBox>
 
+                        <!-- =========================
+                            GUARDAR FINANZAS
+                        ========================= -->
+                        <HBox alignment="CENTER">
+
+                            <Button text="Guardar Finanzas del Evento"
+                                    onAction="#On_guardarFinanzas"
+                                    style="-fx-background-color: #16a34a;
+                                        -fx-text-fill: white;
+                                        -fx-font-size: 15px;
+                                        -fx-font-weight: bold;
+                                        -fx-padding: 12 30 12 30;"/>
+
+                        </HBox>
+
                             <!-- =========================
                                  VOLVER
                             ========================= -->

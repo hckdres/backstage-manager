@@ -132,21 +132,69 @@ public class SceneManager {
     loadScene("/org/example/ax0006/vercontrato.fxml", controller);
     }
 
+    //MENÚ DE FINANZAS
+    public void showMenuFinanzas() throws IOException{
+        MenuFinanzasController menuFinanzasController = new MenuFinanzasController(this, context.getSesion());
+        loadScene("/org/example/ax0006/menufinanzas.fxml", menuFinanzasController);
+    }
+
+    // CREAR ANALISIS NUEVO
     public void showAnalisisFinanciero() throws IOException {
 
-    AnalisisFinancieroController controller = new AnalisisFinancieroController(
+        AnalisisFinancieroController controller =
+                new AnalisisFinancieroController(
+
+                        context.getAnalisisFinancieroService(),
+                        context.getGastoService(),
+                        context.getIngresoService(),
+                        context.getBoleteriaService(),
+                        this
+                );
+
+        loadScene(
+                "/org/example/ax0006/analisisfinanciero.fxml",
+                controller
+        );
+    }
+
+    //ABRIR ANALISIS EXISTENTE
+    public void showAnalisisFinanciero(
+                int idAnalisis
+        ) throws IOException {
+
+            AnalisisFinancieroController controller =
+                    new AnalisisFinancieroController(
 
                             context.getAnalisisFinancieroService(),
                             context.getGastoService(),
                             context.getIngresoService(),
                             context.getBoleteriaService(),
+                            this
+                    );
+
+            loadScene(
+                    "/org/example/ax0006/analisisfinanciero.fxml",
+                    controller
+            );
+
+            controller.cargarAnalisis(idAnalisis);
+        }
+    
+    public void showConsultarFinanzas() throws IOException {
+
+    ConsultarFinanzasController controller =
+            new ConsultarFinanzasController(
+                    context.getAnalisisFinancieroService(),
                     this
-                    );
-                    loadScene(
-                            "/org/example/ax0006/analisisfinanciero.fxml",
-                            controller
-                    );
-    }
+            );
+
+    loadScene(
+            "/org/example/ax0006/consultarfinanzas.fxml",
+            controller
+    );
+}
+    
+    
 
     public void setContratoTemporal(Integer id) {
     this.contratoTemporal = id;

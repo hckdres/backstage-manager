@@ -4,6 +4,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+
+import org.example.ax0006.entity.AnalisisFinanciero;
 import org.example.ax0006.entity.Boleteria;
 import org.example.ax0006.entity.Gasto;
 import org.example.ax0006.entity.Ingreso;
@@ -487,6 +489,56 @@ public class AnalisisFinancieroController {
                 );
 
         tablaBoleteria.setItems(lista);
+    }
+
+
+    public void cargarAnalisis(int id) {
+        AnalisisFinanciero af =
+                analisisService.obtenerAnalisis(id);
+
+        if (af == null) {
+            return;
+        }
+
+        idAnalisisActual = id;
+
+        fid_presupuesto.setText(
+                String.valueOf(
+                        af.getPresupuesto()
+                )
+        );
+
+        chk_aprobado.setSelected(
+                af.isAprobado()
+        );
+
+        lbl_idPresupuesto.setText(
+                "ID Presupuesto: " + id
+        );
+
+        actualizarTablaGastos();
+        actualizarTablaIngresos();
+        actualizarTablaBoleteria();
+    }
+
+    @FXML
+    public void On_guardarFinanzas() {
+
+    if (idAnalisisActual == 0) {
+
+        mostrarError(
+                "Primero cree un presupuesto"
+        );
+
+        return;
+    }
+
+    mostrarExito(
+            "Finanzas del evento guardadas correctamente"
+    );
+
+    // Aquí puedes volver al menú
+    // o cerrar el proceso
     }
 
     // =========================

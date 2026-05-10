@@ -48,7 +48,7 @@ public class MenuController {
     private Button fid_Menu_Conciertos;
 
     @FXML 
-    private Button fid_AnalisisFinanciero;
+    private Button fid_Menu_Finanzas;
 
     @FXML
     public void initialize() {
@@ -89,12 +89,8 @@ public class MenuController {
     }
 
     @FXML
-    public void On_irAnalisisFinanciero() {
-        try {
-            sceneManager.showAnalisisFinanciero();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void On_irMenuFinanzas(ActionEvent event) throws IOException {
+        sceneManager.showMenuFinanzas();
     }
 
     @FXML
