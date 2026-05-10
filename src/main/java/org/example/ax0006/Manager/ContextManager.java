@@ -74,4 +74,5 @@ public class ContextManager {
     public StaffService getStaffService() { return staffService; }
     public ContratoService getContratoService() { return contratoService; }
     public ContratoRepository getContratoRepository() { return contratoRepo; }
+    public HorarioRepository getHorarioRepo() {return horarioRepo;}
 }

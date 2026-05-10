@@ -29,7 +29,7 @@ public class DetallesConciertoController {
             lbl_nombre.setText(c.getNombreConcierto());
             lbl_aforo.setText(c.getAforo() + " personas");
             lbl_contrato.setText("Contrato #" + c.getIdContrato());
-            lbl_horario.setText(c.getHorario().getFechaInicio() + " (" + c.getHorario().getHoraInicio() + " - " + c.getHorario().getHoraFin() + ")");
+            lbl_horario.setText(c.getHorario().getFechaInicio() + " (" + c.getHorario().getHoraInicio() + ") - " + c.getHorario().getFechaFin() + " (" + c.getHorario().getHoraFin() + ")");
 
             List<String> objetos = inventarioService.obtenerObjetosPorConcierto(c.getIdConcierto());
             if (objetos.isEmpty()) {

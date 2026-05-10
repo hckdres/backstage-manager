@@ -125,6 +125,46 @@ public class InventarioRepository {
         return lista;
     }
 
+    public List<Objeto> obtenerObjetosCompletosPorInventario(int idInventario) {
+        List<Objeto> lista = new ArrayList<>();
+        String sql = """
+        SELECT o.idObjeto, t.idTipoObjeto, t.tipo, r.idReferenciaObjeto, r.referencia 
+        FROM ObjetoDocumentoInventario odi
+        JOIN Objeto o ON odi.idObjeto = o.idObjeto
+        JOIN TipoObjeto t ON o.idTipoObjeto = t.idTipoObjeto
+        JOIN ReferenciaDeObjeto r ON o.idReferenciaObjeto = r.idReferenciaObjeto
+        WHERE odi.idInventario = ?
+    """;
+
+        try (Connection conn = h2.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idInventario);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                TipoObjeto tipo = new TipoObjeto();
+                tipo.setIdTipoObjeto(rs.getInt("idTipoObjeto"));
+                tipo.setTipo(rs.getString("tipo"));
+
+                ReferenciaDeObjeto ref = new ReferenciaDeObjeto();
+                ref.setIdReferenciaObjeto(rs.getInt("idReferenciaObjeto"));
+                ref.setReferencia(rs.getString("referencia"));
+
+                Objeto obj = new Objeto();
+                obj.setIdObjeto(rs.getInt("idObjeto"));
+                obj.setTipoObjeto(tipo);
+                obj.setReferenciaDeObjeto(ref);
+
+                lista.add(obj);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al cargar objetos del inventario: " + idInventario);
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
     public void eliminarInventario(int idInventario, int idConcierto, int idHorario, List<Integer> idsObjetos) {
         String sqlRelConcierto = "DELETE FROM ConciertoDocumentoInventario WHERE idDocumentoInventario = ? AND idConcierto = ?";
         String sqlRelHorario = "DELETE FROM DocumentoInventarioHorario WHERE idDocumentoInventario = ? AND idHorario = ?";
@@ -193,5 +233,37 @@ public class InventarioRepository {
         }
         return idInventarioConcierto;
     }
+
+    public List<Integer> obtenerInventariosSinConcierto() {
+        List<Integer> ids = new ArrayList<>();
+        String sql = """
+        SELECT d.idDocumentoInventario 
+        FROM DocumentoInventario d
+        LEFT JOIN ConciertoDocumentoInventario cdi ON d.idDocumentoInventario = cdi.idDocumentoInventario
+        WHERE cdi.idConcierto IS NULL OR cdi.idConcierto = 0
+    """;
+        try (Connection conn = h2.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                ids.add(rs.getInt("idDocumentoInventario"));
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return ids;
+    }
+
+    public int obtenerIdHorarioPorInventario(int idInventario) {
+        String sql = "SELECT idHorario FROM DocumentoInventarioHorario WHERE idDocumentoInventario = ?";
+        try (java.sql.Connection conn = h2.getConnection();
+             java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idInventario);
+            java.sql.ResultSet rs = stmt.executeQuery();
+            if (rs.next()) return rs.getInt("idHorario");
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
 }
 

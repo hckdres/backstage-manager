@@ -1,5 +1,6 @@
 package org.example.ax0006.Service;
 
+import org.example.ax0006.Entity.DocumentoInventario;
 import org.example.ax0006.Entity.Objeto;
 import org.example.ax0006.Repository.InventarioRepository;
 import java.util.List;
@@ -31,5 +32,16 @@ public class InventarioService {
         return inventarioRepo.obtenerObjetosCompletosPorConcierto(idConcierto);
     }
 
+    public List<Objeto> obtenerObjetosPorInventario(int idInventario){
+        return inventarioRepo.obtenerObjetosCompletosPorInventario(idInventario);
+    }
+
+    public List<Integer> obtenerInventariosSinConcierto(){
+        return inventarioRepo.obtenerInventariosSinConcierto();
+    }
+
+    public int obtenerIdHorarioPorInventario(int idInventario) {
+        return inventarioRepo.obtenerIdHorarioPorInventario(idInventario);
+    }
 
 }

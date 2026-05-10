@@ -95,5 +95,10 @@ public class MenuController {
         sceneManager.showCrearObjeto();
     }
 
+    @FXML
+    void on_bt_MantenimientoObjeto() throws IOException {
+        sceneManager.showMantenimiento();
+    }
+
 
 }

@@ -110,13 +110,28 @@ public class SceneManager {
     }
 
     public void showCrearInventario() throws IOException {
-        crearInventarioController controller = new crearInventarioController(
+        CrearInventarioController controller = new CrearInventarioController(
                 context.getInventarioService(),
-                context.getObjetoService(), // Añade esto
+                context.getObjetoService(),
                 this,
-                context.getSesion()
+                context.getSesion(),
+                context.getInventarioObjetoService()
         );
         loadScene("/org/example/ax0006/crearInventario.fxml", controller);
+    }
+
+    public void showMantenimiento() throws IOException {
+        context.getSesion().setConciertoTemporal(null);
+        MantenimientoController controller = new MantenimientoController(
+                context.getInventarioService(),
+                context.getObjetoService(),
+                context.getHorarioRepo(),
+                this,
+                context.getSesion(),
+                context.getInventarioObjetoService()
+        );
+
+        loadScene("/org/example/ax0006/mantenimiento.fxml", controller);
     }
 
     public void showDetallesConcierto() throws IOException {

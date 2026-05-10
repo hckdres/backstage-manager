@@ -155,6 +155,12 @@ public class H2 {
             """);
 
             stmt.execute("""
+                MERGE INTO Concierto (idConcierto, nombreConcierto, aforo, programado) 
+                KEY(idConcierto) 
+                VALUES (0, 'mantenimiento', 0, FALSE);
+            """);
+
+            stmt.execute("""
                 CREATE TABLE IF NOT EXISTS ConciertoDocumentoInventario (
                     idDocumentoInventario INT,
                     idConcierto INT,

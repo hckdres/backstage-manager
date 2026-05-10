@@ -9,17 +9,19 @@ import org.example.ax0006.Entity.Concierto;
 import org.example.ax0006.Entity.Objeto;
 import org.example.ax0006.Manager.SceneManager;
 import org.example.ax0006.Manager.SesionManager;
+import org.example.ax0006.Service.InventarioObjetoService;
 import org.example.ax0006.Service.InventarioService;
 import org.example.ax0006.Service.ObjetoService;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class crearInventarioController {
+public class CrearInventarioController {
     private final InventarioService inventarioService;
-    private final ObjetoService objetoService; 
+    private final ObjetoService objetoService;
     private final SceneManager sceneManager;
     private final SesionManager sesionManager;
+    private final InventarioObjetoService inventarioObjetoService;
 
     @FXML private DatePicker dp_fechaInicio;
     @FXML private DatePicker dp_fechaFin;
@@ -35,11 +37,12 @@ public class crearInventarioController {
     private ObservableList<String> listaVisualObjetos = FXCollections.observableArrayList();
     private List<Integer> listaIdsParaGuardar = new ArrayList<>();
 
-    public crearInventarioController(InventarioService inventarioService, ObjetoService objetoService, SceneManager sceneManager, SesionManager sesionManager) {
+    public CrearInventarioController(InventarioService inventarioService, ObjetoService objetoService, SceneManager sceneManager, SesionManager sesionManager, InventarioObjetoService inventarioObjetoService) {
         this.inventarioService = inventarioService;
         this.objetoService = objetoService;
         this.sceneManager = sceneManager;
         this.sesionManager = sesionManager;
+        this.inventarioObjetoService = inventarioObjetoService;
     }
 
     @FXML
@@ -69,7 +72,6 @@ public class crearInventarioController {
     private void mostrarPanelEliminar(boolean mostrarEliminar) {
         panel_eliminar.setVisible(mostrarEliminar);
         panel_eliminar.setManaged(mostrarEliminar);
-
         panel_agregar.setVisible(!mostrarEliminar);
         panel_agregar.setManaged(!mostrarEliminar);
     }
@@ -90,32 +92,26 @@ public class crearInventarioController {
                 int idObjeto = objeto.getIdObjeto();
                 idsObjetosActuales.add(idObjeto);
             }
+            for(int i = 0; i < 3; i++){
+                inventarioService.eliminarDocumentoInventario(idInventario, idConcierto, idHorario, idsObjetosActuales);
+                listaVisualObjetos.clear();
+                listaIdsParaGuardar.clear();
 
-            inventarioService.eliminarDocumentoInventario(idInventario, idConcierto, idHorario, idsObjetosActuales);
-            listaVisualObjetos.clear();
-            listaIdsParaGuardar.clear();
+                panel_eliminar.setVisible(false);
+                panel_eliminar.setManaged(false);
+                panel_agregar.setVisible(true);
+                panel_agregar.setManaged(true);
 
-            panel_eliminar.setVisible(false);
-            panel_eliminar.setManaged(false);
-            panel_agregar.setVisible(true);
-            panel_agregar.setManaged(true);
+                btn_confirmar_todo.setDisable(false);
+            }
 
-            btn_confirmar_todo.setDisable(false);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    @FXML
-    void on_bt_agregar_lista() {
-        String seleccionado = cb_objetos.getSelectionModel().getSelectedItem();
-        if (seleccionado != null && !listaVisualObjetos.contains(seleccionado)) {
-            listaVisualObjetos.add(seleccionado);
-            int id = Integer.parseInt(seleccionado.split(" - ")[0]);
-            listaIdsParaGuardar.add(id);
-        }
-    }
+
 
     @FXML
     void on_bt_quitar_lista() {
@@ -130,25 +126,79 @@ public class crearInventarioController {
     void on_bt_crear() {
         try {
             Concierto c = sesionManager.getConciertoTemporal();
-
-            if (!inventarioService.obtenerObjetosPorConcierto(c.getIdConcierto()).isEmpty()) {
-                System.out.println("Error: Intento de duplicación de inventario bloqueado.");
+            if (c == null || c.getHorario() == null) {
+                mostrarAlerta(Alert.AlertType.ERROR, "Error", "No hay un concierto o horario válido vinculado.");
                 return;
             }
-            int idConcierto = Integer.parseInt(tf_idConcierto.getText());
-            int idHorario = (c != null && c.getHorario() != null) ? c.getHorario().getIdHorario() : 0;
 
-            inventarioService.crearDocumentoInventario(idConcierto, idHorario, listaIdsParaGuardar);
+            if (!inventarioService.obtenerObjetosPorConcierto(c.getIdConcierto()).isEmpty()) {
+                mostrarAlerta(Alert.AlertType.WARNING, "Inventario Existente", "Este concierto ya tiene un inventario asignado.");
+                return;
+            }
 
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setContentText("Inventario creado y objetos vinculados exitosamente.");
-            alert.showAndWait();
+            if (listaIdsParaGuardar.isEmpty()) {
+                mostrarAlerta(Alert.AlertType.WARNING, "Lista Vacía", "Debes agregar al menos un objeto.");
+                return;
+            }
 
-            sesionManager.setConciertoTemporal(null);
-            sceneManager.showMenuConcierto();
+            List<String> objetosConConflicto = new ArrayList<>();
+            for (Integer idObjeto : listaIdsParaGuardar) {
+                if (inventarioObjetoService.objetoEnUsoEnRango(idObjeto, c.getHorario())) {
+                    objetosConConflicto.add("ID: " + idObjeto);
+                }
+            }
+
+            if (!objetosConConflicto.isEmpty()) {
+                String detalle = String.join("\n", objetosConConflicto);
+                mostrarAlerta(Alert.AlertType.ERROR, "Conflicto de Horario",
+                        "Los siguientes objetos ya están ocupados en otro concierto/mantenimiento durante estas fechas:\n\n" + detalle);
+                return;
+            }
+
+            int idConcierto = c.getIdConcierto();
+            int idHorario = c.getHorario().getIdHorario();
+            int resultado = inventarioService.crearDocumentoInventario(idConcierto, idHorario, listaIdsParaGuardar);
+
+            if (resultado != -1) {
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Inventario creado y objetos vinculados exitosamente.");
+                sesionManager.setConciertoTemporal(null);
+                sceneManager.showMenuConcierto();
+            } else {
+                mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo crear el documento de inventario.");
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
+            mostrarAlerta(Alert.AlertType.ERROR, "Error Crítico", "Ocurrió un error: " + e.getMessage());
         }
+    }
+
+    @FXML
+    void on_bt_agregar_lista() {
+        String seleccionado = cb_objetos.getSelectionModel().getSelectedItem();
+        if (seleccionado != null && !listaVisualObjetos.contains(seleccionado)) {
+            int id = Integer.parseInt(seleccionado.split(" - ")[0]);
+            Concierto c = sesionManager.getConciertoTemporal();
+
+            if (c != null && c.getHorario() != null) {
+                if (inventarioObjetoService.objetoEnUsoEnRango(id, c.getHorario())) {
+                    mostrarAlerta(Alert.AlertType.WARNING, "Objeto Ocupado",
+                            "Este objeto ya tiene un compromiso en las fechas de este concierto.");
+                    return;
+                }
+            }
+
+            listaVisualObjetos.add(seleccionado);
+            listaIdsParaGuardar.add(id);
+        }
+    }
+
+    private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 
     @FXML
