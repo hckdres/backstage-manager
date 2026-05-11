@@ -62,7 +62,7 @@ public class MantenimientoController {
         mostrarPanelCreacion(false);
         cargarMantenimientosActivos();
     }
-    
+
     private String normalizarHora(String hora) {
         if (hora == null) return null;
         hora = hora.trim();
@@ -252,6 +252,7 @@ public class MantenimientoController {
         alert.showAndWait();
     }
 
+    
     @FXML
     void on_bt_volver() throws Exception {
         sesionManager.setConciertoTemporal(null);
