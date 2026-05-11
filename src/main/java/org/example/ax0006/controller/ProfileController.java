@@ -5,10 +5,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import org.example.ax0006.Entity.Usuario;
-import org.example.ax0006.Manager.SceneManager;
-import org.example.ax0006.Manager.SesionManager;
-import org.example.ax0006.Service.ProfileService;
+import org.example.ax0006.entity.Usuario;
+import org.example.ax0006.manager.SceneManager;
+import org.example.ax0006.manager.SesionManager;
+import org.example.ax0006.service.ProfileService;
 
 
 import java.io.IOException;

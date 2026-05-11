@@ -4,11 +4,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import org.example.ax0006.Entity.Clausula;
-import org.example.ax0006.Entity.Contrato;
-import org.example.ax0006.Manager.SceneManager;
-import org.example.ax0006.Manager.SesionManager;
-import org.example.ax0006.Service.ContratoService;
+import org.example.ax0006.entity.Clausula;
+import org.example.ax0006.entity.Contrato;
+import org.example.ax0006.manager.SceneManager;
+import org.example.ax0006.manager.SesionManager;
+import org.example.ax0006.service.ContratoService;
 
 import java.io.IOException;
 import java.util.List;

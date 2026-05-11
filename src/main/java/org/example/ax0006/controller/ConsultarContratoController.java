@@ -5,10 +5,10 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-import org.example.ax0006.Entity.Clausula;
-import org.example.ax0006.Entity.Contrato;
-import org.example.ax0006.Manager.SceneManager;
-import org.example.ax0006.Service.ContratoService;
+import org.example.ax0006.entity.Clausula;
+import org.example.ax0006.entity.Contrato;
+import org.example.ax0006.manager.SceneManager;
+import org.example.ax0006.service.ContratoService;
 
 import java.util.List;
 

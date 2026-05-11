@@ -7,10 +7,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import org.example.ax0006.Entity.Concierto;
-import org.example.ax0006.Manager.SceneManager;
-import org.example.ax0006.Manager.SesionManager;
-import org.example.ax0006.Service.ConciertoService;
+import org.example.ax0006.entity.Concierto;
+import org.example.ax0006.manager.SceneManager;
+import org.example.ax0006.manager.SesionManager;
+import org.example.ax0006.service.ConciertoService;
 
 import java.io.IOException;
 import java.util.List;

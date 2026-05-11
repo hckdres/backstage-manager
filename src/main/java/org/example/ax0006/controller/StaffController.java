@@ -4,10 +4,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import org.example.ax0006.Entity.Usuario;
-import org.example.ax0006.Repository.AsignacionStaffRepository;
-import org.example.ax0006.Repository.UsuarioRepository;
-import org.example.ax0006.Service.StaffService;
+import org.example.ax0006.entity.Usuario;
+import org.example.ax0006.repository.AsignacionStaffRepository;
+import org.example.ax0006.repository.UsuarioRepository;
+import org.example.ax0006.service.StaffService;
 import org.example.ax0006.db.H2;
 
 public class StaffController {

@@ -13,9 +13,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import org.example.ax0006.Manager.SceneManager;
-import org.example.ax0006.Manager.SesionManager;
-import org.example.ax0006.Service.AutenticacionService;
+import org.example.ax0006.manager.SceneManager;
+import org.example.ax0006.manager.SesionManager;
+import org.example.ax0006.service.AutenticacionService;
 
 import java.io.IOException;
 

@@ -6,9 +6,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
-import org.example.ax0006.Entity.TipoObjeto;
-import org.example.ax0006.Manager.SceneManager;
-import org.example.ax0006.Service.ObjetoService;
+import org.example.ax0006.entity.TipoObjeto;
+import org.example.ax0006.manager.SceneManager;
+import org.example.ax0006.service.ObjetoService;
 
 import java.sql.SQLException;
 

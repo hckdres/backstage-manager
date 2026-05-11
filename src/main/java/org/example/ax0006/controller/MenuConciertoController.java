@@ -3,8 +3,8 @@ package org.example.ax0006.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import org.example.ax0006.Manager.SceneManager;
-import org.example.ax0006.Manager.SesionManager;
+import org.example.ax0006.manager.SceneManager;
+import org.example.ax0006.manager.SesionManager;
 
 import java.io.IOException;
 
