@@ -4,6 +4,7 @@ public class Nomina {
     private int idNomina;
     private int idConcierto;
     private int idUsuario;
+    private String rol;
     private double horasTrabajadas;   // calculadas automáticamente
     private double tarifaPorHora;      // según rol
     private double horasExtra;          // ingreso manual
@@ -14,9 +15,13 @@ public class Nomina {
     public Nomina() {}
 
     // Constructor con campos principales
-    public Nomina(int idConcierto, int idUsuario, double horasTrabajadas, double tarifaPorHora, double horasExtra, double total, boolean pagado) {
+    public Nomina(int idConcierto, int idUsuario, String rol,
+                  double horasTrabajadas, double tarifaPorHora,
+                  double horasExtra, double total, boolean pagado) {
+
         this.idConcierto = idConcierto;
         this.idUsuario = idUsuario;
+        this.rol = rol;
         this.horasTrabajadas = horasTrabajadas;
         this.tarifaPorHora = tarifaPorHora;
         this.horasExtra = horasExtra;
@@ -31,6 +36,8 @@ public class Nomina {
     public void setIdConcierto(int idConcierto) { this.idConcierto = idConcierto; }
     public int getIdUsuario() { return idUsuario; }
     public void setIdUsuario(int idUsuario) { this.idUsuario = idUsuario; }
+    public String getRol() { return rol; }
+    public void setRol(String rol) { this.rol = rol; }
     public double getHorasTrabajadas() { return horasTrabajadas; }
     public void setHorasTrabajadas(double horasTrabajadas) { this.horasTrabajadas = horasTrabajadas; }
     public double getTarifaPorHora() { return tarifaPorHora; }
