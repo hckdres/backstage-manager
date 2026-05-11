@@ -24,7 +24,7 @@ public class SceneManager {
 
     /*METODO PARA MOSTRAR EL LOGIN*/
     public void showLogin() throws IOException {
-        LoginController loginController = new LoginController(this, context.getAutenService(), context.getSesion());
+        LoginController loginController = new LoginController(this, context.getAutenService(), context.getSesion(),context.getStaffService(), context.getConciertoService());
         loadScene("/org/example/ax0006/login.fxml", loginController);
     }
 
@@ -87,12 +87,10 @@ public class SceneManager {
     }
 
     public void showCrearConcierto() throws  IOException{
-// 🔥 SOLO limpiar si NO vienes de crear contrato
         if (!"crearContrato".equals(context.getSesion().getPantallaOrigen())) {
         context.getSesion().setIdContratoTemporal(null);
         context.getSesion().setConciertoTemporal(null);
         }
-    // 🔥 resetear origen
     context.getSesion().setPantallaOrigen(null);
 
         CrearConciertoController crearConciertoController = new CrearConciertoController(context.getSesion(), context.getConciertoService(), this);
@@ -109,7 +107,7 @@ public class SceneManager {
     CrearContratoController controller = new CrearContratoController(
         this,
         context.getContratoService(),
-        context.getSesion() // 🔥 AQUÍ
+        context.getSesion() 
     );
     loadScene("/org/example/ax0006/crearcontrato.fxml", controller);
     }
