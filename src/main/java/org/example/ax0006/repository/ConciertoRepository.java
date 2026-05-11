@@ -21,8 +21,8 @@ public class ConciertoRepository {
     public int guardar(Concierto c, int idHorario) {
 
         String sql = """
-        INSERT INTO Concierto (nombreConcierto, idHorario, aforo, idContrato, programado)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO Concierto (nombreConcierto, idHorario, aforo, programado)
+        VALUES (?, ?, ?, ?)
     """;
 
         int idConciertoGenerado = 0;
@@ -33,8 +33,7 @@ public class ConciertoRepository {
             stmt.setString(1, c.getNombreConcierto());
             stmt.setInt(2, idHorario);
             stmt.setInt(3, c.getAforo());
-            stmt.setInt(4,c.getIdContrato());
-            stmt.setBoolean(5, c.isProgramado());
+            stmt.setBoolean(4, c.isProgramado());
 
             stmt.executeUpdate();
 
@@ -50,53 +49,88 @@ public class ConciertoRepository {
         return idConciertoGenerado;
     }
 
-    
-    // El siguiente metodo para que lo sepan obtiene los conciertos pero directamente desde la tabla para el filtro del dropdown en gestion de usuarios.
-    public List<Concierto> obtenerConciertosSolos() {
-    List<Concierto> lista = new ArrayList<>();
 
-    String sql = """
-    SELECT c.idConcierto, c.nombreConcierto, c.aforo, c.programado, c.idContrato,
-           h.idHorario, h.fechaInc, h.fechaFin, h.horaInc, h.horaFin
-    FROM Concierto c
-    JOIN Horario h ON c.idHorario = h.idHorario
-    """;
+    public Concierto obtenerPorId(int idConcierto) {
 
-    try (Connection conn = h2.getConnection();
-         PreparedStatement stmt = conn.prepareStatement(sql);
-         ResultSet rs = stmt.executeQuery()) {
+        String sql = """
+            SELECT c.idConcierto, c.nombreConcierto, c.aforo, c.programado,
+                   h.idHorario, h.fechaInc, h.fechaFin, h.horaInc, h.horaFin
+            FROM Concierto c
+            JOIN Horario h ON c.idHorario = h.idHorario
+            WHERE c.idConcierto = ?
+        """;
 
-        while (rs.next()) {
+        try (Connection conn = h2.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            // Horario
-            Horario h = new Horario();
-            h.setIdHorario(rs.getInt("idHorario"));
-            h.setFechaInicio(rs.getDate("fechaInc").toLocalDate());
-            h.setFechaFin(rs.getDate("fechaFin").toLocalDate());
-            h.setHoraInicio(rs.getTime("horaInc").toLocalTime());
-            h.setHoraFin(rs.getTime("horaFin").toLocalTime());
+            stmt.setInt(1, idConcierto);
+            ResultSet rs = stmt.executeQuery();
 
-            // Concierto
-            Concierto c = new Concierto(
-                    rs.getInt("idConcierto"),
-                    rs.getString("nombreConcierto"),
-                    h,
-                    rs.getInt("aforo"),
-                    null,
-                    rs.getBoolean("programado")
-            );
+            if (rs.next()) {
 
-            // 🔥 ESTA LÍNEA ES LA CLAVE
-            c.setIdContrato(rs.getInt("idContrato"));
+                Horario h = new Horario();
+                h.setIdHorario(rs.getInt("idHorario"));
+                h.setFechaInicio(rs.getDate("fechaInc").toLocalDate());
+                h.setFechaFin(rs.getDate("fechaFin").toLocalDate());
+                h.setHoraInicio(rs.getTime("horaInc").toLocalTime());
+                h.setHoraFin(rs.getTime("horaFin").toLocalTime());
 
-            lista.add(c);
+                return new Concierto(
+                        rs.getInt("idConcierto"),
+                        rs.getString("nombreConcierto"),
+                        h,
+                        rs.getInt("aforo"),
+                        null,
+                        rs.getBoolean("programado")
+                );
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return null;
     }
 
-    return lista;
+
+    // El siguiente metodo para que lo sepan obtiene los conciertos pero directamente desde la tabla para el filtro del dropdown en gestion de usuarios.
+    public List<Concierto> obtenerConciertosSolos() {
+        List<Concierto> lista = new ArrayList<>();
+
+        String sql = """
+        SELECT c.idConcierto, c.nombreConcierto, c.aforo, c.programado,
+               h.idHorario, h.fechaInc,h.fechaFin, h.horaInc, h.horaFin
+        FROM Concierto c
+        JOIN Horario h ON c.idHorario = h.idHorario
+    
+    """;
+
+        try (Connection conn = h2.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Horario h = new Horario();
+                h.setIdHorario(rs.getInt("idHorario"));
+                h.setFechaInicio(rs.getDate("fechaInc").toLocalDate());
+                h.setFechaFin(rs.getDate("fechaFin").toLocalDate());
+                h.setHoraInicio(rs.getTime("horaInc").toLocalTime());
+                h.setHoraFin(rs.getTime("horaFin").toLocalTime());
+
+                Concierto c = new Concierto(
+                        rs.getInt("idConcierto"),
+                        rs.getString("nombreConcierto"),
+                        h,
+                        rs.getInt("aforo"),
+                        null,
+                        rs.getBoolean("programado")
+                );
+                lista.add(c);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
     }
 
 

@@ -27,6 +27,7 @@ public class ContextManager {
     private StaffService staffService;
     private ContratoService contratoService;
     private ContratoRepository contratoRepo;
+    private NominaService nominaService;
 
     public ContextManager(
             H2 h2,
@@ -73,4 +74,5 @@ public class ContextManager {
     public StaffService getStaffService() { return staffService; }
     public ContratoService getContratoService() { return contratoService; }
     public ContratoRepository getContratoRepository() { return contratoRepo; }
+    public NominaService getNominaService() { return nominaService; }
 }
