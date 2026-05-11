@@ -62,10 +62,7 @@ public class MantenimientoController {
         mostrarPanelCreacion(false);
         cargarMantenimientosActivos();
     }
-
-    /**
-     * Lógica integrada para normalizar horas (ej: "1:00" -> "01:00")
-     */
+    
     private String normalizarHora(String hora) {
         if (hora == null) return null;
         hora = hora.trim();
