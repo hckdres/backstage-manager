@@ -10,7 +10,6 @@ import java.io.IOException;
 
 public class MenuConciertoController {
 
-
     @FXML
     private Button fid_bt_CrearConcierto;
 
@@ -52,6 +51,7 @@ public class MenuConciertoController {
         }
     }
 
+
     /* CREAR SOLICITUD DE CONCIERTO */
     @FXML
     void On_CrearConcierto(ActionEvent event) {
@@ -64,7 +64,7 @@ public class MenuConciertoController {
 
     /* CONSULTAR SOLICITUDES (no programados) */
     @FXML
-    void On_ConsultarConciertos(ActionEvent event) {
+    void On_showConsultarSolicitudes(ActionEvent event) {
         try {
             sceneManager.showConsultarSolicitudes();
         } catch (IOException e) {
@@ -81,38 +81,6 @@ public class MenuConciertoController {
             e.printStackTrace();
         }
     }
-
-
-
-   //control de vistas:
-    @FXML
-    public void initialize() {
-        int idRol = sesion.getUsuarioActual().getIdRol();
-
-        fid_bt_CrearConcierto.setVisible(idRol == 3);
-        fid_bt_CrearConcierto.setManaged(idRol == 3);
-
-        fid_bt_ConsultarSolicitudes.setVisible(idRol == 1);
-        fid_bt_ConsultarSolicitudes.setManaged(idRol == 1);
-
-        fid_bt_ConsultarProgramados.setVisible(idRol == 1);
-        fid_bt_ConsultarProgramados.setManaged(idRol == 1);
-
-        if (idRol == 0) {
-            fid_bt_CrearConcierto.setVisible(false);
-            fid_bt_CrearConcierto.setManaged(false);
-            fid_bt_ConsultarSolicitudes.setVisible(false);
-            fid_bt_ConsultarSolicitudes.setManaged(false);
-            fid_bt_ConsultarProgramados.setVisible(false);
-            fid_bt_ConsultarProgramados.setManaged(false);
-        }
-
-
-    }
-
-
-
-
 
     /* CREAR CONTRATO */
     @FXML

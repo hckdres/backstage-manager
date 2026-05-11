@@ -2,8 +2,6 @@ package org.example.ax0006.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -83,13 +81,13 @@ public class LoginController {
     }
 
     @FXML
-    /*METODO PARA PODER IR A LA PANTALLA DE SIGN UP*/
+        /*METODO PARA PODER IR A LA PANTALLA DE SIGN UP*/
     void On_sign_up(ActionEvent event) throws IOException {
         sceneManager.showSignUp();
     }
 
     @FXML
-    /*METODO QUE EJECUTA EL LOGIN Y QUE CAMBIA A LA PANTALLA DE MENU SI ESTE ES EXITOSO*/
+        /*METODO QUE EJECUTA EL LOGIN Y QUE CAMBIA A LA PANTALLA DE MENU SI ESTE ES EXITOSO*/
     void On_login(ActionEvent event) throws IOException {
         if (mostrando) {
             togglePassword();
@@ -105,12 +103,6 @@ public class LoginController {
             return;
         }
 
-        /*MENSAJES DE ERROR*/
-        if (!usuarioLogin.getContrasena().equals(fid_Contrasena.getText())) {
-            System.out.println("Contraseña incorrecta");
-            AlertaLogin("Error El usuario o contraseña incorrectos");
-            return;
-        }
 
         /*SE ASIGNA EL USUARIO LOGEADO AL USUARIO EN LA CLASE SESION*/
         sesion.setUsuarioActual(usuarioLogin);

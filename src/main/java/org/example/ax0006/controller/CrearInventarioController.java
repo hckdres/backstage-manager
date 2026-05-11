@@ -126,46 +126,51 @@ public class CrearInventarioController {
     void on_bt_crear() {
         try {
             Concierto c = sesionManager.getConciertoTemporal();
-            if (c == null || c.getHorario() == null) {
+            if(c.isProgramado()){if (c == null || c.getHorario() == null) {
                 mostrarAlerta(Alert.AlertType.ERROR, "Error", "No hay un concierto o horario válido vinculado.");
                 return;
             }
 
-            if (!inventarioService.obtenerObjetosPorConcierto(c.getIdConcierto()).isEmpty()) {
-                mostrarAlerta(Alert.AlertType.WARNING, "Inventario Existente", "Este concierto ya tiene un inventario asignado.");
-                return;
-            }
-
-            if (listaIdsParaGuardar.isEmpty()) {
-                mostrarAlerta(Alert.AlertType.WARNING, "Lista Vacía", "Debes agregar al menos un objeto.");
-                return;
-            }
-
-            List<String> objetosConConflicto = new ArrayList<>();
-            for (Integer idObjeto : listaIdsParaGuardar) {
-                if (inventarioObjetoService.objetoEnUsoEnRango(idObjeto, c.getHorario())) {
-                    objetosConConflicto.add("ID: " + idObjeto);
+                if (!inventarioService.obtenerObjetosPorConcierto(c.getIdConcierto()).isEmpty()) {
+                    mostrarAlerta(Alert.AlertType.WARNING, "Inventario Existente", "Este concierto ya tiene un inventario asignado.");
+                    return;
                 }
-            }
 
-            if (!objetosConConflicto.isEmpty()) {
-                String detalle = String.join("\n", objetosConConflicto);
-                mostrarAlerta(Alert.AlertType.ERROR, "Conflicto de Horario",
-                        "Los siguientes objetos ya están ocupados en otro concierto/mantenimiento durante estas fechas:\n\n" + detalle);
+                if (listaIdsParaGuardar.isEmpty()) {
+                    mostrarAlerta(Alert.AlertType.WARNING, "Lista Vacía", "Debes agregar al menos un objeto.");
+                    return;
+                }
+
+                List<String> objetosConConflicto = new ArrayList<>();
+                for (Integer idObjeto : listaIdsParaGuardar) {
+                    if (inventarioObjetoService.objetoEnUsoEnRango(idObjeto, c.getHorario())) {
+                        objetosConConflicto.add("ID: " + idObjeto);
+                    }
+                }
+
+                if (!objetosConConflicto.isEmpty()) {
+                    String detalle = String.join("\n", objetosConConflicto);
+                    mostrarAlerta(Alert.AlertType.ERROR, "Conflicto de Horario",
+                            "Los siguientes objetos ya están ocupados en otro concierto/mantenimiento durante estas fechas:\n\n" + detalle);
+                    return;
+                }
+
+                int idConcierto = c.getIdConcierto();
+                int idHorario = c.getHorario().getIdHorario();
+                int resultado = inventarioService.crearDocumentoInventario(idConcierto, idHorario, listaIdsParaGuardar);
+
+                if (resultado != -1) {
+                    mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Inventario creado y objetos vinculados exitosamente.");
+                    sesionManager.setConciertoTemporal(null);
+                    sceneManager.showMenuConcierto();
+                } else {
+                    mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo crear el documento de inventario.");
+                }
+            }else{
+                mostrarAlerta(Alert.AlertType.WARNING, "Concierto no aprobado", "Este concierto aún no puede tener inventario hasta ser aprobado.");
                 return;
             }
 
-            int idConcierto = c.getIdConcierto();
-            int idHorario = c.getHorario().getIdHorario();
-            int resultado = inventarioService.crearDocumentoInventario(idConcierto, idHorario, listaIdsParaGuardar);
-
-            if (resultado != -1) {
-                mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Inventario creado y objetos vinculados exitosamente.");
-                sesionManager.setConciertoTemporal(null);
-                sceneManager.showMenuConcierto();
-            } else {
-                mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo crear el documento de inventario.");
-            }
 
         } catch (Exception e) {
             e.printStackTrace();

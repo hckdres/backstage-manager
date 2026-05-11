@@ -43,4 +43,8 @@ public class InventarioService {
         return inventarioRepo.obtenerIdHorarioPorInventario(idInventario);
     }
 
+    public void EliminarHorarioInventario(int idHorario){
+        inventarioRepo.romperRelacionesHorario(idHorario);
+    }
+
 }

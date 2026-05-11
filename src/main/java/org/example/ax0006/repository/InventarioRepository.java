@@ -265,5 +265,17 @@ public class InventarioRepository {
         return -1;
     }
 
+    public void romperRelacionesHorario(int idHorario) {
+        String sqlRelHorario = "DELETE FROM DocumentoInventarioHorario WHERE idHorario = ?";
+
+        try (Connection conn = h2.getConnection()) {
+            try (PreparedStatement stmt = conn.prepareStatement(sqlRelHorario)) {
+                stmt.setInt(1, idHorario);
+                stmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
 

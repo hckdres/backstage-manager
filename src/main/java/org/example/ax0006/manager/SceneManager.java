@@ -74,7 +74,9 @@ public class SceneManager {
         loadScene("/org/example/ax0006/changepassword.fxml", changePasswordController);
     }
 
-    public void showConsultarSolicitudes() throws IOException {
+    public void showConsultarSolicitudes() throws IOException{
+        ConsultarSolicitudesController consultarSolicitudesController = new ConsultarSolicitudesController(context.getSesion(), context.getConciertoService(), this);
+        loadScene("/org/example/ax0006/consultarsolicitudes.fxml", consultarSolicitudesController);
     }
 
     public void showCrearConcierto() throws IOException {
@@ -88,7 +90,7 @@ public class SceneManager {
     }
 
     public void showConciertosProgramados() throws IOException {
-        ConciertosProgramadosController controller = new ConciertosProgramadosController(context.getSesion(), context.getConciertoService(), this);
+        ConciertosProgramadosController controller = new ConciertosProgramadosController(context.getSesion(), context.getConciertoService(), this, context.getInventarioService());
         loadScene("/org/example/ax0006/verconciertosprogramados.fxml", controller);
     }
 

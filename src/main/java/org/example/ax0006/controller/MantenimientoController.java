@@ -18,6 +18,7 @@ import org.example.ax0006.service.InventarioService;
 import org.example.ax0006.service.ObjetoService;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,6 +61,106 @@ public class MantenimientoController {
         lv_objetos_seleccionados.setItems(listaVisualObjetos);
         mostrarPanelCreacion(false);
         cargarMantenimientosActivos();
+    }
+
+    /**
+     * Lógica integrada para normalizar horas (ej: "1:00" -> "01:00")
+     */
+    private String normalizarHora(String hora) {
+        if (hora == null) return null;
+        hora = hora.trim();
+        return (hora.length() == 4) ? "0" + hora : hora;
+    }
+
+    @FXML
+    void on_bt_crear() {
+        try {
+            if (dp_fechaInicio.getValue() == null || dp_fechaFin.getValue() == null ||
+                    tf_horaInicio.getText().isEmpty() || tf_horaFin.getText().isEmpty()) {
+                mostrarAlerta(Alert.AlertType.WARNING, "Campos incompletos", "Por favor, completa todas las fechas y horas.");
+                return;
+            }
+
+            if (listaIdsParaGuardar.isEmpty()) {
+                mostrarAlerta(Alert.AlertType.WARNING, "Lista vacía", "Debes agregar al menos un objeto.");
+                return;
+            }
+
+            LocalTime horaInicio = LocalTime.parse(normalizarHora(tf_horaInicio.getText()));
+            LocalTime horaFin = LocalTime.parse(normalizarHora(tf_horaFin.getText()));
+
+            Horario nuevoHorario = new Horario();
+            nuevoHorario.setFechaInicio(dp_fechaInicio.getValue());
+            nuevoHorario.setFechaFin(dp_fechaFin.getValue());
+            nuevoHorario.setHoraInicio(horaInicio);
+            nuevoHorario.setHoraFin(horaFin);
+
+            List<String> conflictos = new ArrayList<>();
+            for (int i = 0; i < listaIdsParaGuardar.size(); i++) {
+                int idObjeto = listaIdsParaGuardar.get(i);
+                if (inventarioObjetoService.objetoEnUsoEnRango(idObjeto, nuevoHorario)) {
+                    conflictos.add(listaVisualObjetos.get(i));
+                }
+            }
+
+            if (!conflictos.isEmpty()) {
+                mostrarAlerta(Alert.AlertType.ERROR, "Conflicto de Horario",
+                        "Los siguientes objetos ya están ocupados en el rango seleccionado:\n\n" + String.join("\n", conflictos));
+                return;
+            }
+
+            int idHorarioGenerado = horarioRepository.guardar(nuevoHorario);
+
+            if (idHorarioGenerado != -1) {
+                int idInventario = inventarioService.crearDocumentoInventario(0, idHorarioGenerado, listaIdsParaGuardar);
+
+                if (idInventario != -1) {
+                    mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "El inventario de mantenimiento se ha creado correctamente.");
+                    on_bt_cancelar_creacion();
+                    cargarMantenimientosActivos();
+                }
+            }
+
+        } catch (DateTimeParseException e) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Error de Formato", "Formato de hora inválido. Use HH:mm (ej: 14:30 o 1:30).");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void on_bt_agregar_lista() {
+        String seleccionado = cb_objetos.getSelectionModel().getSelectedItem();
+        if (seleccionado != null && !listaVisualObjetos.contains(seleccionado)) {
+            try {
+                if (dp_fechaInicio.getValue() != null && !tf_horaInicio.getText().isEmpty() &&
+                        dp_fechaFin.getValue() != null && !tf_horaFin.getText().isEmpty()) {
+
+                    Horario hTemp = new Horario();
+                    hTemp.setFechaInicio(dp_fechaInicio.getValue());
+                    hTemp.setFechaFin(dp_fechaFin.getValue());
+
+                    hTemp.setHoraInicio(LocalTime.parse(normalizarHora(tf_horaInicio.getText())));
+                    hTemp.setHoraFin(LocalTime.parse(normalizarHora(tf_horaFin.getText())));
+
+                    int id = Integer.parseInt(seleccionado.split(" - ")[0]);
+                    if (inventarioObjetoService.objetoEnUsoEnRango(id, hTemp)) {
+                        mostrarAlerta(Alert.AlertType.WARNING, "Objeto Ocupado",
+                                "Este objeto ya está en uso durante las fechas seleccionadas.");
+                        return;
+                    }
+                }
+
+                listaVisualObjetos.add(seleccionado);
+                listaIdsParaGuardar.add(Integer.parseInt(seleccionado.split(" - ")[0]));
+
+            } catch (DateTimeParseException e) {
+                mostrarAlerta(Alert.AlertType.WARNING, "Hora inválida", "Verifica el formato de la hora antes de añadir objetos.");
+            } catch (Exception e) {
+                listaVisualObjetos.add(seleccionado);
+                listaIdsParaGuardar.add(Integer.parseInt(seleccionado.split(" - ")[0]));
+            }
+        }
     }
 
     private void cargarMantenimientosActivos() {
@@ -108,6 +209,12 @@ public class MantenimientoController {
             btnEliminar.setStyle("-fx-background-color: #ef4444; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold;");
             btnEliminar.setOnAction(e -> {
                 inventarioService.eliminarDocumentoInventario(idInv, 0, idHorario, idsObjetosParaEliminar);
+                try{
+                    inventarioService.EliminarHorarioInventario(idHorario);
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+
                 cargarMantenimientosActivos();
             });
 
@@ -116,97 +223,7 @@ public class MantenimientoController {
         }
     }
 
-    @FXML
-    void on_bt_crear() {
-        try {
-            if (dp_fechaInicio.getValue() == null || dp_fechaFin.getValue() == null ||
-                    tf_horaInicio.getText().isEmpty() || tf_horaFin.getText().isEmpty()) {
-                mostrarAlerta(Alert.AlertType.WARNING, "Campos incompletos", "Por favor, completa todas las fechas y horas.");
-                return;
-            }
-
-            if (listaIdsParaGuardar.isEmpty()) {
-                mostrarAlerta(Alert.AlertType.WARNING, "Lista vacía", "Debes agregar al menos un objeto.");
-                return;
-            }
-
-            Horario nuevoHorario = new Horario();
-            nuevoHorario.setFechaInicio(dp_fechaInicio.getValue());
-            nuevoHorario.setFechaFin(dp_fechaFin.getValue());
-            nuevoHorario.setHoraInicio(LocalTime.parse(tf_horaInicio.getText()));
-            nuevoHorario.setHoraFin(LocalTime.parse(tf_horaFin.getText()));
-
-            List<String> conflictos = new ArrayList<>();
-            for (int i = 0; i < listaIdsParaGuardar.size(); i++) {
-                int idObjeto = listaIdsParaGuardar.get(i);
-                if (inventarioObjetoService.objetoEnUsoEnRango(idObjeto, nuevoHorario)) {
-                    conflictos.add(listaVisualObjetos.get(i));
-                }
-            }
-
-            if (!conflictos.isEmpty()) {
-                mostrarAlerta(Alert.AlertType.ERROR, "Conflicto de Horario",
-                        "Los siguientes objetos ya están ocupados en el rango seleccionado:\n\n" + String.join("\n", conflictos));
-                return;
-            }
-
-            int idHorarioGenerado = horarioRepository.guardar(nuevoHorario);
-
-            if (idHorarioGenerado != -1) {
-                int idInventario = inventarioService.crearDocumentoInventario(0, idHorarioGenerado, listaIdsParaGuardar);
-
-                if (idInventario != -1) {
-                    mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "El inventario de mantenimiento se ha creado correctamente.");
-                    on_bt_cancelar_creacion();
-                    cargarMantenimientosActivos();
-                } else {
-                    System.out.println("no se creó xd");
-                }
-            } else {
-                System.out.println("no se guardó horario xd");
-            }
-
-        } catch (java.time.format.DateTimeParseException e) {
-            mostrarAlerta(Alert.AlertType.ERROR, "Error de Formato", "Usa el formato HH:mm (ej: 14:30).");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    void on_bt_agregar_lista() {
-        String seleccionado = cb_objetos.getSelectionModel().getSelectedItem();
-        if (seleccionado != null && !listaVisualObjetos.contains(seleccionado)) {
-            try {
-                if (dp_fechaInicio.getValue() != null && !tf_horaInicio.getText().isEmpty() &&
-                        dp_fechaFin.getValue() != null && !tf_horaFin.getText().isEmpty()) {
-
-                    Horario hTemp = new Horario();
-                    hTemp.setFechaInicio(dp_fechaInicio.getValue());
-                    hTemp.setFechaFin(dp_fechaFin.getValue());
-                    hTemp.setHoraInicio(LocalTime.parse(tf_horaInicio.getText()));
-                    hTemp.setHoraFin(LocalTime.parse(tf_horaFin.getText()));
-
-                    int id = Integer.parseInt(seleccionado.split(" - ")[0]);
-                    if (inventarioObjetoService.objetoEnUsoEnRango(id, hTemp)) {
-                        mostrarAlerta(Alert.AlertType.WARNING, "Objeto Ocupado",
-                                "Este objeto ya está en uso durante las fechas seleccionadas.");
-                        return;
-                    }
-                }
-
-                listaVisualObjetos.add(seleccionado);
-                listaIdsParaGuardar.add(Integer.parseInt(seleccionado.split(" - ")[0]));
-
-            } catch (Exception e) {
-                listaVisualObjetos.add(seleccionado);
-                listaIdsParaGuardar.add(Integer.parseInt(seleccionado.split(" - ")[0]));
-            }
-        }
-    }
-
-    @FXML
-    void on_bt_quitar_lista() {
+    @FXML void on_bt_quitar_lista() {
         int index = lv_objetos_seleccionados.getSelectionModel().getSelectedIndex();
         if (index >= 0) {
             listaVisualObjetos.remove(index);
@@ -214,11 +231,9 @@ public class MantenimientoController {
         }
     }
 
-    @FXML
-    void on_bt_abrir_creacion() { mostrarPanelCreacion(true); }
+    @FXML void on_bt_abrir_creacion() { mostrarPanelCreacion(true); }
 
-    @FXML
-    void on_bt_cancelar_creacion() {
+    @FXML void on_bt_cancelar_creacion() {
         tf_horaInicio.clear(); tf_horaFin.clear();
         dp_fechaInicio.setValue(null); dp_fechaFin.setValue(null);
         listaVisualObjetos.clear(); listaIdsParaGuardar.clear();

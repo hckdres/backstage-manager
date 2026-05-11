@@ -48,13 +48,14 @@ public class StartController extends Application {
         ProfileService profileService = new ProfileService(usuarioRepo);
         RolService rolService = new RolService(rolRepo, usuarioRepo);
         ContratoService contratoService = new ContratoService(contratoRepo);
-        org.example.ax0006.service.ConciertoService conciertoService = new ConciertoService(conciertoRepo, horarioRepo, conciertoValidator, contratoService , asignacionStaffRepo);
-
         InventarioService inventarioService = new InventarioService(inventarioRepo);
         StaffService staffService = new StaffService(usuarioRepo, asignacionStaffRepo);
 
         InventarioObjetoService inventarioObjetoService = new InventarioObjetoService(inventarioObjetoRepo);
         ObjetoService objetoService = new ObjetoService(objetoRepo);
+        ConciertoService conciertoService = new ConciertoService(conciertoRepo, inventarioService, horarioRepo, conciertoValidator, contratoService , asignacionStaffRepo);
+
+
 
         SesionManager sesion = new SesionManager();
         ContextManager context = new ContextManager(

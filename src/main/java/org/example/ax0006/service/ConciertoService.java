@@ -9,6 +9,7 @@ import org.example.ax0006.service.ContratoService;
 import org.example.ax0006.service.InventarioService;
 import org.example.ax0006.validator.ConciertoValidator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ConciertoService {
@@ -64,6 +65,11 @@ public class ConciertoService {
     /*Elimina un concierto y su horario de la base de datos*/
     public void eliminarConcierto(int idConcierto, int idHorario) {
         conciertoRepo.eliminarConcierto(idConcierto);
+        try{
+            inventarioService.EliminarHorarioInventario(idHorario);
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
         horarioRepo.eliminarHorario(idHorario);
     }
 

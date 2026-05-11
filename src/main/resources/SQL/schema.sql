@@ -46,10 +46,23 @@ CREATE TABLE IF NOT EXISTS Horario (
     horaFin TIME NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS ReferenciaDeObjeto (
+   idReferenciaObjeto INT AUTO_INCREMENT PRIMARY KEY,
+   referencia VARCHAR(255) NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS TipoObjeto (
-        idTipoObjeto INT AUTO_INCREMENT PRIMARY KEY,
-        nombre VARCHAR(255)
-    );
+    idTipoObjeto INT AUTO_INCREMENT PRIMARY KEY,
+    tipo VARCHAR(255) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS Objeto (
+    idObjeto INT AUTO_INCREMENT PRIMARY KEY,
+    idTipoObjeto INT NOT NULL,
+    idReferenciaObjeto INT NOT NULL,
+    FOREIGN KEY (idTipoObjeto) REFERENCES TipoObjeto(idTipoObjeto),
+    FOREIGN KEY (idReferenciaObjeto) REFERENCES ReferenciaDeObjeto(idReferenciaObjeto)
+);
 
 CREATE TABLE IF NOT EXISTS ObjetoInventario (
         idInventario INT AUTO_INCREMENT PRIMARY KEY,
@@ -96,6 +109,54 @@ CREATE TABLE IF NOT EXISTS RolConciertoUsuario (
         FOREIGN KEY (idConcierto) REFERENCES Concierto(idConcierto)
     );
 
+CREATE TABLE IF NOT EXISTS DocumentoInventario (
+        idDocumentoInventario INT AUTO_INCREMENT PRIMARY KEY
+    );
+
+CREATE TABLE IF NOT EXISTS ObjetoDocumentoInventario (
+        idInventario INT,
+        idObjeto INT,
+        FOREIGN KEY (idInventario) REFERENCES DocumentoInventario(idDocumentoInventario),
+        FOREIGN KEY (idObjeto) REFERENCES Objeto(idObjeto)
+    );
+
+CREATE TABLE IF NOT EXISTS DocumentoInventarioHorario (
+        idDocumentoInventario INT,
+        idHorario INT,
+        PRIMARY KEY (idDocumentoInventario, idHorario),
+        FOREIGN KEY (idDocumentoInventario) REFERENCES DocumentoInventario(idDocumentoInventario),
+        FOREIGN KEY (idHorario) REFERENCES Horario(idHorario)
+    );
+
+CREATE TABLE IF NOT EXISTS ConciertoDocumentoInventario (
+        idDocumentoInventario INT,
+        idConcierto INT,
+        PRIMARY KEY (idDocumentoInventario, idConcierto),
+        FOREIGN KEY (idDocumentoInventario) REFERENCES DocumentoInventario(idDocumentoInventario),
+        FOREIGN KEY (idConcierto) REFERENCES Concierto(idConcierto)
+    );
+
 -- Insertar roles por defecto
 MERGE INTO Rol (idRol, rol) KEY(idRol)
     VALUES (0, 'Sin rol'),(1, 'Administrador'), (2, 'Tecnico'), (3, 'Manager'), (4, 'Staff');
+
+MERGE INTO TipoObjeto (tipo) KEY(tipo) VALUES
+    ('Micrófono'),
+    ('Parlante'),
+    ('Cable XLR'),
+    ('Cable de poder'),
+    ('Consola de mezcla'),
+    ('Amplificador'),
+    ('Monitor de escenario'),
+    ('Pantalla LED'),
+    ('Proyector'),
+    ('Soporte de micrófono'),
+    ('Rack de audio'),
+    ('Interfaz de audio'),
+    ('Sistema in-ear'),
+    ('Luces LED'),
+    ('Generador eléctrico');
+
+MERGE INTO Concierto (idConcierto, nombreConcierto, aforo, programado)
+    KEY(idConcierto)
+    VALUES (0, 'mantenimiento', 0, FALSE);
