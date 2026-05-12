@@ -7,7 +7,6 @@ public class Usuario {
     private String gmail;
     private int idRol;
 
-
     private String telefono;
     private String direccion;
     private String contactoEmergenciaNombre;
@@ -65,10 +64,6 @@ public class Usuario {
     public void setIdRol(int idRol) {
         this.idRol = idRol;
     }
-
-
-
-
 
     public String getTelefono() {
         return telefono;

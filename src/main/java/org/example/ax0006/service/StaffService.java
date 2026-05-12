@@ -97,4 +97,8 @@ public class StaffService {
 
         return asignacionStaffRepository.actualizarSubrolStaffEnConcierto(idUsuario, idConcierto, subrol);
     }
+
+    public int obtenerIdConciertoDelUsuario(int idUsuario) {
+        return asignacionStaffRepository.obtenerIdConciertoDelUsuario(idUsuario);
+    }
 }
