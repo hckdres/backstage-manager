@@ -98,6 +98,11 @@ public class StaffService {
         return asignacionStaffRepository.actualizarSubrolStaffEnConcierto(idUsuario, idConcierto, subrol);
     }
 
+    // Retorna la lista de subroles disponibles registrados en la base de datos
+    public List<String> obtenerSubrolesDisponibles() {
+        return asignacionStaffRepository.obtenerSubrolesDisponibles();
+    }
+
     public int obtenerIdConciertoDelUsuario(int idUsuario) {
         return asignacionStaffRepository.obtenerIdConciertoDelUsuario(idUsuario);
     }

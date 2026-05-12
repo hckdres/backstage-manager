@@ -87,13 +87,8 @@ public class DirectorioStaffController {
             return new SimpleStringProperty(subrol);
         });
 
-        comboSubrol.getItems().addAll(
-                "Sonido",
-                "Luces",
-                "Seguridad",
-                "Logística",
-                "Producción"
-        );
+        // Carga los subroles disponibles desde la base de datos
+        comboSubrol.getItems().addAll(staffService.obtenerSubrolesDisponibles());
 
         comboConcierto.getItems().addAll(
                 conciertoService.obtenerConciertosSolos().stream()
