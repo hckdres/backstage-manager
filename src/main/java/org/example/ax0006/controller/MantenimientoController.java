@@ -17,6 +17,8 @@ import org.example.ax0006.service.InventarioObjetoService;
 import org.example.ax0006.service.InventarioService;
 import org.example.ax0006.service.ObjetoService;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -85,10 +87,28 @@ public class MantenimientoController {
 
             LocalTime horaInicio = LocalTime.parse(normalizarHora(tf_horaInicio.getText()));
             LocalTime horaFin = LocalTime.parse(normalizarHora(tf_horaFin.getText()));
+            LocalDate fechaInicio = dp_fechaInicio.getValue();
+            LocalDate fechaFin = dp_fechaFin.getValue();
+
+            if(horaFin.isBefore(horaInicio) && fechaFin.isEqual(fechaInicio)){
+                mostrarAlerta(Alert.AlertType.ERROR, "Hora Final", "La Hora final no es valida");
+                return;
+            }
+
+            if(horaFin.equals(horaInicio) && fechaFin.isEqual(fechaInicio)){
+                mostrarAlerta(Alert.AlertType.ERROR, "Horas Exactas", "No se puede tener un mantenimiento que inicia y finaliza a la misma hora del mismo día");
+                return;
+            }
+
+            if(fechaFin.isBefore(fechaInicio)){
+                mostrarAlerta(Alert.AlertType.ERROR, "Fecha Final", "La Fecha final no es valida");
+                return;
+            }
+
 
             Horario nuevoHorario = new Horario();
-            nuevoHorario.setFechaInicio(dp_fechaInicio.getValue());
-            nuevoHorario.setFechaFin(dp_fechaFin.getValue());
+            nuevoHorario.setFechaInicio(fechaInicio);
+            nuevoHorario.setFechaFin(fechaFin);
             nuevoHorario.setHoraInicio(horaInicio);
             nuevoHorario.setHoraFin(horaFin);
 
@@ -252,7 +272,7 @@ public class MantenimientoController {
         alert.showAndWait();
     }
 
-    
+
     @FXML
     void on_bt_volver() throws Exception {
         sesionManager.setConciertoTemporal(null);
