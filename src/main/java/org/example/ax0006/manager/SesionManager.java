@@ -2,6 +2,7 @@ package org.example.ax0006.manager;
 
 import org.example.ax0006.entity.Concierto;
 import org.example.ax0006.entity.Usuario;
+import org.example.ax0006.entity.Nomina;
 
 /*ESTA CLASE CONTIENE LA INFORMACION DE LA SESION
 * POR AHORA ESTA CONTIENE EL USUARIO QUE ACTUALMENTE ESTA LOGEADO A LA APLICACION */
@@ -11,6 +12,7 @@ public class SesionManager {
     private Usuario usuarioActual;
     private Concierto conciertoTemporal;
     private Concierto conciertoActual;
+    private Nomina nominaSeleccionada;
 
     /*METODO PARA OBTENER EL USUARIO ACTUALMENTE LOGEADO EN EL PROGRAMA, SI NADIE SE HA LOGEADO PUES ESTE ESTA EN NULL*/
     public Usuario getUsuarioActual() {
@@ -62,4 +64,8 @@ public class SesionManager {
     public void setConciertoActual(Concierto conciertoActual) {
         this.conciertoActual = conciertoActual;
     }
+
+    public Nomina getNominaSeleccionada() { return nominaSeleccionada; }
+
+    public void setNominaSeleccionada(Nomina nominaSeleccionada) { this.nominaSeleccionada = nominaSeleccionada; }
 }

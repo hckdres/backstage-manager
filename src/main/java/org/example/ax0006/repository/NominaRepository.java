@@ -16,16 +16,17 @@ public class NominaRepository {
     }
 
     public void guardar(Nomina nomina) {
-        String sql = "INSERT INTO Nomina (idConcierto, idUsuario, horasTrabajadas, tarifaPorHora, horasExtra, total, pagado) VALUES (?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO Nomina (idConcierto, idUsuario, rol, horasTrabajadas, tarifaPorHora, horasExtra, total, pagado) VALUES (?,?,?,?,?,?,?)";
         try (Connection conn = h2.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setInt(1, nomina.getIdConcierto());
             stmt.setInt(2, nomina.getIdUsuario());
-            stmt.setDouble(3, nomina.getHorasTrabajadas());
-            stmt.setDouble(4, nomina.getTarifaPorHora());
-            stmt.setDouble(5, nomina.getHorasExtra());
-            stmt.setDouble(6, nomina.getTotal());
-            stmt.setBoolean(7, nomina.isPagado());
+            stmt.setString(3, nomina.getRol());
+            stmt.setDouble(4, nomina.getHorasTrabajadas());
+            stmt.setDouble(5, nomina.getTarifaPorHora());
+            stmt.setDouble(6, nomina.getHorasExtra());
+            stmt.setDouble(7, nomina.getTotal());
+            stmt.setBoolean(8, nomina.isPagado());
             stmt.executeUpdate();
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
@@ -48,6 +49,7 @@ public class NominaRepository {
                 n.setIdNomina(rs.getInt("idNomina"));
                 n.setIdConcierto(rs.getInt("idConcierto"));
                 n.setIdUsuario(rs.getInt("idUsuario"));
+                n.setRol(rs.getString("rol"));
                 n.setHorasTrabajadas(rs.getDouble("horasTrabajadas"));
                 n.setTarifaPorHora(rs.getDouble("tarifaPorHora"));
                 n.setHorasExtra(rs.getDouble("horasExtra"));
@@ -97,6 +99,7 @@ public class NominaRepository {
                 n.setIdNomina(rs.getInt("idNomina"));
                 n.setIdConcierto(rs.getInt("idConcierto"));
                 n.setIdUsuario(rs.getInt("idUsuario"));
+                n.setRol(rs.getString("rol"));
                 n.setHorasTrabajadas(rs.getDouble("horasTrabajadas"));
                 n.setTarifaPorHora(rs.getDouble("tarifaPorHora"));
                 n.setHorasExtra(rs.getDouble("horasExtra"));

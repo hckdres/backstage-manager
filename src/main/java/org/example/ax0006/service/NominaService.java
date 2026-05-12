@@ -30,15 +30,17 @@ public class NominaService {
         return duration.toHours() + (duration.toMinutesPart() / 60.0);
     }
 
-    private double obtenerTarifaPorRol(String nombreRol) {
-        // Si hay múltiples roles separados por coma, tomamos el primero
-        String primerRol = nombreRol.split(",")[0].trim().toLowerCase();
-        switch (primerRol) {
-            case "staff": return 10000;
-            case "tecnico": return 20000;
-            case "artista": return 15000;
-            case "administrador": return 25000;
-            default: return 10000;
+    private double obtenerTarifaPorRol(String rol) {
+        rol = rol.toLowerCase();
+        switch (rol) {
+            case "manager":return 50000;
+            case "tecnico":return 35000;
+            case "luces":return 28000;
+            case "sonido":return 30000;
+            case "staff":return 15000;
+            case "artista":return 40000;
+            case "administrador":return 45000;
+            default:return 10000;
         }
     }
 
@@ -61,7 +63,7 @@ public class NominaService {
             String rolNombre = asignacionStaffRepository.obtenerNombreRolEnConcierto(u.getIdUsuario(), idConcierto);
             double tarifa = obtenerTarifaPorRol(rolNombre);
             double total = horasBase * tarifa;
-            Nomina n = new Nomina(idConcierto, u.getIdUsuario(), horasBase, tarifa, 0, total, false);
+            Nomina n = new Nomina(idConcierto, u.getIdUsuario(), rolNombre, horasBase, tarifa, 0, total, false);
             nominaRepository.guardar(n);
         }
     }

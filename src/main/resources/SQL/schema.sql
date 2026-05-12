@@ -99,3 +99,18 @@ CREATE TABLE IF NOT EXISTS RolConciertoUsuario (
 -- Insertar roles por defecto
 MERGE INTO Rol (idRol, rol) KEY(idRol)
     VALUES (0, 'Sin rol'),(1, 'Administrador'), (2, 'Tecnico'), (3, 'Manager'), (4, 'Staff');
+
+CREATE TABLE IF NOT EXISTS Nomina (
+    idNomina INT AUTO_INCREMENT PRIMARY KEY,
+    idConcierto INT NOT NULL,
+    idUsuario INT NOT NULL,
+    rol VARCHAR(100),
+    horasTrabajadas DOUBLE NOT NULL,
+    tarifaPorHora DOUBLE NOT NULL,
+    horasExtra DOUBLE DEFAULT 0,
+    total DOUBLE NOT NULL,
+    pagado BOOLEAN DEFAULT FALSE,
+
+    FOREIGN KEY (idConcierto) REFERENCES Concierto(idConcierto),
+    FOREIGN KEY (idUsuario) REFERENCES Usuario(idUsuario)
+);

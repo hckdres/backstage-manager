@@ -7,7 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
-
+import javafx.scene.control.TableRow;
 import javafx.util.converter.DoubleStringConverter;
 
 import org.example.ax0006.entity.Concierto;
@@ -73,6 +73,25 @@ public class NominaController {
         colEstado.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().isPagado() ? "Pagado" : "Pendiente"));
 
         tablaNominas.setEditable(true);
+
+        tablaNominas.setRowFactory(tv -> {
+            TableRow<Nomina> row = new TableRow<>();
+
+            row.setOnMouseClicked(event -> {
+
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    Nomina nominaSeleccionada = row.getItem();
+                    sesion.setNominaSeleccionada(nominaSeleccionada);
+                    try {
+                        sceneManager.showDetalleNomina();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            return row;
+        });
+
         colExtra.setCellFactory(TextFieldTableCell.forTableColumn(new javafx.util.converter.DoubleStringConverter()));
         colExtra.setOnEditCommit(event -> {
             Nomina nomina = event.getRowValue();
@@ -92,6 +111,26 @@ public class NominaController {
                 .toList();
 
         comboEvento.setItems(FXCollections.observableArrayList(conciertos));
+
+        tablaNominas.setRowFactory(tv -> {
+            TableRow<Nomina> row = new TableRow<>();
+
+            row.setOnMouseClicked(event -> {
+
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+
+                    Nomina nomina = row.getItem();
+
+                    try {
+                        sceneManager.showDetalleNomina(nomina);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            return row;
+        });
     }
 
     private void cargarNominas(int idConcierto) {

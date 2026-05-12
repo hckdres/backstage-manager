@@ -4,8 +4,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.example.ax0006.controller.*;
-
+import org.example.ax0006.controller.DetalleNominaController;
 import java.io.IOException;
+
 
 
 /*ESTA CLASE ES LA QUE HACE TODO EL CAMBIO DE ESCENAS POSIBLE AL ENVIAR LA INFORMACION Y AL SIMPLIFICAR EL CAMBIAR DE ESCENA*/
@@ -147,6 +148,19 @@ public class SceneManager {
                 context.getStaffService()
         );
 
+        public void showDetalleNomina(org.example.ax0006.entity.Nomina nomina) throws IOException {
+
+            context.getSesion().setNominaSeleccionada(nomina);
+
+            DetalleNominaController controller = new DetalleNominaController(
+                    this,
+                    context.getSesion(),
+                    context.getStaffService()
+            );
+
+            loadScene("/org/example/ax0006/detallenomina.fxml", controller);
+        }
+
         loadScene("/org/example/ax0006/liquidacionhoras.fxml", controller);
     }
 
@@ -163,6 +177,4 @@ public class SceneManager {
         Scene scene = new Scene(loader.load());
         stage.setScene(scene);
     }
-
-
 }
