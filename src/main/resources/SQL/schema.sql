@@ -144,8 +144,7 @@ MERGE INTO Clausula (idClausula, clausula, idContrato) KEY (idClausula)
 
 ALTER TABLE Clausula ALTER COLUMN idClausula RESTART WITH 6;
 
--- 5. CONCIERTOS (Ahora sí, referenciando Horario y Contrato existentes)
--- Ojo: Ajusté los booleanos nativos de SQL (TRUE/FALSE) para la columna programado
+-- 5. CONCIERTOS (referenciando Horario y Contrato existentes)
 MERGE INTO Concierto (idConcierto, nombreConcierto, idHorario, aforo, idContrato, programado, idAnalisisF) KEY(idConcierto)
     VALUES
     (1, 'Fin del Mundo Loko', 1, 100001, 1, FALSE, null),
@@ -153,7 +152,7 @@ MERGE INTO Concierto (idConcierto, nombreConcierto, idHorario, aforo, idContrato
 
 ALTER TABLE Concierto ALTER COLUMN idConcierto RESTART WITH 3;
 
--- 6. TABLAS INTERMEDIAS (Asignamos a Feid como el Manager/Artista de ambos conciertos)
+-- 6. TABLAS INTERMEDIAS
 -- 3 = Manager/Artista
 MERGE INTO RolConciertoUsuario (idRol, idUsuario, idConcierto) KEY (idRol, idUsuario, idConcierto)
     VALUES
