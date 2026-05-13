@@ -33,7 +33,7 @@ jobs:
         uses: mikepenz/action-junit-report@v5
         if: success() || failure()
         with:
-          report_paths: '**/target/surefire-reports/TEST-*.xml'
+          report_paths: 'target/surefire-reports/TEST-*.xml'
 
       - name: Generar un reporte de cobertura de pruebas
         uses: PavanMudigonda/jacoco-reporter@v4.8
