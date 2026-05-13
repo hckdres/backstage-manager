@@ -130,7 +130,7 @@ class ConciertoServiceTest {
 
             conciertoService.crearConcierto(concierto);
 
-            conciertoService.obtenerConciertosSolos()
+            conciertoService.obtenerConciertosSolos();
 
         }
     }
