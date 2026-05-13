@@ -35,9 +35,7 @@ CREATE TABLE IF NOT EXISTS Clausula (
 CREATE TABLE IF NOT EXISTS AnalisisFinanciero (
     idAnalisisF INT AUTO_INCREMENT PRIMARY KEY,
     presupuesto INT NOT NULL,
-    gastos INT DEFAULT 0,
-    aprobado BOOLEAN DEFAULT FALSE,
-    precioBoleta INT DEFAULT 0
+    aprobado BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS Gasto (
