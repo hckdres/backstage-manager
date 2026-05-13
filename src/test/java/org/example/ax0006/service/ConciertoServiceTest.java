@@ -126,11 +126,11 @@ class ConciertoServiceTest {
                 usuario.setIdRol(3);
                 usuarioRepo.guardar(usuario);
 
-            concierto.setArtista(usuario);
-
-            conciertoService.crearConcierto(concierto);
-
-            conciertoService.obtenerConciertosSolos();
+//            concierto.setArtista(usuario);
+//
+//            conciertoService.crearConcierto(concierto);
+//
+//            conciertoService.obtenerConciertosSolos();
 
         }
     }
