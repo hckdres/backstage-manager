@@ -21,6 +21,8 @@ public class H2 {
     private static final String USER = "sa";
     private static final String PASS = "";
 
+    private Server webServer;
+
     public H2() {}; //Constructor
 
     public Connection getConnection() throws SQLException {
@@ -50,6 +52,14 @@ public class H2 {
         } catch (Exception e) {
             System.err.println("Error crítico al inicializar la base de datos.");
             e.printStackTrace();
+        }
+    }
+
+    public void cerrarServidor() {
+        if (webServer != null) {
+            webServer.stop();
+            webServer = null;
+            System.out.println("Servidor web de H2 detenido correctamente.");
         }
     }
 }
