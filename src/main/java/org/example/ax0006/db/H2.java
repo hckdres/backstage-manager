@@ -47,6 +47,7 @@ public class H2 {
                 System.out.println("No se pudo iniciar el servidor web H2. Puede que ya esté corriendo.");
             }
 
+
         } catch (Exception e) {
             System.err.println("Error crítico al inicializar la base de datos.");
             e.printStackTrace();
