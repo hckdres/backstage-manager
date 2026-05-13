@@ -86,7 +86,6 @@ public class ConciertoRepository {
                     rs.getBoolean("programado")
             );
 
-            // 🔥 ESTA LÍNEA ES LA CLAVE
             c.setIdContrato(rs.getInt("idContrato"));
 
             lista.add(c);
@@ -279,4 +278,31 @@ public class ConciertoRepository {
             e.printStackTrace();
         }
     }
+
+    //Asignar unas finanzas a un concierto
+    public void asignarAnalisisFinanciero(
+        int idConcierto,
+        int idAnalisisF){
+
+            String sql = """
+                UPDATE Concierto
+                SET idAnalisisF = ?
+                WHERE idConcierto = ?
+            """;
+
+            try (
+                    Connection conn = h2.getConnection();
+                    PreparedStatement stmt =
+                            conn.prepareStatement(sql)
+            ) {
+
+                stmt.setInt(1, idAnalisisF);
+                stmt.setInt(2, idConcierto);
+
+                stmt.executeUpdate();
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
 }

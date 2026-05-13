@@ -16,6 +16,9 @@ public class MenuFinanzasController {
     private Button fid_bt_ConsultarFinanzasConciertos;
 
     @FXML
+    private Button fid_bt_AsignarPresupuesto;
+
+    @FXML
     private Button fid_bt_volver;
 
     /* ATRIBUTOS */
@@ -59,6 +62,17 @@ public class MenuFinanzasController {
         try {
 
             sceneManager.showConsultarFinanzas();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void On_AsignarPresupuesto(ActionEvent event) {
+        try {
+            sceneManager.showAsignarPresupuesto();
 
         } catch (IOException e) {
 

@@ -60,4 +60,16 @@ public class ConciertoService {
         conciertoRepo.eliminarConcierto(idConcierto);
         horarioRepo.eliminarHorario(idHorario);
     }
+
+    // Asignar un presupuesto a un concierto
+    public void asignarPresupuesto(
+        int idConcierto,
+        int idAnalisisF
+    ) {
+
+        conciertoRepo.asignarAnalisisFinanciero(
+                idConcierto,
+                idAnalisisF
+        );
+    }
 }

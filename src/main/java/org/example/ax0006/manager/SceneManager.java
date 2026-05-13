@@ -192,7 +192,23 @@ public class SceneManager {
             "/org/example/ax0006/consultarfinanzas.fxml",
             controller
     );
-}
+    }
+
+    public void showAsignarPresupuesto() throws IOException {
+
+    AsignarPresupuestoController controller =
+            new AsignarPresupuestoController(
+
+                    context.getAnalisisFinancieroService(),
+                    context.getConciertoService(),
+                    this
+            );
+
+    loadScene(
+            "/org/example/ax0006/asignarpresupuesto.fxml",
+            controller
+    );
+    }
     
     
 
