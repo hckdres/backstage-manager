@@ -104,7 +104,7 @@ class ConciertoServiceTest {
             concierto.setHorario(horario);
 
             // ==========================================
-            // 2. ARTISTA (Adaptado a retorno boolean)
+            // 2. ARTISTA
             // ==========================================
             Usuario usuario = new Usuario();
             usuario.setNombre("Juan Luis Guerra");
@@ -112,11 +112,9 @@ class ConciertoServiceTest {
             usuario.setContrasena("password123");
             usuario.setIdRol(3); // Rol de Manager/Artista
 
-            // Guardamos validando el boolean
             boolean artistaGuardado = usuarioRepo.guardar(usuario);
             assertTrue(artistaGuardado, "El repositorio falló al guardar al artista.");
 
-            // 🔥 TRUCO: Buscamos al artista recién creado para capturar su ID real de la BD
             Usuario artistaReal = usuarioRepo.buscarPorNombre("Juan Luis Guerra");
             assertNotNull(artistaReal, "No se pudo recuperar el artista de la base de datos.");
 
@@ -143,9 +141,9 @@ class ConciertoServiceTest {
             concierto.setIdContrato(idContratoReal);
 
             // ==========================================
-            // 4. EJECUTAR SERVICIO (Validando el boolean)
+            // 4. EJECUTAR SERVICIO
             // ==========================================
-
+            conciertoService.crearConcierto(concierto);
             // ==========================================
             // 5. ASERCIONES
             // ==========================================
