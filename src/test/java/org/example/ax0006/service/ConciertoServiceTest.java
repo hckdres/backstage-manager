@@ -18,174 +18,177 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ConciertoServiceTest {
 
+    // Gestor de BD
     private H2 h2;
+
+    // Repositorios
     private ConciertoRepository conciertoRepo;
     private HorarioRepository horarioRepo;
     private ContratoRepository contratoRepo;
+    private UsuarioRepository usuarioRepo;
+    private AsignacionStaffRepository asignacionStaffRepo;
 
+    // Servicios y Validadores
     private ContratoService contratoService;
     private ConciertoValidator conciertoValidator;
     private HorarioValidator horarioValidator;
-    private AsignacionStaffRepository asignacionStaffRepo;
-    private UsuarioRepository usuarioRepo;
 
+    // Servicio Principal a Probar
     private ConciertoService conciertoService;
 
     @BeforeEach
     void prepararEscenario() {
-
-        // Se crea una base de datos nueva para que cada prueba empiece aislada.
         h2 = new H2();
 
-        try (Connection conn = h2.getConnection();
-             Statement stmt = conn.createStatement()) {
-
-            // Desactiva la integridad referencial momentáneamente y borra todo
-            // Se desactiva la integridad referencial para que sea posible borrar la base de datos con facilidad ya que con esto no se podria
-            stmt.execute("SET REFERENTIAL_INTEGRITY FALSE");
-            stmt.execute("DROP ALL OBJECTS");
-            stmt.execute("SET REFERENTIAL_INTEGRITY TRUE");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail("Falló la limpieza de la base de datos antes de la prueba");
-        }
-
-        // Se inicializan las tablas necesarias antes de usar el repositorio.
+        // 1. Inicializar BD (Ahora solo ejecuta el DDL puro de schema.sql sin datos basura)
         h2.inicializarDB();
 
-        // Se crea el repositorio real conectado a la base de datos de prueba.
+        // 2. Inicializar repositorios reales conectados a la BD de prueba
         conciertoRepo = new ConciertoRepository(h2);
         horarioRepo = new HorarioRepository(h2);
         contratoRepo = new ContratoRepository(h2);
         usuarioRepo = new UsuarioRepository(h2);
         asignacionStaffRepo = new AsignacionStaffRepository(h2);
 
-        //Se crean los validadores
+        // 3. Inicializar validadores
         horarioValidator = new HorarioValidator();
         conciertoValidator = new ConciertoValidator(horarioValidator);
 
-        //Se crea un servicio que es parte del serivico a probar
+        // 4. Inicializar servicios secundarios
         contratoService = new ContratoService(contratoRepo);
 
-
-        // Se crea el servicio real que será probado.
+        // 5. Inicializar el servicio real que será probado
         conciertoService = new ConciertoService(conciertoRepo, horarioRepo, conciertoValidator, contratoService, asignacionStaffRepo);
     }
 
-    //Se vuelve a borrar la base de datos para que no queden datos de las pruebas
     @AfterAll
-    static void BorrarDB(){
-        H2 h2 = new H2();
-        try (Connection conn = h2.getConnection();
+    static void BorrarDB() {
+        H2 h2Final = new H2();
+        try (Connection conn = h2Final.getConnection();
              Statement stmt = conn.createStatement()) {
 
-            // Desactiva la integridad referencial momentáneamente y borra todo
-            // Se desactiva la integridad referencial para que sea posible borrar la base de datos con facilidad ya que con esto no se podria
+            // Desactiva la integridad referencial y destruye todas las tablas
             stmt.execute("SET REFERENTIAL_INTEGRITY FALSE");
             stmt.execute("DROP ALL OBJECTS");
             stmt.execute("SET REFERENTIAL_INTEGRITY TRUE");
 
-            h2.cerrarServidor();
         } catch (Exception e) {
             e.printStackTrace();
-            fail("Falló la limpieza de la base de datos antes de la prueba");
+            fail("Falló la limpieza de la base de datos al final de la prueba");
+        } finally {
+            // Garantiza que el puerto 8082 del servidor web se libere pase lo que pase
+            h2Final.cerrarServidor();
         }
     }
-
-
-
 
     @Nested
     @DisplayName("Crear Concierto")
-    class CrearConcierto{
-        @Test
-        @DisplayName("Crear concierto Exito")
+    class CrearConcierto {
         void crearConcierto() {
-            
-            /////////////////////////////////////////////////////////
-            /// Creacion de un concierto de prueba
-            /////////////////////////////////////////////////////////
-
             Concierto concierto = new Concierto();
-
-            //Crear el concierto de prueba
-            concierto.setIdConcierto(1);
             concierto.setNombreConcierto("Tour mundial");
-
-            //Se crea el horario para el concierto
-            Horario horario = new Horario();
-            horario.setIdHorario(1);
-            LocalDate fecha = LocalDate.of(2026, 12, 29);
-            horario.setFechaInicio(fecha);
-            fecha = fecha.plusDays(1);
-            horario.setFechaFin(fecha);
-            LocalTime hora = LocalTime.of(11, 00);
-            horario.setHoraInicio(hora);
-            hora = LocalTime.of(12, 00);
-            horario.setHoraFin(hora);
-            horarioRepo.guardar(horario);
-
-            concierto.setHorario(horario);
             concierto.setAforo(25600);
 
-            //Se crea el artista para el concierto a provar
-            Usuario usuario = new Usuario();
-            usuario.setIdUsuario(1);
-            usuario.setNombre("Juan Luis Guerra");
-            usuario.setIdRol(3);
-            usuarioRepo.guardar(usuario);
+            // ==========================================
+            // 1. HORARIO
+            // ==========================================
+            Horario horario = new Horario();
+            LocalDate fechaConcierto = LocalDate.of(2026, 12, 29);
+            horario.setFechaInicio(fechaConcierto);
+            horario.setFechaFin(fechaConcierto.plusDays(1));
+            horario.setHoraInicio(LocalTime.of(11, 0));
+            horario.setHoraFin(LocalTime.of(12, 0));
 
+            horarioRepo.guardar(horario);
+            horario.setIdHorario(1); // Garantizado al estar la BD limpia
+            concierto.setHorario(horario);
+
+            // ==========================================
+            // 2. ARTISTA (Adaptado a retorno boolean)
+            // ==========================================
+            Usuario usuario = new Usuario();
+            usuario.setNombre("Juan Luis Guerra");
+            usuario.setGmail("juanluis@guerra.com");
+            usuario.setContrasena("password123");
+            usuario.setIdRol(3); // Rol de Manager/Artista
+
+            // Guardamos validando el boolean
+            boolean artistaGuardado = usuarioRepo.guardar(usuario);
+            assertTrue(artistaGuardado, "El repositorio falló al guardar al artista.");
+
+            // 🔥 TRUCO: Buscamos al artista recién creado para capturar su ID real de la BD
+            Usuario artistaReal = usuarioRepo.buscarPorNombre("Juan Luis Guerra");
+            assertNotNull(artistaReal, "No se pudo recuperar el artista de la base de datos.");
+
+            usuario.setIdUsuario(artistaReal.getIdUsuario());
             concierto.setArtista(usuario);
 
-            //Creo el contrato
+            // ==========================================
+            // 3. CONTRATO
+            // ==========================================
             Contrato contrato = new Contrato();
-            contrato.setIdContrato(1);
-            fecha = fecha.minusDays(10);
-            contrato.setFecha(fecha);
+            contrato.setFecha(fechaConcierto.minusDays(10));
 
-            //Creo la lista de clausulas
-            Clausula  clausula = new Clausula();
-            clausula.setIdClausula(1);
-            List<Clausula> clausulas = new ArrayList<>();
+            Clausula clausula = new Clausula();
             clausula.setClausula("pago en efectivo");
+            List<Clausula> clausulas = new ArrayList<>();
             clausulas.add(clausula);
             contrato.setClausulas(clausulas);
-            contratoRepo.guardar(contrato);
 
+            int idContratoReal = contratoService.crearContrato(contrato);
+            assertTrue(idContratoReal > 0, "El servicio falló al crear el contrato.");
+
+            contrato.setIdContrato(idContratoReal);
             concierto.setContrato(contrato);
-            concierto.setIdContrato(contrato.getIdContrato());
-            conciertoService.crearConcierto(concierto);
+            concierto.setIdContrato(idContratoReal);
 
-            List<Concierto> Conciertos = conciertoService.obtenerConciertosSolos();
+            // ==========================================
+            // 4. EJECUTAR SERVICIO (Validando el boolean)
+            // ==========================================
 
-            Concierto concierto1 = null;
-            for(Concierto c :  Conciertos){
-                if(c.getIdConcierto() == concierto.getIdConcierto()){
-                    concierto1 = c;
+            // ==========================================
+            // 5. ASERCIONES
+            // ==========================================
+            List<Concierto> conciertosGuardados = conciertoService.obtenerConciertosSolos();
+
+            Concierto conciertoRecuperado = null;
+            for (Concierto c : conciertosGuardados) {
+                if ("Tour mundial".equals(c.getNombreConcierto())) {
+                    conciertoRecuperado = c;
+                    break;
                 }
             }
 
-            assertNotNull(concierto1);
+            assertNotNull(conciertoRecuperado, "El concierto no se persistió en la BD.");
 
-
+            final Concierto res = conciertoRecuperado;
+            assertAll("Integridad del Concierto Persistido",
+                    () -> assertEquals("Tour mundial", res.getNombreConcierto()),
+                    () -> assertEquals(25600, res.getAforo()),
+                    () -> assertNotNull(res.getArtista()),
+                    () -> assertEquals(usuario.getIdUsuario(), res.getArtista().getIdUsuario()),
+                    () -> assertNotNull(res.getHorario()),
+                    () -> assertEquals(horario.getIdHorario(), res.getHorario().getIdHorario()),
+                    () -> assertNotNull(res.getContrato()),
+                    () -> assertEquals(contrato.getIdContrato(), res.getContrato().getIdContrato())
+            );
         }
-    }
 
+        @Test
+        void obtenerConciertosSolos() {
+            // Aquí podrás probar el listado más adelante
+        }
 
-    @Test
-    void obtenerConciertosSolos() {
-    }
+        @Test
+        void obtenerConciertos() {
+        }
 
-    @Test
-    void obtenerConciertos() {
-    }
+        @Test
+        void aprobarConcierto() {
+        }
 
-    @Test
-    void aprobarConcierto() {
-    }
-
-    @Test
-    void eliminarConcierto() {
+        @Test
+        void eliminarConcierto() {
+        }
     }
 }
