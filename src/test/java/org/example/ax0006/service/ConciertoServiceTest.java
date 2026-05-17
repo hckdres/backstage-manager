@@ -176,14 +176,15 @@ class ConciertoServiceTest {
 
         @Test
         void crearConciertoMalo() {
-//            assertThrows();
+
+            Concierto conciertoMalo = new Concierto();
+            conciertoMalo.setNombreConcierto(""); // Nombre vacío
+            conciertoMalo.setAforo(-500); // Aforo negativo (imposible)
+            Exception excepcion = assertThrows(IllegalArgumentException.class, () -> {
+                conciertoService.crearConcierto(conciertoMalo);
+            });
         }
 
-        @Test
-        void eliminarConcierto() {
-        }
-        @Test
-        void obtenerConciertosSolos(){}
     }
 
     @Nested
