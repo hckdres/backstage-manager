@@ -323,6 +323,139 @@ class ConciertoServiceTest {
         @Test
         void obtenerConciertos() {
 
+            Concierto concierto = new Concierto();
+            concierto.setNombreConcierto("Tour mundial");
+            concierto.setAforo(25600);
+
+            // ==========================================
+            // 1. HORARIO
+            // ==========================================
+            Horario horario = new Horario();
+            LocalDate fechaConcierto = LocalDate.of(2026, 12, 29);
+            horario.setFechaInicio(fechaConcierto);
+            horario.setFechaFin(fechaConcierto.plusDays(1));
+            horario.setHoraInicio(LocalTime.of(11, 0));
+            horario.setHoraFin(LocalTime.of(12, 0));
+
+            horarioRepo.guardar(horario);
+            horario.setIdHorario(1); // Garantizado al estar la BD limpia
+            concierto.setHorario(horario);
+
+            // ==========================================
+            // 2. ARTISTA
+            // ==========================================
+            Usuario usuario = new Usuario();
+            usuario.setNombre("Juan Luis Guerra");
+            usuario.setGmail("juanluis@guerra.com");
+            usuario.setContrasena("password123");
+            usuario.setIdRol(3); // Rol de Manager/Artista
+
+            boolean artistaGuardado = usuarioRepo.guardar(usuario);
+            assertTrue(artistaGuardado, "El repositorio falló al guardar al artista.");
+
+            Usuario artistaReal = usuarioRepo.buscarPorNombre("Juan Luis Guerra");
+            assertNotNull(artistaReal, "No se pudo recuperar el artista de la base de datos.");
+
+            usuario.setIdUsuario(artistaReal.getIdUsuario());
+            concierto.setArtista(usuario);
+
+            // ==========================================
+            // 3. CONTRATO
+            // ==========================================
+            Contrato contrato = new Contrato();
+            contrato.setFecha(fechaConcierto.minusDays(10));
+
+            Clausula clausula = new Clausula();
+            clausula.setClausula("pago en efectivo");
+            List<Clausula> clausulas = new ArrayList<>();
+            clausulas.add(clausula);
+            contrato.setClausulas(clausulas);
+
+            int idContratoReal = contratoService.crearContrato(contrato);
+            assertTrue(idContratoReal > 0, "El servicio falló al crear el contrato.");
+
+            contrato.setIdContrato(idContratoReal);
+            concierto.setContrato(contrato);
+            concierto.setIdContrato(idContratoReal);
+
+            // ==========================================
+            // 4. EJECUTAR METOODO DE CREAR CONCIERTO
+            // ==========================================
+            conciertoService.crearConcierto(concierto);
+
+            List<Concierto> conciertosGuardados = conciertoService.obtenerConciertosSolos();
+
+            Concierto concierto1 = new Concierto();
+            concierto.setNombreConcierto("MEGA TOUR");
+            concierto.setAforo(25600);
+
+            // ==========================================
+            // 1. HORARIO
+            // ==========================================
+            Horario horario1 = new Horario();
+            LocalDate fechaConcierto1 = LocalDate.of(2026, 12, 29);
+            horario.setFechaInicio(fechaConcierto);
+            horario.setFechaFin(fechaConcierto.plusDays(1));
+            horario.setHoraInicio(LocalTime.of(11, 0));
+            horario.setHoraFin(LocalTime.of(12, 0));
+
+            horarioRepo.guardar(horario);
+            horario.setIdHorario(1); // Garantizado al estar la BD limpia
+            concierto.setHorario(horario);
+
+            // ==========================================
+            // 2. ARTISTA
+            // ==========================================
+            Usuario usuario1 = new Usuario();
+            usuario.setNombre("Diomedez");
+            usuario.setGmail("Diomedez@guerra.com");
+            usuario.setContrasena("password123");
+            usuario.setIdRol(3); // Rol de Manager/Artista
+
+            boolean artistaGuardado1 = usuarioRepo.guardar(usuario);
+            assertTrue(artistaGuardado, "El repositorio falló al guardar al artista.");
+
+            Usuario artistaReal1 = usuarioRepo.buscarPorNombre("Diomedez");
+            assertNotNull(artistaReal, "No se pudo recuperar el artista de la base de datos.");
+
+            usuario.setIdUsuario(artistaReal.getIdUsuario());
+            concierto.setArtista(usuario);
+
+            // ==========================================
+            // 3. CONTRATO
+            // ==========================================
+            Contrato contrato1 = new Contrato();
+            contrato.setFecha(fechaConcierto.minusDays(10));
+
+            Clausula clausula1 = new Clausula();
+            clausula.setClausula("pago en efectivo");
+            List<Clausula> clausulas1 = new ArrayList<>();
+            clausulas.add(clausula);
+            contrato.setClausulas(clausulas);
+
+            int idContratoReal1 = contratoService.crearContrato(contrato);
+            assertTrue(idContratoReal1 > 0, "El servicio falló al crear el contrato.");
+
+            contrato.setIdContrato(idContratoReal);
+            concierto.setContrato(contrato);
+            concierto.setIdContrato(idContratoReal);
+
+            // ==========================================
+            // 4. EJECUTAR METOODO DE CREAR CONCIERTO
+            // ==========================================
+
+           List<Concierto> conciertoSolos = conciertoService.obtenerConciertosSolos();
+
+
+           assertEquals(conciertoSolos.size(), 3);
+           for(Concierto conciertoSolo : conciertoSolos) {
+               assertAll("Integridad del Concierto Persistido",
+                       () -> assertNotNull(conciertoSolo.getNombreConcierto()),
+                       () -> assertNotEquals(0, conciertoSolo.getAforo()),
+                       () -> assertNotNull(conciertoSolo.getHorario())
+               );
+           }
+
         }
     }
 }
