@@ -265,8 +265,21 @@ public class ConciertoRepository {
 
     public List<Concierto> obtenerConciertosPorUsuarioYRol(int idUsuario, int idRol) {
         String sql = """
-        SELECT c.* FROM Concierto c
+        SELECT
+        c.idConcierto,
+        c.nombreConcierto,
+        c.idHorario,
+        c.aforo,
+        c.idContrato,
+        c.programado,
+        c.idAnalisisF,
+        h.fechaInc,
+        h.fechaFin,
+        h.horaInc,
+        h.horaFin
+        FROM Concierto c
         INNER JOIN RolConciertoUsuario rcu ON c.idConcierto = rcu.idConcierto
+        INNER JOIN Horario h ON c.idHorario = h.idHorario
         WHERE rcu.idUsuario = ? AND rcu.idRol = ?
     """;
         List<Concierto> listaFiltrada = new ArrayList<>();
@@ -280,10 +293,32 @@ public class ConciertoRepository {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     Concierto c = new Concierto();
+
+                    // Mapeo directo a la entidad Concierto
                     c.setIdConcierto(rs.getInt("idConcierto"));
                     c.setNombreConcierto(rs.getString("nombreConcierto"));
                     c.setAforo(rs.getInt("aforo"));
                     c.setProgramado(rs.getBoolean("programado"));
+                    c.setIdContrato(rs.getInt("idContrato"));
+
+                    Horario h = new Horario();
+                    h.setIdHorario(rs.getInt("idHorario"));
+
+                    if (rs.getDate("fechaInc") != null) {
+                        h.setFechaInicio(rs.getDate("fechaInc").toLocalDate());
+                    }
+                    if (rs.getDate("fechaFin") != null) {
+                        h.setFechaFin(rs.getDate("fechaFin").toLocalDate());
+                    }
+                    if (rs.getTime("horaInc") != null) {
+                        h.setHoraInicio(rs.getTime("horaInc").toLocalTime());
+                    }
+                    if (rs.getTime("horaFin") != null) {
+                        h.setHoraFin(rs.getTime("horaFin").toLocalTime());
+                    }
+
+                    c.setHorario(h);
+
                     listaFiltrada.add(c);
                 }
             }
