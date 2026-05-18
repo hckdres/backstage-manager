@@ -146,4 +146,9 @@ public class MenuController {
     }
 
 
+
+    @FXML
+    void On_Directorio_Staff(ActionEvent event) throws IOException {
+        sceneManager.showDirectorioStaff();
+    }
 }

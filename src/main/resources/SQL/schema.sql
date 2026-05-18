@@ -20,6 +20,9 @@ CREATE TABLE IF NOT EXISTS Usuario (
     FOREIGN KEY (idRol) REFERENCES Rol(idRol)
     );
 
+ALTER TABLE Usuario
+    ADD COLUMN IF NOT EXISTS idRol INT DEFAULT 0;
+
 CREATE TABLE IF NOT EXISTS Contrato (
     idContrato INT AUTO_INCREMENT PRIMARY KEY,
     fecha DATE NOT NULL
@@ -98,6 +101,16 @@ CREATE TABLE IF NOT EXISTS ConciertoInventario (
         FOREIGN KEY (idInventario) REFERENCES ObjetoInventario(idInventario),
         FOREIGN KEY (idConcierto) REFERENCES Concierto(idConcierto)
     );
+
+-- Tabla que almacena los subroles disponibles para usuarios con rol Staff
+CREATE TABLE IF NOT EXISTS Subrol (
+                                      idSubrol INT AUTO_INCREMENT PRIMARY KEY,
+                                      nombre VARCHAR(100) NOT NULL
+);
+
+-- Insertar subroles por defecto
+MERGE INTO Subrol (idSubrol, nombre) KEY(idSubrol)
+    VALUES (1, 'Sonido'), (2, 'Luces'), (3, 'Seguridad'), (4, 'Logística'), (5, 'Producción');
 
 CREATE TABLE IF NOT EXISTS RolConciertoUsuario (
         idRol INT,

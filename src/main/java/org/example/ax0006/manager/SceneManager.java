@@ -4,24 +4,31 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.example.ax0006.controller.*;
+
 import java.io.IOException;
 
+
+/*ESTA CLASE ES LA QUE HACE TODO EL CAMBIO DE ESCENAS POSIBLE AL ENVIAR LA INFORMACION Y AL SIMPLIFICAR EL CAMBIAR DE ESCENA*/
 public class SceneManager {
 
+    /*ATRIBUTOS*/
     private Stage stage;
     private ContextManager context;
     private Integer contratoTemporal;
 
+    /*CONSTRUCTOR*/
     public SceneManager(Stage stage, ContextManager context) {
         this.stage = stage;
         this.context = context;
     }
 
+    /*METODO PARA MOSTRAR EL LOGIN*/
     public void showLogin() throws IOException {
         LoginController loginController = new LoginController(this, context.getAutenService(), context.getSesion(), context.getStaffService(), context.getConciertoService());
         loadScene("/org/example/ax0006/login.fxml", loginController);
     }
 
+    /*METODO PARA MOSTRAR EL SIGN UP*/
     public void showSignUp() throws IOException {
         SignUpController signUpControl = new SignUpController(this, context.getAutenService(), context.getSesion());
         loadScene("/org/example/ax0006/signup.fxml", signUpControl);
@@ -43,6 +50,17 @@ public class SceneManager {
                 context.getStaffService()
         );
         loadScene("/org/example/ax0006/adminUsuarios.fxml", controller);
+    }
+
+    //metodo para mostrar pantalla de directorio de staff.
+    public void showDirectorioStaff() throws IOException {
+        DirectorioStaffController controller = new DirectorioStaffController(
+                this,
+                context.getSesion(),
+                context.getConciertoService(),
+                context.getStaffService()
+        );
+        loadScene("/org/example/ax0006/directorioStaff.fxml", controller);
     }
 
     //Metodo para mostrar pantalla de perfil del usuario
@@ -193,4 +211,6 @@ public class SceneManager {
         Scene scene = new Scene(loader.load());
         stage.setScene(scene);
     }
+
+
 }

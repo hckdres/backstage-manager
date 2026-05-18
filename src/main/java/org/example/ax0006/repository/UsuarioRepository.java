@@ -4,8 +4,6 @@
  * ANDRES
  */
 
-
-
 package org.example.ax0006.repository;
 
 import org.example.ax0006.entity.Rol;
@@ -22,7 +20,7 @@ public class UsuarioRepository {
 
     private H2 h2;
 
-    
+
 
     //CONSTRUCTOR
     public UsuarioRepository(H2 h2) {
@@ -35,7 +33,7 @@ public class UsuarioRepository {
         String sql = "INSERT INTO Usuario (nombre, contrasena, gmail, idRol) VALUES (?, ?, ?, ?)";
         try (Connection conn = h2.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-                String hash = BCrypt.hashpw(u.getContrasena(), BCrypt.gensalt());
+            String hash = BCrypt.hashpw(u.getContrasena(), BCrypt.gensalt());
             stmt.setString(1, u.getNombre());
             stmt.setString(2, hash);
             stmt.setString(3, u.getGmail());
@@ -91,7 +89,7 @@ public class UsuarioRepository {
         List<Usuario> lista = new ArrayList<>();
 
         String sql = "SELECT * FROM Usuario";
-        try (Connection conn = new H2().getConnection();
+        try (Connection conn = h2.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
@@ -231,7 +229,6 @@ public class UsuarioRepository {
         }
     }
 
-
     public void actualizarRolGlobal(int idUsuario, int idRol) {
         String sql = "UPDATE Usuario SET idRol = ? WHERE idUsuario = ?";
         try (Connection conn = h2.getConnection();
@@ -243,9 +240,4 @@ public class UsuarioRepository {
             e.printStackTrace();
         }
     }
-
-
-
-
 }
-
