@@ -77,6 +77,10 @@ public class ConciertoService {
         inventarioService.eliminarDocumentoInventario(idInventario, idConcierto, idHorario, idsObjetos);
     }
 
+    public List<Concierto> obtenerConciertosPorUsuarioYRol(int idUsuario, int idRol) {
+        return conciertoRepo.obtenerConciertosPorUsuarioYRol(idUsuario, idRol);
+    }
+
 
     public List<Concierto> listarConciertos() {
         return conciertoRepo.obtenerConciertos();

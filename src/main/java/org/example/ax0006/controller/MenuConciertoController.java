@@ -35,6 +35,40 @@ public class MenuConciertoController {
     private SceneManager sceneManager;
     private SesionManager sesion;
 
+    @FXML
+    public void initialize() {
+        int idRol = sesion.getUsuarioActual().getIdRol();
+
+        fid_bt_CrearConcierto.setVisible(idRol == 3);
+        fid_bt_CrearConcierto.setManaged(idRol == 3);
+
+        fid_bt_ConsultarSolicitudes.setVisible(idRol == 1);
+        fid_bt_ConsultarSolicitudes.setManaged(idRol == 1);
+
+        fid_bt_ConsultarProgramados.setVisible(idRol == 1);
+        fid_bt_ConsultarProgramados.setManaged(idRol == 1);
+
+        if (idRol == 3) {
+            fid_bt_crearInventario.setVisible(true);
+            fid_bt_crearInventario.setManaged(true);
+        } else if(idRol == 1) {
+            fid_bt_crearInventario.setVisible(false);
+            fid_bt_crearInventario.setManaged(false);
+        }
+
+
+        if (idRol == 0) {
+            fid_bt_CrearConcierto.setVisible(false);
+            fid_bt_CrearConcierto.setManaged(false);
+            fid_bt_ConsultarSolicitudes.setVisible(false);
+            fid_bt_ConsultarSolicitudes.setManaged(false);
+            fid_bt_ConsultarProgramados.setVisible(false);
+            fid_bt_ConsultarProgramados.setManaged(false);
+            fid_bt_crearInventario.setVisible(false);
+        }
+
+
+    }
     /* CONSTRUCTOR */
     public MenuConciertoController(SceneManager sceneManager, SesionManager sesion) {
         this.sceneManager = sceneManager;

@@ -1,8 +1,6 @@
 package org.example.ax0006.repository;
 
-import org.example.ax0006.entity.Concierto;
-import org.example.ax0006.entity.Horario;
-import org.example.ax0006.entity.Usuario;
+import org.example.ax0006.entity.*;
 import org.example.ax0006.db.H2;
 
 import java.util.List;
@@ -210,5 +208,35 @@ public class ConciertoRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<Concierto> obtenerConciertosPorUsuarioYRol(int idUsuario, int idRol) {
+        String sql = """
+        SELECT c.* FROM Concierto c
+        INNER JOIN RolConciertoUsuario rcu ON c.idConcierto = rcu.idConcierto
+        WHERE rcu.idUsuario = ? AND rcu.idRol = ?
+    """;
+        List<Concierto> listaFiltrada = new ArrayList<>();
+
+        try (Connection conn = h2.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idUsuario);
+            stmt.setInt(2, idRol);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Concierto c = new Concierto();
+                    c.setIdConcierto(rs.getInt("idConcierto"));
+                    c.setNombreConcierto(rs.getString("nombreConcierto"));
+                    c.setAforo(rs.getInt("aforo"));
+                    c.setProgramado(rs.getBoolean("programado"));
+                    listaFiltrada.add(c);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listaFiltrada;
     }
 }

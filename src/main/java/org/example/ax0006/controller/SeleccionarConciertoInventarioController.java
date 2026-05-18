@@ -10,6 +10,8 @@ import org.example.ax0006.manager.SceneManager;
 import org.example.ax0006.manager.SesionManager;
 import org.example.ax0006.service.ConciertoService;
 
+import java.util.List;
+
 public class SeleccionarConciertoInventarioController {
 
     private final ConciertoService conciertoService;
@@ -48,7 +50,16 @@ public class SeleccionarConciertoInventarioController {
     }
 
     private void cargarDatos() {
-        tv_conciertos.setItems(FXCollections.observableArrayList(conciertoService.obtenerConciertos()));
+        // 1. Extraer los datos del usuario autenticado desde la sesión
+        // (Ajusta estos métodos según cómo se llamen exactamente en tu SesionManager)
+        int idUsuarioLogueado = sesion.getUsuarioLogueado().getIdUsuario();
+        int idRolEspecifico = sesion.getUsuarioLogueado().getIdRol();
+
+        // 2. Llamar al nuevo servicio filtrado
+        List<Concierto> conciertosPermitidos = conciertoService.obtenerConciertosPorUsuarioYRol(idUsuarioLogueado, idRolEspecifico);
+
+        // 3. Cargar el TableView únicamente con los conciertos autorizados
+        tv_conciertos.setItems(FXCollections.observableArrayList(conciertosPermitidos));
     }
 
     @FXML
