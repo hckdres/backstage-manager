@@ -166,7 +166,8 @@ MERGE INTO Usuario (idUsuario, nombre, gmail, contrasena, idRol, telefono, direc
     VALUES
     (1, 'Admin', 'admin@gestionconcierto.com', '$2a$10$ToZhw13TSN5sI4X1N9YnjuMFRk1lYBtXGtCVHzDEpWbnLHMw.9X7O', 1, '314234123', 'Calle 100 #48-90', 'Aseguradora ALIANZA', '310233211', 'Aseguradora'),
     (2, 'Feid', 'feid@vidaloka.com', '$2a$10$ToZhw13TSN5sI4X1N9YnjuMFRk1lYBtXGtCVHzDEpWbnLHMw.9X7O', 3, '310000221', 'Calle 44 #22-01', 'Centrals Seguros', '324231231', 'Aseguradora'),
-    (3, 'Pepe', 'pepe@cloro.co', '$2a$10$ToZhw13TSN5sI4X1N9YnjuMFRk1lYBtXGtCVHzDEpWbnLHMw.9X7O', 0, '312324123', 'Calle 1 #32-09', 'Abuelita Marta', '3111211', 'Abuela');
+    (3, 'Pepe', 'pepe@cloro.co', '$2a$10$ToZhw13TSN5sI4X1N9YnjuMFRk1lYBtXGtCVHzDEpWbnLHMw.9X7O', 2, '312324123', 'Calle 1 #32-09', 'Abuelita Marta', '3111211', 'Abuela');
+
 
 ALTER TABLE Usuario ALTER COLUMN idUsuario RESTART WITH 4;
 

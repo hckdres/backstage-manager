@@ -81,8 +81,8 @@ public class MenuController {
             fid_bt_mantenimientoObjeto.setVisible(esManager);
             fid_bt_mantenimientoObjeto.setManaged(esManager);
 
-            fid_bt_mantenimientoObjeto.setVisible(esTecnico);
-            fid_bt_mantenimientoObjeto.setManaged(esTecnico);
+            fid_bt_mantenimientoObjeto.setVisible(esAdmin);
+            fid_bt_mantenimientoObjeto.setManaged(esAdmin);
 
 
 
