@@ -24,7 +24,7 @@ public class SceneManager {
 
     /*METODO PARA MOSTRAR EL LOGIN*/
     public void showLogin() throws IOException {
-        LoginController loginController = new LoginController(this, context.getAutenService(), context.getSesion(),context.getStaffService(), context.getConciertoService());
+        LoginController loginController = new LoginController(this, context.getAutenService(), context.getSesion(), context.getStaffService(), context.getConciertoService());
         loadScene("/org/example/ax0006/login.fxml", loginController);
     }
 
@@ -35,7 +35,7 @@ public class SceneManager {
     }
 
     /*METOOD PARA MOSTRAR EL MENU*/
-    public void showMenu() throws IOException{
+    public void showMenu() throws IOException {
         MenuController menuControl = new MenuController(this, context.getSesion(), context.getConciertoService());
         loadScene("/org/example/ax0006/menu.fxml", menuControl);
     }
@@ -97,8 +97,7 @@ public class SceneManager {
         loadScene("/org/example/ax0006/consultarsolicitudes.fxml", consultarSolicitudesController);
     }
 
-    public void showCrearConcierto() throws  IOException{
-    //  SOLO limpiar si NO se viene de crear contrato
+    public void showCrearConcierto() throws IOException {
         if (!"crearContrato".equals(context.getSesion().getPantallaOrigen())) {
             context.getSesion().setIdContratoTemporal(null);
             context.getSesion().setConciertoTemporal(null);
@@ -110,9 +109,9 @@ public class SceneManager {
         loadScene("/org/example/ax0006/crearconcierto.fxml", crearConciertoController);
     }
 
-    public void showConciertosProgramados() throws  IOException{
-        ConciertosProgramadosController conciertosProgramadosController = new ConciertosProgramadosController(context.getSesion(), context.getConciertoService(), this);
-        loadScene("/org/example/ax0006/verconciertosprogramados.fxml", conciertosProgramadosController);
+    public void showConciertosProgramados() throws IOException {
+        ConciertosProgramadosController controller = new ConciertosProgramadosController(context.getSesion(), context.getConciertoService(), this, context.getInventarioService());
+        loadScene("/org/example/ax0006/verconciertosprogramados.fxml", controller);
     }
 
     //Crear Contrato
@@ -133,9 +132,9 @@ public class SceneManager {
         loadScene("/org/example/ax0006/consultarcontrato.fxml", controller);
     }
 
-    public void showMenuConcierto() throws IOException{
-        MenuConciertoController menuConciertoController = new MenuConciertoController(this, context.getSesion());
-        loadScene("/org/example/ax0006/menuconcierto.fxml", menuConciertoController);
+    public void showMenuConcierto() throws IOException {
+        MenuConciertoController controller = new MenuConciertoController(this, context.getSesion());
+        loadScene("/org/example/ax0006/menuconcierto.fxml", controller);
     }
 
     public void showVerContrato() throws IOException {
@@ -229,6 +228,57 @@ public class SceneManager {
 
     public Integer getContratoTemporal() {
         return contratoTemporal;
+    }
+
+    /* --- MÉTODOS DE INVENTARIO --- */
+
+    public void showCrearObjeto() throws IOException {
+        ObjetoController controller = new ObjetoController(context.getObjetoService(), this);
+        loadScene("/org/example/ax0006/crearObjeto.fxml", controller);
+    }
+
+    public void showSeleccionarConciertoInventario() throws IOException {
+        SeleccionarConciertoInventarioController controller = new SeleccionarConciertoInventarioController(
+                context.getConciertoService(),
+                this,
+                context.getSesion()
+        );
+        loadScene("/org/example/ax0006/seleccionarConcierto.fxml", controller);
+    }
+
+    public void showCrearInventario() throws IOException {
+        CrearInventarioController controller = new CrearInventarioController(
+                context.getInventarioService(),
+                context.getObjetoService(),
+                this,
+                context.getSesion(),
+                context.getInventarioObjetoService()
+        );
+        loadScene("/org/example/ax0006/crearInventario.fxml", controller);
+    }
+
+    public void showMantenimiento() throws IOException {
+        context.getSesion().setConciertoTemporal(null);
+        MantenimientoController controller = new MantenimientoController(
+                context.getInventarioService(),
+                context.getObjetoService(),
+                context.getHorarioRepo(),
+                this,
+                context.getSesion(),
+                context.getInventarioObjetoService()
+        );
+
+        loadScene("/org/example/ax0006/mantenimiento.fxml", controller);
+    }
+
+    public void showDetallesConcierto() throws IOException {
+        DetallesConciertoController controller = new DetallesConciertoController(
+                this,
+                context.getSesion(),
+                context.getInventarioService()
+        );
+
+        loadScene("/org/example/ax0006/DetallesConcierto.fxml", controller);
     }
 
     /*METODO PARA NO REPETIR ESTO COMO MIL VECES Y HACER QUE EL CAMBIO DE ESCENA SE VEA MAS LIMPIO*/

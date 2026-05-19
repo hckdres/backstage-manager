@@ -43,19 +43,28 @@ public class StartController extends Application {
         IngresoRepository ingresoRepo = new IngresoRepository(h2);
         BoleteriaRepository boleteriaRepo = new BoleteriaRepository(h2);
 
+        InventarioRepository inventarioRepo = new InventarioRepository(h2);
+        InventarioObjetoRepository inventarioObjetoRepo = new InventarioObjetoRepository(h2);
+        ObjetoRepository objetoRepo = new ObjetoRepository(h2);
+
         // SERVICIOS
         AutenticacionService autenService = new AutenticacionService(usuarioRepo,asignacionStaffRepo);
         ProfileService profileService = new ProfileService(usuarioRepo);
         RolService rolService = new RolService(rolRepo, usuarioRepo);
         ContratoService contratoService = new ContratoService(contratoRepo);
-        ConciertoService conciertoService = new ConciertoService(conciertoRepo, horarioRepo, conciertoValidator, contratoService , asignacionStaffRepo);
         AnalisisFinancieroService analisisService = new AnalisisFinancieroService(analisisRepo);
         GastoService gastoService = new GastoService(gastoRepo);
         IngresoService ingresoService = new IngresoService(ingresoRepo);
         BoleteriaService boleteriaService = new BoleteriaService(boleteriaRepo);
+        InventarioService inventarioService = new InventarioService(inventarioRepo);
         StaffService staffService = new StaffService(usuarioRepo, asignacionStaffRepo, conciertoRepo);
 
-        // MANAGERS
+        InventarioObjetoService inventarioObjetoService = new InventarioObjetoService(inventarioObjetoRepo);
+        ObjetoService objetoService = new ObjetoService(objetoRepo);
+        ConciertoService conciertoService = new ConciertoService(conciertoRepo, inventarioService, horarioRepo, conciertoValidator, contratoService , asignacionStaffRepo);
+
+
+
         SesionManager sesion = new SesionManager();
         ContextManager context = new ContextManager(
                 h2,
@@ -69,7 +78,9 @@ public class StartController extends Application {
                 conciertoService,
                 sesion,
                 staffService,
-                conciertoRepo,
+                inventarioService,
+                inventarioObjetoService,
+                objetoService,
                 contratoService,
                 contratoRepo,
                 analisisService,

@@ -1,8 +1,6 @@
 package org.example.ax0006.repository;
 
-import org.example.ax0006.entity.Concierto;
-import org.example.ax0006.entity.Horario;
-import org.example.ax0006.entity.Usuario;
+import org.example.ax0006.entity.*;
 import org.example.ax0006.db.H2;
 
 import java.util.List;
@@ -21,24 +19,30 @@ public class ConciertoRepository {
     public int guardar(Concierto c, int idHorario) {
 
         String sql = """
-        INSERT INTO Concierto (nombreConcierto, idHorario, aforo, idContrato, programado)
-        VALUES (?, ?, ?, ?, ?)
-    """;
+            INSERT INTO Concierto (nombreConcierto, idHorario, aforo, idContrato, programado)
+            VALUES (?, ?, ?, ?, ?)
+        """;
 
         int idConciertoGenerado = 0;
 
-        try (Connection conn = h2.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (
+                Connection conn = h2.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(
+                        sql,
+                        Statement.RETURN_GENERATED_KEYS
+                )
+        ) {
 
             stmt.setString(1, c.getNombreConcierto());
             stmt.setInt(2, idHorario);
             stmt.setInt(3, c.getAforo());
-            stmt.setInt(4,c.getIdContrato());
+            stmt.setInt(4, c.getIdContrato());
             stmt.setBoolean(5, c.isProgramado());
 
             stmt.executeUpdate();
 
             ResultSet rs = stmt.getGeneratedKeys();
+
             if (rs.next()) {
                 idConciertoGenerado = rs.getInt(1);
             }
@@ -50,80 +54,101 @@ public class ConciertoRepository {
         return idConciertoGenerado;
     }
 
-    
-    // El siguiente metodo para que lo sepan obtiene los conciertos pero directamente desde la tabla para el filtro del dropdown en gestion de usuarios.
+    // Obtiene conciertos simples para dropdowns
     public List<Concierto> obtenerConciertosSolos() {
-    List<Concierto> lista = new ArrayList<>();
 
-    String sql = """
-    SELECT c.idConcierto, c.nombreConcierto, c.aforo, c.programado, c.idContrato,
-           h.idHorario, h.fechaInc, h.fechaFin, h.horaInc, h.horaFin
-    FROM Concierto c
-    JOIN Horario h ON c.idHorario = h.idHorario
-    """;
+        List<Concierto> lista = new ArrayList<>();
 
-    try (Connection conn = h2.getConnection();
-         PreparedStatement stmt = conn.prepareStatement(sql);
-         ResultSet rs = stmt.executeQuery()) {
+        String sql = """
+            SELECT c.idConcierto,
+                   c.nombreConcierto,
+                   c.aforo,
+                   c.programado,
+                   c.idContrato,
+                   h.idHorario,
+                   h.fechaInc,
+                   h.fechaFin,
+                   h.horaInc,
+                   h.horaFin
+            FROM Concierto c
+            JOIN Horario h
+                ON c.idHorario = h.idHorario
+        """;
 
-        while (rs.next()) {
+        try (
+                Connection conn = h2.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()
+        ) {
 
-            // Horario
-            Horario h = new Horario();
-            h.setIdHorario(rs.getInt("idHorario"));
-            h.setFechaInicio(rs.getDate("fechaInc").toLocalDate());
-            h.setFechaFin(rs.getDate("fechaFin").toLocalDate());
-            h.setHoraInicio(rs.getTime("horaInc").toLocalTime());
-            h.setHoraFin(rs.getTime("horaFin").toLocalTime());
+            while (rs.next()) {
 
-            // Concierto
-            Concierto c = new Concierto(
-                    rs.getInt("idConcierto"),
-                    rs.getString("nombreConcierto"),
-                    h,
-                    rs.getInt("aforo"),
-                    null,
-                    rs.getBoolean("programado")
-            );
+                Horario h = new Horario();
 
-            c.setIdContrato(rs.getInt("idContrato"));
+                h.setIdHorario(rs.getInt("idHorario"));
+                h.setFechaInicio(rs.getDate("fechaInc").toLocalDate());
+                h.setFechaFin(rs.getDate("fechaFin").toLocalDate());
+                h.setHoraInicio(rs.getTime("horaInc").toLocalTime());
+                h.setHoraFin(rs.getTime("horaFin").toLocalTime());
 
-            lista.add(c);
+                Concierto c = new Concierto(
+                        rs.getInt("idConcierto"),
+                        rs.getString("nombreConcierto"),
+                        h,
+                        rs.getInt("aforo"),
+                        null,
+                        rs.getBoolean("programado")
+                );
+
+                c.setIdContrato(rs.getInt("idContrato"));
+
+                lista.add(c);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return lista;
     }
 
-    return lista;
-    }
-
-
-
-
-    /*Obtiene conciertos de la base de datos y los guarda como objetos, ademas tambien trae el objeto del artista y el objeto de su horario*/
+    /*Obtiene conciertos completos*/
     public List<Concierto> obtenerConciertos() {
 
         List<Concierto> lista = new ArrayList<>();
 
         String sql = """
-        SELECT c.idConcierto, c.nombreConcierto, c.aforo, c.programado,
-               h.idHorario,h.fechaInc, h.fechaFin, h.horaInc, h.horaFin,
-               u.idUsuario, u.nombre
-        FROM Concierto c
-        JOIN Horario h ON c.idHorario = h.idHorario
-        LEFT JOIN RolConciertoUsuario rcu ON c.idConcierto = rcu.idConcierto AND rcu.idRol = 3
-        LEFT JOIN Usuario u ON rcu.idUsuario = u.idUsuario
-    """;
+            SELECT c.idConcierto,
+                   c.nombreConcierto,
+                   c.aforo,
+                   c.programado,
+                   h.idHorario,
+                   h.fechaInc,
+                   h.fechaFin,
+                   h.horaInc,
+                   h.horaFin,
+                   u.idUsuario,
+                   u.nombre
+            FROM Concierto c
+            JOIN Horario h
+                ON c.idHorario = h.idHorario
+            LEFT JOIN RolConciertoUsuario rcu
+                ON c.idConcierto = rcu.idConcierto
+                AND rcu.idRol = 3
+            LEFT JOIN Usuario u
+                ON rcu.idUsuario = u.idUsuario
+        """;
 
-        try (Connection conn = h2.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+        try (
+                Connection conn = h2.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()
+        ) {
 
             while (rs.next()) {
 
-                // Horario
                 Horario h = new Horario();
+
                 h.setIdHorario(rs.getInt("idHorario"));
                 h.setFechaInicio(rs.getDate("fechaInc").toLocalDate());
                 h.setFechaFin(rs.getDate("fechaFin").toLocalDate());
@@ -133,13 +158,13 @@ public class ConciertoRepository {
                 Usuario artista = null;
 
                 if (rs.getObject("idUsuario") != null) {
+
                     artista = new Usuario();
+
                     artista.setIdUsuario(rs.getInt("idUsuario"));
                     artista.setNombre(rs.getString("nombre"));
                 }
 
-
-                // Concierto
                 Concierto c = new Concierto(
                         rs.getInt("idConcierto"),
                         rs.getString("nombreConcierto"),
@@ -159,45 +184,67 @@ public class ConciertoRepository {
         return lista;
     }
 
-    /*No se utiliza pero se deja una implementacion parcial porque puede ser relevante en un futuro*/
-    public List<Concierto> buscarPorArtista(String nombreArtista) {
+    // NUEVO METODO
+    public List<Concierto> obtenerConciertosPorUsuarioYRol(
+            int idUsuario,
+            int idRol
+    ) {
 
         List<Concierto> lista = new ArrayList<>();
 
         String sql = """
-        SELECT c.idConcierto, c.aforo, c.programado,
-               h.idHorario, h.fechaInc, h.fechaFin, h.horaInc, h.horaFin,
-               u.idUsuario, u.nombre
-        FROM Concierto c
-        JOIN Horario h ON c.idHorario = h.idHorario
-        JOIN RolConciertoUsuario rcu ON c.idConcierto = rcu.idConcierto
-        JOIN Usuario u ON rcu.idUsuario = u.idUsuario
-        WHERE u.nombre = ?
-    """;
+            SELECT c.idConcierto,
+                   c.nombreConcierto,
+                   c.aforo,
+                   c.programado,
+                   h.idHorario,
+                   h.fechaInc,
+                   h.fechaFin,
+                   h.horaInc,
+                   h.horaFin,
+                   u.idUsuario,
+                   u.nombre
+            FROM Concierto c
+            JOIN Horario h
+                ON c.idHorario = h.idHorario
+            JOIN RolConciertoUsuario rcu
+                ON c.idConcierto = rcu.idConcierto
+            LEFT JOIN Usuario u
+                ON rcu.idUsuario = u.idUsuario
+            WHERE rcu.idUsuario = ?
+              AND rcu.idRol = ?
+        """;
 
-        try (Connection conn = h2.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (
+                Connection conn = h2.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
 
-            stmt.setString(1, nombreArtista);
+            stmt.setInt(1, idUsuario);
+            stmt.setInt(2, idRol);
 
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
 
-                // Horario
                 Horario h = new Horario();
+
                 h.setIdHorario(rs.getInt("idHorario"));
                 h.setFechaInicio(rs.getDate("fechaInc").toLocalDate());
                 h.setFechaFin(rs.getDate("fechaFin").toLocalDate());
                 h.setHoraInicio(rs.getTime("horaInc").toLocalTime());
                 h.setHoraFin(rs.getTime("horaFin").toLocalTime());
 
-                // Usuario (artista)
-                Usuario u = new Usuario();
-                u.setIdUsuario(rs.getInt("idUsuario"));
-                u.setNombre(rs.getString("nombre"));
+                Usuario u = null;
 
-                // Concierto
+                if (rs.getObject("idUsuario") != null) {
+
+                    u = new Usuario();
+
+                    u.setIdUsuario(rs.getInt("idUsuario"));
+                    u.setNombre(rs.getString("nombre"));
+                }
+
                 Concierto c = new Concierto(
                         rs.getInt("idConcierto"),
                         rs.getString("nombreConcierto"),
@@ -217,16 +264,93 @@ public class ConciertoRepository {
         return lista;
     }
 
-    /*Genera la relacion RolConciertoArtista*/
-    public void guardarRelacionArtista(int idUsuario, int idConcierto, int idRol) {
+    /*Buscar por artista*/
+    public List<Concierto> buscarPorArtista(String nombreArtista) {
+
+        List<Concierto> lista = new ArrayList<>();
 
         String sql = """
-        INSERT INTO RolConciertoUsuario (idRol, idUsuario, idConcierto)
-        VALUES (?, ?, ?)
-    """;
+            SELECT c.idConcierto,
+                   c.nombreConcierto,
+                   c.aforo,
+                   c.programado,
+                   h.idHorario,
+                   h.fechaInc,
+                   h.fechaFin,
+                   h.horaInc,
+                   h.horaFin,
+                   u.idUsuario,
+                   u.nombre
+            FROM Concierto c
+            JOIN Horario h
+                ON c.idHorario = h.idHorario
+            JOIN RolConciertoUsuario rcu
+                ON c.idConcierto = rcu.idConcierto
+            JOIN Usuario u
+                ON rcu.idUsuario = u.idUsuario
+            WHERE u.nombre = ?
+        """;
 
-        try (Connection conn = h2.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (
+                Connection conn = h2.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
+
+            stmt.setString(1, nombreArtista);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+
+                Horario h = new Horario();
+
+                h.setIdHorario(rs.getInt("idHorario"));
+                h.setFechaInicio(rs.getDate("fechaInc").toLocalDate());
+                h.setFechaFin(rs.getDate("fechaFin").toLocalDate());
+                h.setHoraInicio(rs.getTime("horaInc").toLocalTime());
+                h.setHoraFin(rs.getTime("horaFin").toLocalTime());
+
+                Usuario u = new Usuario();
+
+                u.setIdUsuario(rs.getInt("idUsuario"));
+                u.setNombre(rs.getString("nombre"));
+
+                Concierto c = new Concierto(
+                        rs.getInt("idConcierto"),
+                        rs.getString("nombreConcierto"),
+                        h,
+                        rs.getInt("aforo"),
+                        u,
+                        rs.getBoolean("programado")
+                );
+
+                lista.add(c);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
+
+    /*Relacion artista*/
+    public void guardarRelacionArtista(
+            int idUsuario,
+            int idConcierto,
+            int idRol
+    ) {
+
+        String sql = """
+            INSERT INTO RolConciertoUsuario
+            (idRol, idUsuario, idConcierto)
+            VALUES (?, ?, ?)
+        """;
+
+        try (
+                Connection conn = h2.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
 
             stmt.setInt(1, idRol);
             stmt.setInt(2, idUsuario);
@@ -239,15 +363,22 @@ public class ConciertoRepository {
         }
     }
 
-    /*Cambia el atributo de Programado de false a true*/
+    /*Aprobar concierto*/
     public void aprobarConcierto(int id) {
 
-        String sql = "UPDATE Concierto SET programado = TRUE WHERE idConcierto = ?";
+        String sql = """
+            UPDATE Concierto
+            SET programado = TRUE
+            WHERE idConcierto = ?
+        """;
 
-        try (Connection conn = h2.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (
+                Connection conn = h2.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
 
             stmt.setInt(1, id);
+
             stmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -255,54 +386,77 @@ public class ConciertoRepository {
         }
     }
 
-    /*Elimina un concierto de la base de datos*/
+    /*Eliminar concierto*/
     public void eliminarConcierto(int idConcierto) {
 
         try (Connection conn = h2.getConnection()) {
 
-            // 1. borrar relación artista
-            String sql1 = "DELETE FROM RolConciertoUsuario WHERE idConcierto = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(sql1)) {
+            conn.setAutoCommit(false);
+
+            String sqlInv = """
+                DELETE FROM ConciertoDocumentoInventario
+                WHERE idConcierto = ?
+            """;
+
+            try (PreparedStatement stmt = conn.prepareStatement(sqlInv)) {
+
                 stmt.setInt(1, idConcierto);
                 stmt.executeUpdate();
             }
 
-            // 2. borrar concierto
-            String sql2 = "DELETE FROM Concierto WHERE idConcierto = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(sql2)) {
+            String sqlRel = """
+                DELETE FROM RolConciertoUsuario
+                WHERE idConcierto = ?
+            """;
+
+            try (PreparedStatement stmt = conn.prepareStatement(sqlRel)) {
+
                 stmt.setInt(1, idConcierto);
                 stmt.executeUpdate();
             }
+
+            String sqlConc = """
+                DELETE FROM Concierto
+                WHERE idConcierto = ?
+            """;
+
+            try (PreparedStatement stmt = conn.prepareStatement(sqlConc)) {
+
+                stmt.setInt(1, idConcierto);
+                stmt.executeUpdate();
+            }
+
+            conn.commit();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    //Asignar unas finanzas a un concierto
+    //Asignar análisis financiero
     public void asignarAnalisisFinanciero(
-        int idConcierto,
-        int idAnalisisF){
+            int idConcierto,
+            int idAnalisisF
+    ) {
 
-            String sql = """
-                UPDATE Concierto
-                SET idAnalisisF = ?
-                WHERE idConcierto = ?
-            """;
+        String sql = """
+            UPDATE Concierto
+            SET idAnalisisF = ?
+            WHERE idConcierto = ?
+        """;
 
-            try (
-                    Connection conn = h2.getConnection();
-                    PreparedStatement stmt =
-                            conn.prepareStatement(sql)
-            ) {
+        try (
+                Connection conn = h2.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
 
-                stmt.setInt(1, idAnalisisF);
-                stmt.setInt(2, idConcierto);
+            stmt.setInt(1, idAnalisisF);
+            stmt.setInt(2, idConcierto);
 
-                stmt.executeUpdate();
+            stmt.executeUpdate();
 
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+    }
 }

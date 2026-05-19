@@ -22,6 +22,10 @@ public class ContextManager {
     private HorarioRepository horarioRepo;
     private ConciertoRepository conciertoRepo;
     private StaffService staffService;
+
+    private InventarioService inventarioService;
+    private InventarioObjetoService inventarioObjetoService;
+    private ObjetoService objetoService;
     private ContratoService contratoService;
     private ContratoRepository contratoRepo;
     private AnalisisFinancieroService analisisService;
@@ -42,7 +46,9 @@ public class ContextManager {
             ConciertoService conciertoService,
             SesionManager sesion,
             StaffService staffService,
-            ConciertoRepository conciertoRepoExtra, 
+            InventarioService inventarioService,
+            InventarioObjetoService inventarioObjetoService,
+            ObjetoService objetoService,
             ContratoService contratoService,
             ContratoRepository contratoRepo,
             AnalisisFinancieroService analisisService,
@@ -55,13 +61,16 @@ public class ContextManager {
         this.usuarioRepository = usuarioRepository;
         this.rolRepository = rolRepository;
         this.horarioRepo = horarioRepo;
-        this.conciertoRepo = conciertoRepo; 
+        this.conciertoRepo = conciertoRepo;
         this.autenService = autenService;
         this.profileService = profileService;
         this.conciertoService = conciertoService;
         this.rolService = rolService;
         this.sesion = sesion;
         this.staffService = staffService;
+        this.inventarioService = inventarioService;
+        this.inventarioObjetoService = inventarioObjetoService;
+        this.objetoService = objetoService;
         this.contratoService = contratoService;
         this.contratoRepo = contratoRepo;
         this.analisisService = analisisService;
@@ -71,9 +80,9 @@ public class ContextManager {
         this.boleteriaService = boleteriaService;
     }
 
-
-
-
+    public InventarioService getInventarioService() { return inventarioService; }
+    public InventarioObjetoService getInventarioObjetoService() { return inventarioObjetoService; }
+    public ObjetoService getObjetoService() { return objetoService; }
     public H2 getH2() { return h2; }
     public UsuarioRepository getUsuarioRepository() { return usuarioRepository; }
     public RolRepository getRolRepository() { return rolRepository; }
@@ -90,4 +99,5 @@ public class ContextManager {
     public GastoService getGastoService() { return gastoService;}
     public IngresoService getIngresoService() { return ingresoService;}
     public BoleteriaService getBoleteriaService() { return boleteriaService;}
+    public HorarioRepository getHorarioRepo() {return horarioRepo;}
 }
